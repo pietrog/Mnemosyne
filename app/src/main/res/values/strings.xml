@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Mnemosyne</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="action_addDictionnary">Creer un dictionnaire</string>
+    <string name="action_checkDictionnary">Consulter un dictionnaire</string>
+    <string name="title_activity_create_dictionnary">CreateDictionnaryActivity</string>
+
+    <!-- Dictionary create -->
+    <string name="action_dict_create">Creer dictionnaire</string>
+    <string name="hint_dict_fillIn_name">Nom du dictionnaire</string>
+    <string name="hint_dict_fillIn_desc">Description du dictionnaire</string>
+
+
+</resources>
