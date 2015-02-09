@@ -2,8 +2,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     >
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <TextView android:text="@string/hint_dict_fillIn_name" android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
     <EditText
@@ -11,5 +15,24 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:hint="@string/hint_dict_fillIn_name"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView android:text="@string/hint_dict_fillIn_desc" android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <EditText
+            android:id="@+id/desc_dict"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="@string/hint_dict_fillIn_desc"/>
+    </LinearLayout>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/action_save"
+        android:onClick="save_dict"/>
 
 </LinearLayout>

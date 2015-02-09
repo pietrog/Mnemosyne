@@ -22,7 +22,7 @@ public class Dictionary {
      * @param title NMame of the dictionary
      * @param description Description of the disctionary
      */
-    Dictionary(String title, String description){
+    public Dictionary(String title, String description){
         m_sDescription = description;
         m_sTitle = title;
     }

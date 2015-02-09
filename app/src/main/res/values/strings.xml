@@ -12,6 +12,8 @@
     <string name="action_dict_create">Creer dictionnaire</string>
     <string name="hint_dict_fillIn_name">Nom du dictionnaire</string>
     <string name="hint_dict_fillIn_desc">Description du dictionnaire</string>
+    <string name="action_save">Enregistrer</string>
+
 
 
 </resources>

@@ -11,15 +11,30 @@ import model.dictionary.dictionaryObjects.DictionaryObject;
  */
 public class DictionaryHandle {
 
-    private Dictionary m_oDictionary;
+    private final Dictionary m_oDictionary ;
+    private boolean m_bHasBeenModofied = false;
+
 
     /**
      * Constructor
-     * @param dictionary Dictionary to manage
      */
-    DictionaryHandle(Dictionary dictionary){
-        m_oDictionary = dictionary;
+    DictionaryHandle(Dictionary dict)
+    {
+        if (dict == null)
+            throw new ExceptionInInitializerError("Impossible to instantiate a DictionaryHandle without dictionary");
+        m_oDictionary = dict;
     }
+
+    /**
+     *
+     */
+    private void initDictionaryHandle(){
+        loadListOfDictionaries();
+    }
+
+    /**
+     * METHODS FOR HANDLING DICTIONARY
+     */
 
     /**
      * Get the dictionary's object associated to the key
@@ -30,18 +45,20 @@ public class DictionaryHandle {
         return m_oDictionary.getDictionaryObject(key);
     }
 
+
     /**
-     * Add object value associated to key to the current dictionary
-     * @param key object's key
-     * @param value object to insert
-     * @param merge if true and key already exists in the dictionary, merge the existing object with the given one
-     * @return
+     * MEMORY IO
      */
-    public int addDictionaryObject(String key, DictionaryObject value, Boolean merge){
-        return m_oDictionary.addDictionaryObject(key, value, merge);
+
+    /**
+     * Persist and update existing dictionaries
+     */
+    public int persistDictionary(){
+
+        return 0;
     }
 
-    public int getDictionarySize(){
-        return m_oDictionary.size();
+    public int loadListOfDictionaries(){
+        return 0;
     }
 }

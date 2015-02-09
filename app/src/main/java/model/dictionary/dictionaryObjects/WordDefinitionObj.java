@@ -6,13 +6,19 @@ package model.dictionary.dictionaryObjects;
 public class WordDefinitionObj extends DictionaryObject{
 
     private String m_sWord; //
-    private String m_sDescription; //
+    private String m_sDefinition; //
 
 
-    WordDefinitionObj(String word, String description)
+
+    WordDefinitionObj(String word, String definition)
     {
-        m_sWord = m_sDescription;
-        m_sDescription = description;
+        super( word+ "(" + definition.substring(0, 5).toString() + "...)");
+        m_sWord = word;
+        m_sDefinition = definition;
     }
 
+    @Override
+    public DictionaryObjectType getType() {
+        return DictionaryObjectType.WordDefinition;
+    }
 }

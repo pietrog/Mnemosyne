@@ -2,6 +2,7 @@ package model.dictionary.dictionaryObjects;
 
 import java.util.Date;
 
+
 /**
  * Created by pietro on 30/01/15.
  * DictionaryObject is an object associated to a key in the dictionary
@@ -50,10 +51,9 @@ public abstract class DictionaryObject {
 
 
     /**
-     * Return an empty version of the object. Only used for type checking, in order to lock one type of
-     * object in a dictionary
-     * @return Empty object
+     * Return type of the current object
+     * @return enum Type of the dictionary object
      */
-    public abstract DictionaryObject getEmptyForType();
+    public abstract DictionaryObjectType getType();
 
 }
