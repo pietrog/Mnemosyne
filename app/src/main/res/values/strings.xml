@@ -2,18 +2,23 @@
 <resources>
 
     <string name="app_name">Mnemosyne</string>
-
     <string name="action_settings">Settings</string>
     <string name="action_addDictionnary">Creer un dictionnaire</string>
     <string name="action_checkDictionnary">Consulter un dictionnaire</string>
     <string name="title_activity_create_dictionnary">CreateDictionnaryActivity</string>
+    <string name="action_save">Enregistrer</string>
 
     <!-- Dictionary create -->
     <string name="action_dict_create">Creer dictionnaire</string>
     <string name="hint_dict_fillIn_name">Nom du dictionnaire</string>
     <string name="hint_dict_fillIn_desc">Description du dictionnaire</string>
-    <string name="action_save">Enregistrer</string>
+    <string name="title_activity_create_catalogue">CreateCatalogueActivity</string>
 
-
+    <!-- Catalogue -->
+    <string name="action_cat_remove">Supprimer le catalogue</string>
+    <string name="hint_cat_fillIn_name">Nom du catalogue</string>
+    <string name="hint_cat_fillIn_desc">Description du catalogue</string>
+    <string name="title_activity_list_of_catalogue">ListOfCatalogueActivity</string>
+    <string name="action_list_of_catalogue">Consulter les catalogues</string>
 
 </resources>

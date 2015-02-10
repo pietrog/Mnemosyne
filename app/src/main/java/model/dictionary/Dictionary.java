@@ -64,7 +64,13 @@ public class Dictionary {
         return 0;
     }
 
+    /**
+     * Get the size of the dictionary
+     * @return int size of the dictionary
+     */
     public int size(){
         return m_hmContent.size();
     }
+
+
 }

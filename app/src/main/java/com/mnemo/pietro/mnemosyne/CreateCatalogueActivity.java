@@ -1,28 +1,29 @@
 package com.mnemo.pietro.mnemosyne;
 
-import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 
 import model.dictionary.catalogue.CatalogueList;
+import model.dictionary.tools.ViewTools;
 
 
-public class MnemoCentral extends ActionBarActivity {
+public class CreateCatalogueActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_mnemo_central);
+        setContentView(R.layout.activity_create_catalogue);
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_mnemo_central, menu);
+        getMenuInflater().inflate(R.menu.menu_create_catalogue, menu);
         return true;
     }
 
@@ -41,21 +42,15 @@ public class MnemoCentral extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void createCatalogue(View view) {
-        Intent intent;
-
-        intent = new Intent(this, CreateCatalogueActivity.class);
-        startActivity(intent);
+    /**
+     * Save the catalogue (persist it in memory)
+     * @param view
+     */
+    public void save_catalogue(View view){
+        String catalogue_name = ViewTools.getStringFromEditableText(findViewById(R.id.name_cat));
+        String catalogue_desc = ViewTools.getStringFromEditableText(findViewById(R.id.desc_cat));
+        CatalogueList whole = CatalogueList.LoadCatalogueListFromJSONFile(getApplicationContext());
+        whole.addCatalogue(catalogue_name, catalogue_desc);
+        CatalogueList.StoreCatalogueListToJSONFile(getApplicationContext(), whole);
     }
-
-    public void checkCatalogueList(View view){
-        Intent intent;
-        intent = new Intent(this, ListOfCatalogueActivity.class);
-        startActivity(intent);
-    }
-
-    public void removeCatalogue(View view){
-        CatalogueList.removeCatalogue(this);
-    }
-
 }

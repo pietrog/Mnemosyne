@@ -2,30 +2,27 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    >
+    tools:context="com.mnemo.pietro.mnemosyne.CreateCatalogueActivity">
 
 
     <EditText
-        android:id="@+id/name_dict"
-        android:minWidth="10dp"
+        android:id="@+id/name_cat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="@string/hint_dict_fillIn_name"/>
+        android:text="@string/hint_cat_fillIn_name"
+        />
 
     <EditText
-        android:id="@+id/desc_dict"
-        android:minWidth="10dp"
+        android:id="@+id/desc_cat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="@string/hint_dict_fillIn_desc"/>
-
+        android:text="@string/hint_cat_fillIn_desc"
+        />
 
     <Button
+        android:onClick="save_catalogue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/action_save"
-        android:hint="@string/action_save"
-        android:onClick="save_dict"/>
+        android:hint="@string/action_save"/>
 
 </LinearLayout>
