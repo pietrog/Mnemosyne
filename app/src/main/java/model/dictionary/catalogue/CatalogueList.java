@@ -10,9 +10,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 
 import model.dictionary.Global;
@@ -38,7 +40,19 @@ public class CatalogueList {
         if (m_mListOfCatalogue.containsKey(name))
             return -1;
         m_mListOfCatalogue.put(name, desc);
+
         return 0;
+    }
+
+    public int getCount(){
+        return m_mListOfCatalogue.keySet().size();
+    }
+
+    public Catalogue getElement(int position){
+        Set<String> set = m_mListOfCatalogue.keySet();
+        if (set.size() <= position)
+            return null;
+        return (Catalogue)set.toArray()[position];
     }
 
     /**

@@ -1,23 +1,31 @@
 package com.mnemo.pietro.mnemosyne;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.mnemo.pietro.mnemosyne.fragments.CatalogueListFragment;
+
 import model.dictionary.catalogue.CatalogueList;
 
 
-public class MnemoCentral extends ActionBarActivity {
+public class MnemoCentral extends ActionBarActivity implements CatalogueListFragment.OnFragmentInteractionListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mnemo_central);
-    }
+        /*FragmentManager fm = this.getFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.add(R.id.cat_main_list, CatalogueFragment.newInstance("tst", "ahhhh"));
+        ft.commit();*/
 
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -58,4 +66,8 @@ public class MnemoCentral extends ActionBarActivity {
         CatalogueList.removeCatalogue(this);
     }
 
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
 }

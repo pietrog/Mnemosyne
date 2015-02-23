@@ -1,4 +1,4 @@
-package model.dictionary.dictionaryObjects;
+package model.dictionary.dictionary;
 
 /**
  * Created by pietro on 04/02/15.

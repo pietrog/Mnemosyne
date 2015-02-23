@@ -29,6 +29,15 @@ public class Catalogue {
         m_sDescription = desc;
     }
 
+
+    public String getName() {
+        return m_sName;
+    }
+    public String getDescription(){
+        return m_sDescription;
+    }
+
+
     public int storeCatalogue(){
 
         JSONObject catalogue ;

@@ -7,8 +7,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
-import model.dictionary.Dictionary;
-import model.dictionary.DictionaryHandle;
+import model.dictionary.dictionary.Dictionary;
+import model.dictionary.dictionary.DictionaryHandle;
 
 
 public class CreateDictionnaryActivity extends ActionBarActivity {
@@ -17,6 +17,7 @@ public class CreateDictionnaryActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_dictionnary);
+
 
 
     }

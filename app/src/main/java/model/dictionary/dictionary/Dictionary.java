@@ -1,8 +1,8 @@
-package model.dictionary;
+package model.dictionary.dictionary;
 
 import java.util.HashMap;
 
-import model.dictionary.dictionaryObjects.DictionaryObject;
+import model.dictionary.dictionary.DictionaryObject;
 
 /**
  * Created by pietro on 30/01/15.

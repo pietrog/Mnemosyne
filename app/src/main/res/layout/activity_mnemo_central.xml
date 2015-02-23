@@ -22,4 +22,11 @@
         android:text="@string/action_cat_remove"
         android:onClick="removeCatalogue"/>
 
+    <fragment
+        android:id="@+id/cat_list_fgt"
+        android:name="com.mnemo.pietro.mnemosyne.fragments.CatalogueListFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
 </LinearLayout>

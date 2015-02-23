@@ -1,6 +1,4 @@
-package model.dictionary;
-
-import model.dictionary.dictionaryObjects.DictionaryObject;
+package model.dictionary.dictionary;
 
 
 /**

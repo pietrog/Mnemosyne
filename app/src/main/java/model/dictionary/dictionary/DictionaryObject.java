@@ -1,4 +1,4 @@
-package model.dictionary.dictionaryObjects;
+package model.dictionary.dictionary;
 
 import java.util.Date;
 
