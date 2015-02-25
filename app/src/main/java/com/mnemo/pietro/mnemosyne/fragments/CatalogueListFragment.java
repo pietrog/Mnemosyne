@@ -18,6 +18,7 @@ import com.mnemo.pietro.mnemosyne.R;
 import com.mnemo.pietro.mnemosyne.adaptater.CatalogueAdaptater;
 
 import model.dictionary.catalogue.CatalogueList;
+import model.dictionary.catalogue.CatalogueListSingleton;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -36,8 +37,7 @@ public class CatalogueListFragment extends Fragment implements AbsListView.OnIte
     private OnFragmentInteractionListener mListener;
 
     private AbsListView mListView;
-    private BaseAdapter mAdaptater;
-    private CatalogueList mCatalogueList;
+    private CatalogueAdaptater mAdaptater;
 
 
     /**
@@ -73,9 +73,7 @@ public class CatalogueListFragment extends Fragment implements AbsListView.OnIte
         // Inflate the layout for this fragment
         View viewRoot = inflater.inflate(R.layout.fragment_catalogue_list, container, false);
         mListView = (ListView) viewRoot.findViewById(R.id.catListView);
-        mCatalogueList = CatalogueList.LoadCatalogueListFromJSONFile(viewRoot.getContext());
-        mAdaptater = new CatalogueAdaptater(getActivity(), mCatalogueList);
-        //mAdaptater = new ArrayAdapter<String>(getActivity(), R.layout.catalogue_list_item, mCatalogueList.getArrayOfString());
+        mAdaptater = new CatalogueAdaptater(getActivity());
         mListView.setAdapter(mAdaptater);
         return viewRoot;
     }
@@ -84,7 +82,7 @@ public class CatalogueListFragment extends Fragment implements AbsListView.OnIte
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
         if (mListener != null){
-            mListener.onCatalogueSelected(mCatalogueList.getElement(position).getName());
+            mListener.onCatalogueSelected(CatalogueListSingleton.getInstance(getActivity()).getElement(position).getName());
         }
     }
 
@@ -104,6 +102,12 @@ public class CatalogueListFragment extends Fragment implements AbsListView.OnIte
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mAdaptater.notifyDataSetChanged();
     }
 
     /**

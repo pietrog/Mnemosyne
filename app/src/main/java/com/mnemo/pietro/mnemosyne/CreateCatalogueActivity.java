@@ -9,6 +9,7 @@ import android.widget.EditText;
 
 import model.dictionary.catalogue.Catalogue;
 import model.dictionary.catalogue.CatalogueList;
+import model.dictionary.catalogue.CatalogueListSingleton;
 import model.dictionary.tools.Logger;
 import model.dictionary.tools.ViewTools;
 
@@ -51,10 +52,11 @@ public class CreateCatalogueActivity extends ActionBarActivity {
     public void save_catalogue(View view){
         String catalogue_name = ViewTools.getStringFromEditableText(findViewById(R.id.name_cat));
         String catalogue_desc = ViewTools.getStringFromEditableText(findViewById(R.id.desc_cat));
-        CatalogueList whole = CatalogueList.LoadCatalogueListFromJSONFile(getApplicationContext());
+        CatalogueList whole = CatalogueListSingleton.getInstance(this);
         Catalogue newCat = Catalogue.createCatalogue(catalogue_name, catalogue_desc, this);
         whole.addCatalogue(newCat);
         whole.writeToJSONFile();
+
         finish();
     }
 

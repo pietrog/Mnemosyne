@@ -12,6 +12,7 @@ import com.mnemo.pietro.mnemosyne.R;
 
 import model.dictionary.catalogue.Catalogue;
 import model.dictionary.catalogue.CatalogueList;
+import model.dictionary.catalogue.CatalogueListSingleton;
 
 /**
  * Created by pietro on 12/02/15.
@@ -22,8 +23,8 @@ public class CatalogueAdaptater extends BaseAdapter {
     private LayoutInflater m_oLayoutInflater;
 
 
-    public CatalogueAdaptater(Context context, CatalogueList cl){
-        m_oCatalogues = cl;
+    public CatalogueAdaptater(Context context){
+        m_oCatalogues = CatalogueListSingleton.getInstance(context);
         m_oLayoutInflater = LayoutInflater.from(context);
     }
 
@@ -62,6 +63,8 @@ public class CatalogueAdaptater extends BaseAdapter {
         return convertView;
 
     }
+
+
 
     private void bindView(ViewHolder holder, int position){
         Catalogue current = (Catalogue) getItem(position);
