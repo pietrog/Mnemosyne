@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.mnemo.pietro.mnemosyne.CreateCatalogueActivity">
 
 
@@ -24,5 +25,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:hint="@string/action_save"/>
+
+    <Button
+        android:text="FINIISH"
+        android:onClick="comeBack"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </LinearLayout>

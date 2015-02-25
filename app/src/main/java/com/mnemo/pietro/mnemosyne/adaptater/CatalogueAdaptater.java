@@ -52,19 +52,21 @@ public class CatalogueAdaptater extends BaseAdapter {
             holder = new ViewHolder();
             holder.name = (TextView) convertView.findViewById(R.id.name);
             holder.description = (TextView) convertView.findViewById(R.id.description);
+            convertView.setTag(holder);
         }
         else
-            holder = (ViewHolder)convertView.getTag();
+            holder = (ViewHolder) convertView.getTag();
 
-        Catalogue current = (Catalogue) getItem(position);
-
-        if (current != null) {
-            holder.name.setText(current.getName());
-            holder.description.setText(current.getDescription());
-        }
+        bindView(holder, position);
 
         return convertView;
 
+    }
+
+    private void bindView(ViewHolder holder, int position){
+        Catalogue current = (Catalogue) getItem(position);
+        holder.name.setText(current.getName());
+        holder.description.setText(current.getDescription());
     }
 
 

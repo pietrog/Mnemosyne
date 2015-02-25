@@ -9,6 +9,7 @@ import android.widget.EditText;
 
 import model.dictionary.catalogue.Catalogue;
 import model.dictionary.catalogue.CatalogueList;
+import model.dictionary.tools.Logger;
 import model.dictionary.tools.ViewTools;
 
 
@@ -54,5 +55,12 @@ public class CreateCatalogueActivity extends ActionBarActivity {
         Catalogue newCat = Catalogue.createCatalogue(catalogue_name, catalogue_desc, this);
         whole.addCatalogue(newCat);
         whole.writeToJSONFile();
+        finish();
+    }
+
+
+    public void comeBack(View view){
+        Logger.i("CreateCatalogueActivity::comeBack"," finish activity");
+        finish();
     }
 }

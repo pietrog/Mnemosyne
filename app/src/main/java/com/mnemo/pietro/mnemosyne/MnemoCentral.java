@@ -13,20 +13,23 @@ import android.view.View;
 import com.mnemo.pietro.mnemosyne.fragments.CatalogueListFragment;
 
 import model.dictionary.catalogue.CatalogueList;
+import model.dictionary.tools.Logger;
 
 
 public class MnemoCentral extends ActionBarActivity implements CatalogueListFragment.OnFragmentInteractionListener{
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mnemo_central);
 
-        //create the catalogue list fragment
-        CatalogueListFragment fgt = CatalogueListFragment.newInstance("BASECATALOGUE");
-        getFragmentManager().beginTransaction().add(R.id.cat_list_fgt, fgt).commit();
-
-
+        if (savedInstanceState == null){
+            //create the catalogue list fragment
+            CatalogueListFragment fgt = CatalogueListFragment.newInstance("BASECATALOGUE");
+            getFragmentManager().beginTransaction().add(R.id.cat_list_fgt, fgt).addToBackStack("myfrag").commit();
+        }
     }
 
     @Override
@@ -34,6 +37,32 @@ public class MnemoCentral extends ActionBarActivity implements CatalogueListFrag
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_mnemo_central, menu);
         return true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Logger.i("MnemoCentral::onResume","");
+        //getFragmentManager().beginTransaction()
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Logger.i("MnemoCentral::onPause", "");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Logger.i("MnemoCentral::onStop", "");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Logger.i("MnemoCentral::onDestroy", "");
     }
 
     @Override
@@ -58,11 +87,6 @@ public class MnemoCentral extends ActionBarActivity implements CatalogueListFrag
         startActivity(intent);
     }
 
-    public void checkCatalogueList(View view){
-        Intent intent;
-        intent = new Intent(this, ListOfCatalogueActivity.class);
-        startActivity(intent);
-    }
 
     @Override
     public void onCatalogueSelected(String name) {
