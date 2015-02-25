@@ -1,13 +1,21 @@
 package model.dictionary.tools;
 
+import android.content.Context;
+import android.util.Log;
+
+import com.mnemo.pietro.mnemosyne.BuildConfig;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+
+import model.dictionary.Global;
 
 
 /**
@@ -15,6 +23,12 @@ import java.io.IOException;
  */
 public class GeneralTools {
 
+    /**
+     * Return a JSON object built from a json file
+     * @param dir directory where the json file is
+     * @param fileName name of the source json file
+     * @return json object resulting of the fileName json file
+     */
     public static JSONObject getJSONObjectFromFile(String dir, String fileName){
         File file = new File(dir, fileName);
         if (!file.exists())
@@ -33,12 +47,44 @@ public class GeneralTools {
             res = new JSONObject(str_build.toString());
         }
         catch (FileNotFoundException e){
+            Logger.d("GeneralTools::getJSONObjectFromFile", "File not found ", e);
         }
         catch(IOException e){
+            Logger.d("GeneralTools::getJSONObjectFromFile", "IOException thrown ", e);
         }
         catch(JSONException e){
+            Logger.d("GeneralTools::getJSONObjectFromFile", "JSON exception thrown ", e);
         }
 
         return res;
+    }
+
+    /**
+     * Write the json object into a file named filename
+     * @param toWrite json object to write
+     * @param filename name of the output file
+     * @param context context for the path
+     * @return SUCCESS ot FAILURE
+     */
+    public static int writeFile (JSONObject toWrite, String filename, Context context){
+
+        try {
+            FileOutputStream stream = context.openFileOutput(filename, context.MODE_PRIVATE);
+
+            stream.write(toWrite.toString().getBytes());
+            stream.flush();
+            stream.close();
+            Logger.v("GeneralTools::writeFile","File " + filename + " written");
+        }
+        catch (FileNotFoundException e){
+            Logger.d("GeneralTools::writeFile", "File not found during writing", e);
+            return Global.FAILURE;
+        }
+        catch (IOException e){
+            Logger.d("GeneralTools::writeFile", "IOException thrown", e);
+            return Global.FAILURE;
+        }
+
+        return Global.SUCCESS;
     }
 }

@@ -16,15 +16,8 @@
         android:text="@string/action_list_of_catalogue"
         android:onClick="checkCatalogueList"/>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/action_cat_remove"
-        android:onClick="removeCatalogue"/>
-
-    <fragment
+    <FrameLayout
         android:id="@+id/cat_list_fgt"
-        android:name="com.mnemo.pietro.mnemosyne.fragments.CatalogueListFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         />

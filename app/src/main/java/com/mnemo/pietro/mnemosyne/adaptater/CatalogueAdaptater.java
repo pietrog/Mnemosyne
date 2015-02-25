@@ -22,8 +22,8 @@ public class CatalogueAdaptater extends BaseAdapter {
     private LayoutInflater m_oLayoutInflater;
 
 
-    public CatalogueAdaptater(Context context){
-        m_oCatalogues = CatalogueList.LoadCatalogueListFromJSONFile(context);
+    public CatalogueAdaptater(Context context, CatalogueList cl){
+        m_oCatalogues = cl;
         m_oLayoutInflater = LayoutInflater.from(context);
     }
 
@@ -57,8 +57,11 @@ public class CatalogueAdaptater extends BaseAdapter {
             holder = (ViewHolder)convertView.getTag();
 
         Catalogue current = (Catalogue) getItem(position);
-        holder.name.setText(current.getName());
-        holder.description.setText(current.getDescription());
+
+        if (current != null) {
+            holder.name.setText(current.getName());
+            holder.description.setText(current.getDescription());
+        }
 
         return convertView;
 

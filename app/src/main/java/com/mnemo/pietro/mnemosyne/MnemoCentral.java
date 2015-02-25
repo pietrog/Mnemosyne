@@ -1,5 +1,7 @@
 package com.mnemo.pietro.mnemosyne;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
@@ -19,10 +21,10 @@ public class MnemoCentral extends ActionBarActivity implements CatalogueListFrag
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mnemo_central);
-        /*FragmentManager fm = this.getFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction();
-        ft.add(R.id.cat_main_list, CatalogueFragment.newInstance("tst", "ahhhh"));
-        ft.commit();*/
+
+        //create the catalogue list fragment
+        CatalogueListFragment fgt = CatalogueListFragment.newInstance("BASECATALOGUE");
+        getFragmentManager().beginTransaction().add(R.id.cat_list_fgt, fgt).commit();
 
 
     }
@@ -62,12 +64,9 @@ public class MnemoCentral extends ActionBarActivity implements CatalogueListFrag
         startActivity(intent);
     }
 
-    public void removeCatalogue(View view){
-        CatalogueList.removeCatalogue(this);
-    }
-
     @Override
-    public void onFragmentInteraction(Uri uri) {
-
+    public void onCatalogueSelected(String name) {
+        String currentName = name;
+        currentName += " : coucou";
     }
 }

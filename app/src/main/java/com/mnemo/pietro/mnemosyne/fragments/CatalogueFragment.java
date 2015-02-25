@@ -1,93 +1,74 @@
 package com.mnemo.pietro.mnemosyne.fragments;
 
 import android.app.Activity;
-import android.app.ListFragment;
+import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 
 import com.mnemo.pietro.mnemosyne.R;
-import com.mnemo.pietro.mnemosyne.adaptater.CatalogueAdaptater;
-
-import model.dictionary.catalogue.CatalogueList;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link CatalogueListFragment.OnFragmentInteractionListener} interface
+ * {@link CatalogueFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link CatalogueListFragment#newInstance} factory method to
+ * Use the {@link CatalogueFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CatalogueListFragment extends Fragment implements AbsListView.OnItemClickListener{
-
+public class CatalogueFragment extends Fragment {
+    // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String CATALOGUE_NAME = "catalogue_name";
-    private String m_sCatalogueName;
+
+    // TODO: Rename and change types of parameters
+    private String mCatalogue_name;
+
 
     private OnFragmentInteractionListener mListener;
-
-    private AbsListView mListView;
-    private BaseAdapter mAdaptater;
-    private CatalogueList mCatalogueList;
-
 
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param catalogueName name of the catalogue
-     * @return A new instance of fragment CatalogueListFragment.
+     * @param catalogueName Parameter 1.
+     * @return A new instance of fragment CatalogueFragment.
      */
-    public static CatalogueListFragment newInstance(String catalogueName) {
-        CatalogueListFragment fragment = new CatalogueListFragment();
+    public static CatalogueFragment newInstance(String catalogueName) {
+        CatalogueFragment fragment = new CatalogueFragment();
         Bundle args = new Bundle();
         args.putString(CATALOGUE_NAME, catalogueName);
         fragment.setArguments(args);
         return fragment;
     }
 
-    public CatalogueListFragment() {
+    public CatalogueFragment() {
         // Required empty public constructor
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null)
-            m_sCatalogueName = getArguments().getString(CATALOGUE_NAME);
-
+        if (getArguments() != null) {
+            mCatalogue_name = getArguments().getString(CATALOGUE_NAME);
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View viewRoot = inflater.inflate(R.layout.fragment_catalogue_list, container, false);
-        mListView = (ListView) viewRoot.findViewById(R.id.catListView);
-        mCatalogueList = CatalogueList.LoadCatalogueListFromJSONFile(viewRoot.getContext());
-        mAdaptater = new CatalogueAdaptater(getActivity(), mCatalogueList);
-        //mAdaptater = new ArrayAdapter<String>(getActivity(), R.layout.catalogue_list_item, mCatalogueList.getArrayOfString());
-        mListView.setAdapter(mAdaptater);
-        return viewRoot;
+        return inflater.inflate(R.layout.fragment_catalogue, container, false);
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-        if (mListener != null){
-            mListener.onCatalogueSelected(mCatalogueList.getElement(position).getName());
+    // TODO: Rename method, update argument and hook method into UI event
+    public void onButtonPressed(Uri uri) {
+        if (mListener != null) {
+            mListener.onFragmentInteraction(uri);
         }
     }
-
 
     @Override
     public void onAttach(Activity activity) {
@@ -117,7 +98,8 @@ public class CatalogueListFragment extends Fragment implements AbsListView.OnIte
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        public void onCatalogueSelected(String catalogueName);
+        // TODO: Update argument type and name
+        public void onFragmentInteraction(Uri uri);
     }
 
 }

@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
+import model.dictionary.catalogue.Catalogue;
 import model.dictionary.catalogue.CatalogueList;
 import model.dictionary.tools.ViewTools;
 
@@ -50,7 +51,8 @@ public class CreateCatalogueActivity extends ActionBarActivity {
         String catalogue_name = ViewTools.getStringFromEditableText(findViewById(R.id.name_cat));
         String catalogue_desc = ViewTools.getStringFromEditableText(findViewById(R.id.desc_cat));
         CatalogueList whole = CatalogueList.LoadCatalogueListFromJSONFile(getApplicationContext());
-        whole.addCatalogue(catalogue_name, catalogue_desc);
-        CatalogueList.StoreCatalogueListToJSONFile(getApplicationContext(), whole);
+        Catalogue newCat = Catalogue.createCatalogue(catalogue_name, catalogue_desc, this);
+        whole.addCatalogue(newCat);
+        whole.writeToJSONFile();
     }
 }

@@ -18,41 +18,56 @@ import java.util.Set;
 import java.util.Vector;
 
 import model.dictionary.Global;
+import model.dictionary.JSONPersist;
 import model.dictionary.tools.GeneralTools;
 
 /**
  * Created by pietro on 09/02/15.
  */
-public class CatalogueList {
 
-    private Hashtable<String, String> m_mListOfCatalogue = new Hashtable<>();
+public class CatalogueList implements JSONPersist{
 
-    private CatalogueList(){}
+    // JSON KEYS
+    public static final String JSON_NAME = "name";
+    public static final String JSON_DESC = "description";
+    public static final String JSON_LISTCATALOGUE = "all";
+
+    private Vector<Catalogue> m_mListOfCatalogue = new Vector<>();
+
+    private final Context mContext;
+
+    private CatalogueList(Context context){
+        mContext = context;
+    }
 
 
     /**
      * Add a new catalogue, if it does not exist (name is unique)
-     * @param name name of the catalogue (name is unique
-     * @param desc description of the catalogue
+     * @param catalogue
      * @return 0 if successful, -1 if name already exists
      */
-    public int addCatalogue(String name, String desc){
-        if (m_mListOfCatalogue.containsKey(name))
-            return -1;
-        m_mListOfCatalogue.put(name, desc);
+    public int addCatalogue(Catalogue catalogue){
 
-        return 0;
+        if (m_mListOfCatalogue.contains(catalogue))
+            return Global.ALREADY_EXISTS;
+        m_mListOfCatalogue.add(catalogue);
+
+        return Global.SUCCESS;
     }
 
     public int getCount(){
-        return m_mListOfCatalogue.keySet().size();
+
+        return m_mListOfCatalogue.size();
     }
 
     public Catalogue getElement(int position){
-        Set<String> set = m_mListOfCatalogue.keySet();
-        if (set.size() <= position)
+        if (position > m_mListOfCatalogue.size()-1)
             return null;
-        return (Catalogue)set.toArray()[position];
+        Catalogue res = Catalogue.LoadCatalogue(m_mListOfCatalogue.get(position).getName(), mContext);
+        if (res == null)
+            return null;
+
+        return res;
     }
 
     /**
@@ -62,7 +77,7 @@ public class CatalogueList {
      */
     public static CatalogueList LoadCatalogueListFromJSONFile(Context context){
         String path = context.getFilesDir().getPath();
-        CatalogueList res = new CatalogueList();
+        CatalogueList res = new CatalogueList(context);
 
         try {
             JSONObject obj = GeneralTools.getJSONObjectFromFile(path, Global.catalogueList_JSON_filename);
@@ -73,83 +88,63 @@ public class CatalogueList {
                 return res;
             }
             else{
-                listOfCatalogue = obj.getJSONArray("all");
+                listOfCatalogue = obj.getJSONArray(JSON_LISTCATALOGUE);
             }
-
-
 
 
             for (int i = 0; i < listOfCatalogue.length(); i++){
                 JSONObject current = listOfCatalogue.getJSONObject(i);
-                String name = current.getString("name");
-                String description = current.getString("description");
-                res.addCatalogue(name, description);
+                String name = current.getString(JSON_NAME);
+                Catalogue toAdd = Catalogue.LoadCatalogue(name, context);
+                res.addCatalogue(toAdd);
             }
         }
         catch(JSONException e){
         }
 
-
         return res;
     }
 
 
-    /**
-     * Store the catalogue list in a JSON file
-     * @param context context of the app
-     * @param list The catalogue list to persist
-     * @return 0 if successful
-     */
-    public static int StoreCatalogueListToJSONFile(Context context, CatalogueList list){
+    // IMPLEMENTATION of JSONPersist
 
+    @Override
+    public JSONObject toJSONObject() {
+        JSONObject json = null;
         try {
-
-            String path = context.getFilesDir().getPath();
-            JSONObject toWrite = new JSONObject();
+            json = new JSONObject();
             JSONArray _list = new JSONArray();
-            for (String currName : list.m_mListOfCatalogue.keySet()) {
+            for (Catalogue el : m_mListOfCatalogue) {
                 JSONObject currObj = new JSONObject();
-                currObj.put("name", currName);
-                currObj.put("description", list.m_mListOfCatalogue.get(currName));
+                currObj.put(JSON_NAME, el.getName());
+                currObj.put(JSON_DESC, el.getDescription());
                 _list.put(currObj);
             }
-            toWrite.put("all", _list);
-
-            FileOutputStream stream = context.openFileOutput(Global.catalogueList_JSON_filename, Context.MODE_PRIVATE);
-
-            stream.write(toWrite.toString().getBytes());
-            stream.flush();
-            stream.close();
-
-        }
-        catch (JSONException e){
-
-        }
-        catch (FileNotFoundException e){
-
-        }
-        catch (IOException e){
-
+            json.put(JSON_LISTCATALOGUE, _list);
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
 
-        return 0;
+        return json;
+    }
+
+    @Override
+    public int writeToJSONFile() {
+        JSONObject json = toJSONObject();
+        if (json == null)
+            return Global.FAILURE;
+
+        return GeneralTools.writeFile(json, Global.catalogueList_JSON_filename, mContext);
     }
 
     public List<String> getArrayOfString(){
 
         List<String> res = new ArrayList<>();
 
-        for(String key: m_mListOfCatalogue.keySet()){
-            res.add(key + " => " + m_mListOfCatalogue.get(key));
+        for(Catalogue key: m_mListOfCatalogue){
+            res.add(key.getName() + " => " + key.getDescription());
         }
         return res;
-    }
-
-    public static boolean removeCatalogue(Context context){
-        String path = context.getFilesDir().toString();
-        File file = new File(path, Global.catalogueList_JSON_filename);
-        boolean isDeleted = file.delete();
-        return isDeleted;
     }
 
 }
