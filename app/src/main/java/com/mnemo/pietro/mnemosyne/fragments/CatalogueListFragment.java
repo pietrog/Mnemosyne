@@ -17,6 +17,7 @@ import android.widget.ListView;
 import com.mnemo.pietro.mnemosyne.R;
 import com.mnemo.pietro.mnemosyne.adaptater.CatalogueAdaptater;
 
+import model.dictionary.catalogue.Catalogue;
 import model.dictionary.catalogue.CatalogueList;
 import model.dictionary.catalogue.CatalogueListSingleton;
 
@@ -28,7 +29,7 @@ import model.dictionary.catalogue.CatalogueListSingleton;
  * Use the {@link CatalogueListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CatalogueListFragment extends Fragment implements AbsListView.OnItemClickListener{
+public class CatalogueListFragment extends ListFragment{
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String CATALOGUE_NAME = "catalogue_name";
@@ -68,24 +69,18 @@ public class CatalogueListFragment extends Fragment implements AbsListView.OnIte
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View viewRoot = inflater.inflate(R.layout.fragment_catalogue_list, container, false);
-        mListView = (ListView) viewRoot.findViewById(R.id.catListView);
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         mAdaptater = new CatalogueAdaptater(getActivity());
-        mListView.setAdapter(mAdaptater);
-        return viewRoot;
+        setListAdapter(mAdaptater);
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-        if (mListener != null){
-            mListener.onCatalogueSelected(CatalogueListSingleton.getInstance(getActivity()).getElement(position).getName());
-        }
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        super.onListItemClick(l, v, position, id);
+        if (mListener != null)
+            mListener.onCatalogueSelected(((Catalogue)mAdaptater.getItem(position)).getName());
     }
-
 
     @Override
     public void onAttach(Activity activity) {
