@@ -17,14 +17,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".CreateDictionnaryActivity"
-            android:label="@string/title_activity_create_dictionnary"
-            android:parentActivityName=".MnemoCentral" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.mnemo.pietro.mnemosyne.MnemoCentral" />
-        </activity>
-        <activity
             android:name=".CreateCatalogueActivity"
             android:label="@string/title_activity_create_catalogue"
             android:parentActivityName=".MnemoCentral" >

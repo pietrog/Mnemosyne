@@ -15,4 +15,22 @@ public class Global {
     public static final int NOT_FOUND = 5;
 
 
+
+    public static String getLogFromResult(int result){
+        switch (result){
+            case Global.SUCCESS:
+                return " SUCCESS ";
+            case Global.NOT_FOUND:
+                return " NOT FOUND ";
+            case Global.ALREADY_EXISTS:
+                return " ALREADY EXISTS ";
+            case Global.FAILURE:
+                return " FAILURE ";
+            default:
+                return " CODE(" + result+") unknown ";
+
+        }
+    }
+
+
 }

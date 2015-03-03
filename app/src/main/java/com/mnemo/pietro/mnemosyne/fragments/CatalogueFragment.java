@@ -1,14 +1,18 @@
 package com.mnemo.pietro.mnemosyne.fragments;
 
 import android.app.Activity;
-import android.net.Uri;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.mnemo.pietro.mnemosyne.R;
+
+import model.dictionary.tools.Logger;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -18,12 +22,13 @@ import com.mnemo.pietro.mnemosyne.R;
  * Use the {@link CatalogueFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CatalogueFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
+public class CatalogueFragment extends Fragment implements View.OnClickListener{
+
+    private static final String CREATE_DICT_FGT_TAG = "CREATE_DICT_FGT_TAG";
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String CATALOGUE_NAME = "catalogue_name";
 
-    // TODO: Rename and change types of parameters
+
     private String mCatalogue_name;
 
 
@@ -60,13 +65,16 @@ public class CatalogueFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_catalogue, container, false);
+        View view = inflater.inflate(R.layout.fragment_catalogue, container, false);
+        Button b = (Button)view.findViewById(R.id.idcreatedict);
+        b.setOnClickListener(this);
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
+    public void onButtonPressed(String name) {
         if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+            mListener.onDictionarySelected(name);
         }
     }
 
@@ -87,6 +95,8 @@ public class CatalogueFragment extends Fragment {
         mListener = null;
     }
 
+
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -98,8 +108,15 @@ public class CatalogueFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
+
+        public void onDictionarySelected(String name);
     }
 
+    @Override
+    public void onClick(View v) {
+        CreateDictionaryFragment fragment = CreateDictionaryFragment.newInstance(mCatalogue_name);
+        int ret = getActivity().getFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.cat_list_fgt, fragment).commit();
+        int dv = ret + 1;
+        return;
+    }
 }

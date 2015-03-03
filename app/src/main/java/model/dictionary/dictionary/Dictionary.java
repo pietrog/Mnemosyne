@@ -10,21 +10,21 @@ import model.dictionary.dictionary.DictionaryObject;
 public class Dictionary {
 
     //description of the dictionary
-    private String m_sTitle;
-    private String m_sDescription;
+    private String mName;
+    private String mDescription;
 
     //structure that store the elements
-    private HashMap<String, DictionaryObject> m_hmContent = new HashMap<>(0);
+    private HashMap<String, DictionaryObject> m_hmContent = new HashMap<String, DictionaryObject>(0);
 
 
     /**
      * Constructor
-     * @param title NMame of the dictionary
+     * @param name NMame of the dictionary
      * @param description Description of the disctionary
      */
-    public Dictionary(String title, String description){
-        m_sDescription = description;
-        m_sTitle = title;
+    public Dictionary(String name, String description){
+        mDescription = description;
+        mName = name;
     }
 
     /**
@@ -73,4 +73,11 @@ public class Dictionary {
     }
 
 
+    public String getName() {
+        return mName;
+    }
+
+    public String getDescription() {
+        return mDescription;
+    }
 }

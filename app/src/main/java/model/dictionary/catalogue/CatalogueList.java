@@ -23,6 +23,9 @@ import model.dictionary.tools.GeneralTools;
 
 /**
  * Created by pietro on 09/02/15.
+ *
+ * The entry point. Contains the list of all catalogues. Catalogues contain list of dictionaries, that contain list of couples
+ * It loads a json file containing a list of catalogues
  */
 
 public class CatalogueList implements JSONPersist{
@@ -32,7 +35,7 @@ public class CatalogueList implements JSONPersist{
     public static final String JSON_DESC = "description";
     public static final String JSON_LISTCATALOGUE = "all";
 
-    private Vector<Catalogue> m_mListOfCatalogue = new Vector<>();
+    private Vector<Catalogue> m_mListOfCatalogue = new Vector<Catalogue>();
 
     private final Context mContext;
 
@@ -55,11 +58,20 @@ public class CatalogueList implements JSONPersist{
         return Global.SUCCESS;
     }
 
+    /**
+     * Get the number of catalogue
+     * @return
+     */
     public int getCount(){
 
         return m_mListOfCatalogue.size();
     }
 
+    /**
+     * Get the catalogue for a given position in the vector (mainly for the list)
+     * @param position position in the vector
+     * @return corresponding catalogue if exists, null otherwise
+     */
     public Catalogue getElement(int position){
         if (position > m_mListOfCatalogue.size()-1)
             return null;
@@ -68,6 +80,19 @@ public class CatalogueList implements JSONPersist{
             return null;
 
         return res;
+    }
+
+    /**
+     * Get the catalogue given a name
+     * @param catName name of the catalogue needed
+     * @return catalogue object
+     */
+    public Catalogue getCatalogue(String catName){
+        for(Catalogue curr: m_mListOfCatalogue){
+            if (curr.getName().compareTo(catName) == 0)
+                return curr;
+        }
+        return null;
     }
 
     /**
@@ -139,7 +164,7 @@ public class CatalogueList implements JSONPersist{
 
     public List<String> getArrayOfString(){
 
-        List<String> res = new ArrayList<>();
+        List<String> res = new ArrayList<String>();
 
         for(Catalogue key: m_mListOfCatalogue){
             res.add(key.getName() + " => " + key.getDescription());

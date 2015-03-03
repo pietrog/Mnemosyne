@@ -10,28 +10,24 @@ import java.util.Vector;
 
 import model.dictionary.Global;
 import model.dictionary.JSONPersist;
+import model.dictionary.dictionary.Dictionary;
 import model.dictionary.tools.GeneralTools;
 import model.dictionary.tools.Logger;
 
 /**
  * Created by pietro on 06/02/15.
+ *
+ * Describe a catalogue, a list of dictionaries. Can be an history book, or english book, with
+ * classic dictionary, grammatical definitions, ...
  */
 public class Catalogue implements JSONPersist{
 
     public static final String JSON_LISTDICT = "dictionaries";
 
-    private class LightDictionary{
-        public LightDictionary(String _name, String _desc){
-            name = _name;
-            desc = _desc;
-        }
-        public String name;
-        public String desc;
-    }
 
     private String m_sName;
     private String m_sDescription;
-    private Vector<LightDictionary> m_mDictionaries = new Vector<>();
+    private Vector<Dictionary> m_mDictionaries = new Vector<Dictionary>();
     private boolean mHasBeenModifier = false;
     private final Context mContext;
 
@@ -64,13 +60,16 @@ public class Catalogue implements JSONPersist{
      */
     public int addDictionary(String name, String description, boolean checkExists){
 
-        LightDictionary dict = new LightDictionary(name, description);
+        Dictionary dict = new Dictionary(name, description);
 
         if (checkExists && m_mDictionaries.contains(dict))
             return Global.ALREADY_EXISTS;
 
         m_mDictionaries.add(dict);
         mHasBeenModifier = true;
+
+        //@TODO remove this
+        writeToJSONFile();
 
         return Global.SUCCESS;
     }
@@ -140,10 +139,10 @@ public class Catalogue implements JSONPersist{
             catalogue.put(CatalogueList.JSON_DESC, m_sDescription);
 
             JSONArray listDict = new JSONArray();
-            for(LightDictionary current: m_mDictionaries){
+            for(Dictionary current: m_mDictionaries){
                 JSONObject json = new JSONObject();
-                json.put(CatalogueList.JSON_NAME, current.name);
-                json.put(CatalogueList.JSON_DESC, current.desc);
+                json.put(CatalogueList.JSON_NAME, current.getName());
+                json.put(CatalogueList.JSON_DESC, current.getDescription());
                 listDict.put(json);
             }
             catalogue.put(JSON_LISTDICT, listDict);
