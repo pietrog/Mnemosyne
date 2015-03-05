@@ -42,14 +42,24 @@ public class Catalogue implements JSONPersist{
         mContext = context;
     }
 
-
     public String getName() {
         return m_sName;
     }
+
     public String getDescription(){
         return m_sDescription;
     }
 
+    public int getCount(){
+        return m_mDictionaries.size();
+    }
+
+    public Dictionary getElement(int position){
+        if (m_mDictionaries.size() <= position)
+            return null;
+
+        return m_mDictionaries.get(position);
+    }
 
     /**
      * Add a dictionary in the vector. We can add it without checking if it exists (when we load from JSON file)

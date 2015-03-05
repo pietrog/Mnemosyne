@@ -4,22 +4,13 @@ import android.app.Activity;
 import android.app.ListFragment;
 import android.os.Bundle;
 import android.app.Fragment;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 
-import com.mnemo.pietro.mnemosyne.R;
-import com.mnemo.pietro.mnemosyne.adaptater.CatalogueAdaptater;
+import com.mnemo.pietro.mnemosyne.adaptater.CatalogueListAdaptater;
 
 import model.dictionary.catalogue.Catalogue;
-import model.dictionary.catalogue.CatalogueList;
-import model.dictionary.catalogue.CatalogueListSingleton;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -38,7 +29,7 @@ public class CatalogueListFragment extends ListFragment{
     private OnFragmentInteractionListener mListener;
 
     private AbsListView mListView;
-    private CatalogueAdaptater mAdaptater;
+    private CatalogueListAdaptater mAdaptater;
 
 
     /**
@@ -71,7 +62,7 @@ public class CatalogueListFragment extends ListFragment{
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mAdaptater = new CatalogueAdaptater(getActivity());
+        mAdaptater = new CatalogueListAdaptater(getActivity());
         setListAdapter(mAdaptater);
     }
 

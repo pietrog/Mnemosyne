@@ -13,6 +13,7 @@ public class Global {
     public static final int FAILURE = 1;
     public static final int ALREADY_EXISTS = 4;
     public static final int NOT_FOUND = 5;
+    public static final int OUT_OF_BOUNDS = 6;
 
 
 
@@ -26,6 +27,8 @@ public class Global {
                 return " ALREADY EXISTS ";
             case Global.FAILURE:
                 return " FAILURE ";
+            case Global.OUT_OF_BOUNDS:
+                return "OUT OF BOUNDS";
             default:
                 return " CODE(" + result+") unknown ";
 

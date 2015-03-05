@@ -17,13 +17,13 @@ import model.dictionary.catalogue.CatalogueListSingleton;
 /**
  * Created by pietro on 12/02/15.
  */
-public class CatalogueAdaptater extends BaseAdapter {
+public class CatalogueListAdaptater extends BaseAdapter {
 
     private CatalogueList m_oCatalogues;
     private LayoutInflater m_oLayoutInflater;
 
 
-    public CatalogueAdaptater(Context context){
+    public CatalogueListAdaptater(Context context){
         m_oCatalogues = CatalogueListSingleton.getInstance(context);
         m_oLayoutInflater = LayoutInflater.from(context);
     }
