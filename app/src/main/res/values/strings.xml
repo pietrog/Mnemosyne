@@ -21,8 +21,7 @@
     <string name="title_activity_list_of_catalogue">ListOfCatalogueActivity</string>
     <string name="action_list_of_catalogue">Consulter les catalogues</string>
 
-<!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
+    <!-- Dictionary -->
+    <string name="action_dict_create">Creer un dictionnaire</string>
 
 </resources>

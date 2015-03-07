@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 
 import com.mnemo.pietro.mnemosyne.fragments.CatalogueFragment;
 import com.mnemo.pietro.mnemosyne.fragments.CatalogueListFragment;
@@ -19,7 +20,9 @@ import model.dictionary.catalogue.CatalogueList;
 import model.dictionary.tools.Logger;
 
 
-public class MnemoCentral extends ActionBarActivity implements CatalogueListFragment.OnFragmentInteractionListener, CatalogueFragment.OnFragmentInteractionListener{
+public class MnemoCentral
+        extends ActionBarActivity
+        implements CatalogueListFragment.OnCatalogueListFragmentInteractionListener, CatalogueFragment.OnCatalogueFragmentInteractionListener{
 
     private static final String FGT_BASE_TAG = "BASECATALOGUE";
     private static final String FGT_CURRENT_CATALOGUE_TAG = "CURRENTCATALOGUE";
@@ -112,13 +115,35 @@ public class MnemoCentral extends ActionBarActivity implements CatalogueListFrag
             super.onBackPressed();
     }
 
+
+
+
+
+
+    /**
+     * OnCatalogueListFragmentInteractionListener implementation
+     */
     @Override
-    public void onCatalogueSelected(String name) {
-        String currentName = name;
-        currentName += " : coucou";
+     public void onCatalogueSelected(String name) {
+        //hide the new catalogue button
+        Button addCatalogueButton = (Button) findViewById(R.id.addCatalogueButton);
+        addCatalogueButton.setVisibility(View.INVISIBLE);
+
         CatalogueFragment cfgt = CatalogueFragment.newInstance(name);
         fgtMng.beginTransaction().replace(R.id.cat_list_fgt, cfgt).addToBackStack(FGT_CURRENT_CATALOGUE_TAG).commit();
     }
+
+    @Override
+    public void catalogueListFragmentVisible() {
+        Button addCatalogueButton = (Button) findViewById(R.id.addCatalogueButton);
+        addCatalogueButton.setVisibility(View.VISIBLE);
+    }
+
+
+
+    /**
+     * OnCatalogueFragmentInteractionListener implementation
+     */
 
     @Override
     public void onDictionarySelected(String name) {
@@ -126,4 +151,9 @@ public class MnemoCentral extends ActionBarActivity implements CatalogueListFrag
     }
 
 
+    @Override
+    public void catalogueFragmentVisible() {
+        Button addCatalogueButton = (Button) findViewById(R.id.addCatalogueButton);
+        addCatalogueButton.setVisibility(View.VISIBLE);
+    }
 }
