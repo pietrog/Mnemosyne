@@ -1,17 +1,21 @@
 package com.mnemo.pietro.mnemosyne.fragments;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ListView;
 
 import com.mnemo.pietro.mnemosyne.R;
+import com.mnemo.pietro.mnemosyne.adaptater.DictionaryListAdapter;
 
-import model.dictionary.tools.Logger;
+import model.dictionary.catalogue.CatalogueListSingleton;
+import model.dictionary.dictionary.Dictionary;
+import model.dictionary.dictionary.sql.DictionaryContract;
 
 
 /**
@@ -22,7 +26,7 @@ import model.dictionary.tools.Logger;
  * Use the {@link CatalogueFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CatalogueFragment extends Fragment implements View.OnClickListener{
+public class CatalogueFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener{
 
     private static final String CREATE_DICT_FGT_TAG = "CREATE_DICT_FGT_TAG";
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -30,6 +34,7 @@ public class CatalogueFragment extends Fragment implements View.OnClickListener{
 
 
     private String mCatalogue_name;
+    private DictionaryListAdapter mDictionaryListAdapter;
 
 
     private OnFragmentInteractionListener mListener;
@@ -68,6 +73,12 @@ public class CatalogueFragment extends Fragment implements View.OnClickListener{
         View view = inflater.inflate(R.layout.fragment_catalogue, container, false);
         Button b = (Button)view.findViewById(R.id.idcreatedict);
         b.setOnClickListener(this);
+        mDictionaryListAdapter = new DictionaryListAdapter(CatalogueListSingleton.getInstance(getActivity().getApplicationContext()).getCatalogue(mCatalogue_name), getActivity().getApplicationContext());
+        ListView lv = (ListView) view.findViewById(R.id.dictList);
+        lv.setAdapter(mDictionaryListAdapter);
+        lv.setOnItemClickListener(this);
+
+
         return view;
     }
 
@@ -115,8 +126,14 @@ public class CatalogueFragment extends Fragment implements View.OnClickListener{
     @Override
     public void onClick(View v) {
         CreateDictionaryFragment fragment = CreateDictionaryFragment.newInstance(mCatalogue_name);
-        int ret = getActivity().getFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.cat_list_fgt, fragment).commit();
-        int dv = ret + 1;
+        getActivity().getFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.cat_list_fgt, fragment).commit();
         return;
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        String dictionaryName = ((Dictionary)mDictionaryListAdapter.getItem(position)).getName();
+        DictionaryFragment fragment = DictionaryFragment.newInstance(mCatalogue_name, dictionaryName);
+        getActivity().getFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.cat_list_fgt, fragment).commit();
     }
 }

@@ -3,22 +3,18 @@ package com.mnemo.pietro.mnemosyne.fragments;
 import android.app.Activity;
 import android.app.ListFragment;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.ListView;
 
-import com.mnemo.pietro.mnemosyne.adaptater.CatalogueListAdaptater;
+import com.mnemo.pietro.mnemosyne.adaptater.CatalogueListAdapter;
 
 import model.dictionary.catalogue.Catalogue;
 
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link CatalogueListFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link CatalogueListFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * Fragment containing the list of all catalogues.
+ * You can click on a catalogue to open the catalogue fragment and obtain the list of dictionaries
+ *
  */
 public class CatalogueListFragment extends ListFragment{
 
@@ -29,7 +25,7 @@ public class CatalogueListFragment extends ListFragment{
     private OnFragmentInteractionListener mListener;
 
     private AbsListView mListView;
-    private CatalogueListAdaptater mAdaptater;
+    private CatalogueListAdapter mAdaptater;
 
 
     /**
@@ -62,7 +58,7 @@ public class CatalogueListFragment extends ListFragment{
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mAdaptater = new CatalogueListAdaptater(getActivity());
+        mAdaptater = new CatalogueListAdapter(getActivity());
         setListAdapter(mAdaptater);
     }
 
