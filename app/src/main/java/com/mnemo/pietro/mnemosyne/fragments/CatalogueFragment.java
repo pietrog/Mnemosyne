@@ -106,7 +106,11 @@ public class CatalogueFragment extends Fragment implements View.OnClickListener,
         mListener = null;
     }
 
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        mListener.catalogueFragmentVisible();
+    }
 
     public interface OnCatalogueFragmentInteractionListener {
 

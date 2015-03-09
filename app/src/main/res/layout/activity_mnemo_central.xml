@@ -12,20 +12,22 @@
 
         <Button
             android:id="@+id/addCatalogueButton"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="@string/action_cat_create"
             android:onClick="createCatalogue"/>
 
         <Button
             android:id="@+id/addDictionaryButton"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:text="@string/action_dict_create"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
         <Button
             android:id="@+id/addWordButton"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:text="@string/action_word_create"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 

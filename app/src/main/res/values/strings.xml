@@ -6,13 +6,6 @@
     <string name="action_settings">Settings</string>
     <string name="action_save">Enregistrer</string>
 
-    <!-- Dictionary create -->
-    <string name="action_dict_create">Creer dictionnaire</string>
-    <string name="hint_dict_fillIn_name">Nom du dictionnaire</string>
-    <string name="hint_dict_fillIn_desc">Description du dictionnaire</string>
-    <string name="title_activity_create_catalogue">CreateCatalogueActivity</string>
-
-
     <!-- Catalogue -->
     <string name="action_cat_create">Creer un catalogue</string>
     <string name="action_cat_remove">Supprimer le catalogue</string>
@@ -23,5 +16,11 @@
 
     <!-- Dictionary -->
     <string name="action_dict_create">Creer un dictionnaire</string>
+    <string name="hint_dict_fillIn_name">Nom du dictionnaire</string>
+    <string name="hint_dict_fillIn_desc">Description du dictionnaire</string>
+    <string name="title_activity_create_catalogue">CreateCatalogueActivity</string>
+
+    <!-- Word -->
+    <string name="action_word_create">Creer un mot</string>
 
 </resources>

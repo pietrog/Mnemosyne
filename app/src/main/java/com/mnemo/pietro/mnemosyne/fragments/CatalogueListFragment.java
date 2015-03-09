@@ -5,10 +5,8 @@ import android.app.ListFragment;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AbsListView;
-import android.widget.Button;
 import android.widget.ListView;
 
-import com.mnemo.pietro.mnemosyne.R;
 import com.mnemo.pietro.mnemosyne.adaptater.CatalogueListAdapter;
 
 import model.dictionary.catalogue.Catalogue;

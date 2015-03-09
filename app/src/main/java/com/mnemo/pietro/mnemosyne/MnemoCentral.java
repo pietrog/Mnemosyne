@@ -1,10 +1,8 @@
 package com.mnemo.pietro.mnemosyne;
 
-import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
-import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -14,18 +12,25 @@ import android.widget.Button;
 
 import com.mnemo.pietro.mnemosyne.fragments.CatalogueFragment;
 import com.mnemo.pietro.mnemosyne.fragments.CatalogueListFragment;
-import com.mnemo.pietro.mnemosyne.fragments.CreateDictionaryFragment;
+import com.mnemo.pietro.mnemosyne.fragments.DictionaryFragment;
 
-import model.dictionary.catalogue.CatalogueList;
+import model.dictionary.dictionary.Dictionary;
 import model.dictionary.tools.Logger;
 
 
 public class MnemoCentral
         extends ActionBarActivity
-        implements CatalogueListFragment.OnCatalogueListFragmentInteractionListener, CatalogueFragment.OnCatalogueFragmentInteractionListener{
+        implements CatalogueListFragment.OnCatalogueListFragmentInteractionListener, CatalogueFragment.OnCatalogueFragmentInteractionListener, DictionaryFragment.OnDictionaryFragmentInteractionListener{
 
     private static final String FGT_BASE_TAG = "BASECATALOGUE";
     private static final String FGT_CURRENT_CATALOGUE_TAG = "CURRENTCATALOGUE";
+
+    /**
+     * TOOLBAR
+     */
+    private Button addCatalogueButton;
+    private Button addDictionaryButton;
+    private Button addWordButton;
 
     private FragmentManager fgtMng;
 
@@ -44,6 +49,11 @@ public class MnemoCentral
             CatalogueListFragment fgt = CatalogueListFragment.newInstance(FGT_BASE_TAG);
             fgtMng.beginTransaction().add(R.id.cat_list_fgt, fgt).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
         }
+
+
+        addCatalogueButton = (Button) findViewById(R.id.addCatalogueButton);
+        addDictionaryButton = (Button) findViewById(R.id.addDictionaryButton);
+        addWordButton = (Button) findViewById(R.id.addWordButton);
     }
 
     @Override
@@ -135,8 +145,10 @@ public class MnemoCentral
 
     @Override
     public void catalogueListFragmentVisible() {
-        Button addCatalogueButton = (Button) findViewById(R.id.addCatalogueButton);
+
         addCatalogueButton.setVisibility(View.VISIBLE);
+        addDictionaryButton.setVisibility(View.INVISIBLE);
+        addWordButton.setVisibility(View.INVISIBLE);
     }
 
 
@@ -153,7 +165,18 @@ public class MnemoCentral
 
     @Override
     public void catalogueFragmentVisible() {
-        Button addCatalogueButton = (Button) findViewById(R.id.addCatalogueButton);
-        addCatalogueButton.setVisibility(View.VISIBLE);
+        addCatalogueButton.setVisibility(View.INVISIBLE);
+        addDictionaryButton.setVisibility(View.VISIBLE);
+        addWordButton.setVisibility(View.INVISIBLE);
+    }
+
+    /**
+     * OnDictionaryFragmentInteractionListener implementation
+     */
+    @Override
+    public void dictionaryFragmentVisible() {
+        addCatalogueButton.setVisibility(View.INVISIBLE);
+        addDictionaryButton.setVisibility(View.INVISIBLE);
+        addWordButton.setVisibility(View.VISIBLE);
     }
 }
