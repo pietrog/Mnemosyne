@@ -30,7 +30,7 @@ public class DictionaryFragment extends ListFragment {
     private String mDictionaryName;
     private String mParentCatalogueName;
 
-    private OnFragmentInteractionListener mListener;
+    private OnDictionaryFragmentInteractionListener mListener;
 
     /**
      * Use this factory method to create a new instance of
@@ -75,20 +75,26 @@ public class DictionaryFragment extends ListFragment {
     }
 
     //@Override
-    /*public void onAttach(Activity activity) {
+    public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            mListener = (OnFragmentInteractionListener) activity;
+            mListener = (OnDictionaryFragmentInteractionListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement OnDictionaryFragmentInteractionListener");
         }
-    }*/
+    }
 
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mListener.dictionaryFragmentVisible();
     }
 
     /**
@@ -101,8 +107,8 @@ public class DictionaryFragment extends ListFragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnFragmentInteractionListener {
-        public void onFragmentInteraction(Uri uri);
+    public interface OnDictionaryFragmentInteractionListener {
+        public void dictionaryFragmentVisible();
     }
 
 }

@@ -37,7 +37,7 @@ public class CatalogueFragment extends Fragment implements View.OnClickListener,
     private DictionaryListAdapter mDictionaryListAdapter;
 
 
-    private OnFragmentInteractionListener mListener;
+    private OnCatalogueFragmentInteractionListener mListener;
 
     /**
      * Use this factory method to create a new instance of
@@ -93,7 +93,7 @@ public class CatalogueFragment extends Fragment implements View.OnClickListener,
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            mListener = (OnFragmentInteractionListener) activity;
+            mListener = (OnCatalogueFragmentInteractionListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -106,21 +106,16 @@ public class CatalogueFragment extends Fragment implements View.OnClickListener,
         mListener = null;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        mListener.catalogueFragmentVisible();
+    }
 
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
+    public interface OnCatalogueFragmentInteractionListener {
 
         public void onDictionarySelected(String name);
+        public void catalogueFragmentVisible();
     }
 
     @Override
