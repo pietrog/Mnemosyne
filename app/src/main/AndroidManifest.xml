@@ -16,22 +16,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".CreateCatalogueActivity"
-            android:label="@string/title_activity_create_catalogue"
-            android:parentActivityName=".MnemoCentral" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.mnemo.pietro.mnemosyne.MnemoCentral" />
-        </activity>
-        <activity
-            android:name=".ListOfCatalogueActivity"
-            android:label="@string/title_activity_list_of_catalogue"
-            android:parentActivityName=".MnemoCentral" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.mnemo.pietro.mnemosyne.MnemoCentral" />
-        </activity>
     </application>
 
 </manifest>

@@ -1,4 +1,4 @@
-package com.mnemo.pietro.mnemosyne.fragments;
+package com.mnemo.pietro.mnemosyne.fragments.catalogue;
 
 import android.app.Activity;
 import android.app.ListFragment;
@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.AbsListView;
 import android.widget.ListView;
 
+import com.mnemo.pietro.mnemosyne.MnemoCentral;
+import com.mnemo.pietro.mnemosyne.R;
 import com.mnemo.pietro.mnemosyne.adaptater.CatalogueListAdapter;
 
 import model.dictionary.catalogue.Catalogue;
@@ -64,9 +66,8 @@ public class CatalogueListFragment extends ListFragment{
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        super.onListItemClick(l, v, position, id);
-        if (mListener != null)
-            mListener.onCatalogueSelected(((Catalogue)mAdaptater.getItem(position)).getName());
+        CatalogueFragment cfgt = CatalogueFragment.newInstance(((Catalogue)mAdaptater.getItem(position)).getName());
+        getFragmentManager().beginTransaction().replace(R.id.cat_list_fgt, cfgt).addToBackStack(MnemoCentral.FGT_CATALOGUE_TAG).commit();
     }
 
     @Override
@@ -95,7 +96,6 @@ public class CatalogueListFragment extends ListFragment{
 
 
     public interface OnCatalogueListFragmentInteractionListener {
-        public void onCatalogueSelected(String catalogueName);
         public void catalogueListFragmentVisible();
     }
 

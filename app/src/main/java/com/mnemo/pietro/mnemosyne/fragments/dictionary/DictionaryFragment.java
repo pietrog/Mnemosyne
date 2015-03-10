@@ -1,16 +1,10 @@
-package com.mnemo.pietro.mnemosyne.fragments;
+package com.mnemo.pietro.mnemosyne.fragments.dictionary;
 
 import android.app.Activity;
 import android.app.ListFragment;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.mnemo.pietro.mnemosyne.R;
 import com.mnemo.pietro.mnemosyne.adaptater.DictionaryAdapter;
@@ -70,7 +64,7 @@ public class DictionaryFragment extends ListFragment {
         SQLiteDatabase db = dbhelper.getReadableDatabase();
         String query = "SELECT * FROM " + DictionaryContract.Dictionary.TABLE_NAME + " WHERE " + DictionaryContract.Dictionary.COLUMN_NAME_ID + " LIKE '" + mParentCatalogueName + "_" + mDictionaryName + "%'";
         Cursor cursor = db.rawQuery(query, null);
-        DictionaryAdapter adapter = new DictionaryAdapter(getActivity().getApplicationContext(), R.layout.fragment_dictionary, cursor, 0);
+        DictionaryAdapter adapter = new DictionaryAdapter(getActivity().getApplicationContext(), R.layout.dictionary_fragment, cursor, 0);
         setListAdapter(adapter);
     }
 
@@ -94,7 +88,7 @@ public class DictionaryFragment extends ListFragment {
     @Override
     public void onResume() {
         super.onResume();
-        mListener.dictionaryFragmentVisible();
+        mListener.dictionaryFragmentVisible(mDictionaryName);
     }
 
     /**
@@ -108,7 +102,7 @@ public class DictionaryFragment extends ListFragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnDictionaryFragmentInteractionListener {
-        public void dictionaryFragmentVisible();
+        public void dictionaryFragmentVisible(String dictionaryName);
     }
 
 }

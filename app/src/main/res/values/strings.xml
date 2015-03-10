@@ -5,6 +5,9 @@
     <string name="app_name">Mnemosyne</string>
     <string name="action_settings">Settings</string>
     <string name="action_save">Enregistrer</string>
+    <string name="hint_catalogue_list">Liste des catalogues</string>
+    <string name="hint_catalogue">Catalogue</string>
+    <string name="hint_dictionary">Dictionnaire</string>
 
     <!-- Catalogue -->
     <string name="action_cat_create">Creer un catalogue</string>
@@ -21,6 +24,10 @@
     <string name="title_activity_create_catalogue">CreateCatalogueActivity</string>
 
     <!-- Word -->
+    <string name="hint_word_create">Ajout d\'un mot</string>
     <string name="action_word_create">Creer un mot</string>
+    <string name="hint_word_fillIn_word">Mot a definir</string>
+    <string name="hint_word_fillIn_definition">Definition</string>
+
 
 </resources>

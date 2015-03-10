@@ -1,5 +1,7 @@
 package model.dictionary.dictionary;
 
+import android.content.ContentValues;
+
 import java.util.Date;
 
 
@@ -55,5 +57,7 @@ public abstract class DictionaryObject {
      * @return enum Type of the dictionary object
      */
     public abstract DictionaryObjectType getType();
+
+    public abstract ContentValues toContentValues();
 
 }

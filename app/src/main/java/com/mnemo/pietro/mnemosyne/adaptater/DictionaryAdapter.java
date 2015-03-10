@@ -2,7 +2,9 @@ package com.mnemo.pietro.mnemosyne.adaptater;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ResourceCursorAdapter;
 import android.widget.TextView;
 
@@ -18,6 +20,13 @@ public class DictionaryAdapter extends ResourceCursorAdapter {
 
     public DictionaryAdapter (Context context, int layout, Cursor cursor, int flags){
         super(context, layout, cursor, flags);
+    }
+
+    @Override
+    public View newView(Context context, Cursor cursor, ViewGroup parent) {
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View rootview = inflater.inflate(R.layout.dictionary_view, parent, false);
+        return rootview;
     }
 
     @Override

@@ -2,37 +2,42 @@ package com.mnemo.pietro.mnemosyne;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 
-import com.mnemo.pietro.mnemosyne.fragments.CatalogueFragment;
-import com.mnemo.pietro.mnemosyne.fragments.CatalogueListFragment;
-import com.mnemo.pietro.mnemosyne.fragments.DictionaryFragment;
 
-import model.dictionary.dictionary.Dictionary;
+import com.mnemo.pietro.mnemosyne.fragments.catalogue.CatalogueFragment;
+import com.mnemo.pietro.mnemosyne.fragments.catalogue.CatalogueListFragment;
+import com.mnemo.pietro.mnemosyne.fragments.catalogue.CreateCatalogueFragment;
+import com.mnemo.pietro.mnemosyne.fragments.dictionary.CreateDictionaryFragment;
+import com.mnemo.pietro.mnemosyne.fragments.word.CreateWordFragment;
+import com.mnemo.pietro.mnemosyne.fragments.dictionary.DictionaryFragment;
+
 import model.dictionary.tools.Logger;
 
 
 public class MnemoCentral
         extends ActionBarActivity
-        implements CatalogueListFragment.OnCatalogueListFragmentInteractionListener, CatalogueFragment.OnCatalogueFragmentInteractionListener, DictionaryFragment.OnDictionaryFragmentInteractionListener{
+        implements CatalogueListFragment.OnCatalogueListFragmentInteractionListener,
+        CatalogueFragment.OnCatalogueFragmentInteractionListener,
+        DictionaryFragment.OnDictionaryFragmentInteractionListener,
+        CreateWordFragment.OnWordFragmentInteractionListener,
+        View.OnClickListener{
 
-    private static final String FGT_BASE_TAG = "BASECATALOGUE";
-    private static final String FGT_CURRENT_CATALOGUE_TAG = "CURRENTCATALOGUE";
+    public static final String FGT_CATALOGUE_LIST_TAG = "CATALOGUELIST";
+    public static final String FGT_CATALOGUE_TAG = "CATALOGUE";
+    public static final String FGT_DICTIONARY_TAG = "DICTIONARY";
 
-    /**
-     * TOOLBAR
-     */
-    private Button addCatalogueButton;
-    private Button addDictionaryButton;
-    private Button addWordButton;
 
-    private FragmentManager fgtMng;
+    private Toolbar mToolbar;
+    private String mCurrentCatalogueName;
+    private String mCurrentDictionaryName;
+    private Button mToolbar_add_button;
+    private FragmentManager mFgtMng;
 
     /*******************/
     /// ACTIVITY LIFECYLE
@@ -42,33 +47,25 @@ public class MnemoCentral
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mnemo_central);
-
-        if (savedInstanceState == null){
-            fgtMng = getFragmentManager();
-            //create the catalogue list fragment
-            CatalogueListFragment fgt = CatalogueListFragment.newInstance(FGT_BASE_TAG);
-            fgtMng.beginTransaction().add(R.id.cat_list_fgt, fgt).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
+        mToolbar = (Toolbar) findViewById(R.id.global_toolbar);
+        if (mToolbar != null) {
+            setSupportActionBar(mToolbar);
+            mToolbar_add_button = (Button)mToolbar.findViewById(R.id.add_button);
         }
 
+        if (savedInstanceState == null){
+            mFgtMng = getFragmentManager();
+            //create the catalogue list fragment
+            CatalogueListFragment fgt = CatalogueListFragment.newInstance(FGT_CATALOGUE_LIST_TAG);
+            mFgtMng.beginTransaction().add(R.id.cat_list_fgt, fgt).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
+        }
 
-        addCatalogueButton = (Button) findViewById(R.id.addCatalogueButton);
-        addDictionaryButton = (Button) findViewById(R.id.addDictionaryButton);
-        addWordButton = (Button) findViewById(R.id.addWordButton);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_mnemo_central, menu);
-        return true;
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         Logger.i("MnemoCentral::onResume","");
-        //getFragmentManager().beginTransaction()
-
     }
 
     @Override
@@ -90,36 +87,52 @@ public class MnemoCentral
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+    public void onClick(View v) {
+        Object tag = v.getTag();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if (tag == null) {
+            Logger.d("MnemoCentral::onClick", " No tag found");
+            return;
         }
 
-        return super.onOptionsItemSelected(item);
+        switch (tag.toString()){
+            case FGT_CATALOGUE_LIST_TAG:
+                onClickCatalogueListFgt(v);
+                break;
+            case FGT_CATALOGUE_TAG:
+                onCLickCatalogueFgt(v);
+                break;
+            case FGT_DICTIONARY_TAG:
+                onClickDictionaryFgt(v);
+                break;
+        }
     }
 
     /*******************/
     /// ONCLICK METHODS
     /*******************/
 
-    public void createCatalogue(View view) {
-        Intent intent;
+    private void onClickCatalogueListFgt(View v){
+        //launch fragment createCatalogue
+        CreateCatalogueFragment fragment = CreateCatalogueFragment.newInstance();
+        getFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.cat_list_fgt, fragment).commit();
+    }
 
-        intent = new Intent(this, CreateCatalogueActivity.class);
-        startActivity(intent);
+    private void onCLickCatalogueFgt(View view){
+        CreateDictionaryFragment fragment = CreateDictionaryFragment.newInstance(mCurrentCatalogueName);
+        getFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.cat_list_fgt, fragment).commit();
+    }
+
+    private void onClickDictionaryFgt(View view){
+        CreateWordFragment fragment = CreateWordFragment.newInstance(mCurrentDictionaryName, mCurrentCatalogueName);
+        getFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.cat_list_fgt, fragment).commit();
     }
 
     @Override
     public void onBackPressed() {
 
-        if (fgtMng.getBackStackEntryCount() > 0){
-            fgtMng.popBackStack();
+        if (mFgtMng.getBackStackEntryCount() > 0){
+            mFgtMng.popBackStack();
         }
         else
             super.onBackPressed();
@@ -133,22 +146,13 @@ public class MnemoCentral
     /**
      * OnCatalogueListFragmentInteractionListener implementation
      */
-    @Override
-     public void onCatalogueSelected(String name) {
-        //hide the new catalogue button
-        Button addCatalogueButton = (Button) findViewById(R.id.addCatalogueButton);
-        addCatalogueButton.setVisibility(View.INVISIBLE);
-
-        CatalogueFragment cfgt = CatalogueFragment.newInstance(name);
-        fgtMng.beginTransaction().replace(R.id.cat_list_fgt, cfgt).addToBackStack(FGT_CURRENT_CATALOGUE_TAG).commit();
-    }
 
     @Override
     public void catalogueListFragmentVisible() {
-
-        addCatalogueButton.setVisibility(View.VISIBLE);
-        addDictionaryButton.setVisibility(View.INVISIBLE);
-        addWordButton.setVisibility(View.INVISIBLE);
+        mToolbar.setSubtitle(R.string.hint_catalogue_list);
+        mToolbar_add_button.setText(R.string.action_cat_create);
+        mToolbar_add_button.setOnClickListener(this);
+        mToolbar_add_button.setTag(FGT_CATALOGUE_LIST_TAG);
     }
 
 
@@ -157,26 +161,35 @@ public class MnemoCentral
      * OnCatalogueFragmentInteractionListener implementation
      */
 
-    @Override
-    public void onDictionarySelected(String name) {
-        Logger.i("MnemoCentral::onDictionarySelected", " dictionary selected");
-    }
-
 
     @Override
-    public void catalogueFragmentVisible() {
-        addCatalogueButton.setVisibility(View.INVISIBLE);
-        addDictionaryButton.setVisibility(View.VISIBLE);
-        addWordButton.setVisibility(View.INVISIBLE);
+    public void catalogueFragmentVisible(String catalogueName) {
+        mToolbar.setSubtitle(R.string.hint_catalogue);
+        mToolbar_add_button.setText(R.string.action_dict_create);
+        mToolbar_add_button.setOnClickListener(this);
+        mToolbar_add_button.setTag(FGT_CATALOGUE_TAG);
+        mCurrentCatalogueName = catalogueName;
     }
 
     /**
      * OnDictionaryFragmentInteractionListener implementation
      */
     @Override
-    public void dictionaryFragmentVisible() {
-        addCatalogueButton.setVisibility(View.INVISIBLE);
-        addDictionaryButton.setVisibility(View.INVISIBLE);
-        addWordButton.setVisibility(View.VISIBLE);
+    public void dictionaryFragmentVisible(String dictionaryName) {
+        mToolbar.setSubtitle(R.string.hint_dictionary);
+        mToolbar_add_button.setText(R.string.action_word_create);
+        mToolbar_add_button.setOnClickListener(this);
+        mToolbar_add_button.setTag(FGT_DICTIONARY_TAG);
+        mCurrentDictionaryName = dictionaryName;
+    }
+
+    /**
+     *
+     * @param dictionaryName
+     * @param catalogueName
+     */
+    @Override
+    public void createWordFragmentVisible(String dictionaryName, String catalogueName) {
+
     }
 }

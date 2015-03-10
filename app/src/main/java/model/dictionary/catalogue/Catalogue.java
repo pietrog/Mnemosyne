@@ -61,6 +61,15 @@ public class Catalogue implements JSONPersist{
         return m_mDictionaries.get(position);
     }
 
+    public Dictionary getDictionary(String name){
+        for (Dictionary current : m_mDictionaries){
+            if (current.getName() == name)
+                return current;
+        }
+
+        return null;
+    }
+
     /**
      * Add a dictionary in the vector. We can add it without checking if it exists (when we load from JSON file)
      * @param name dictionary name
@@ -70,7 +79,7 @@ public class Catalogue implements JSONPersist{
      */
     public int addDictionary(String name, String description, boolean checkExists){
 
-        Dictionary dict = new Dictionary(name, description);
+        Dictionary dict = new Dictionary(name, description, m_sName, null );
 
         if (checkExists && m_mDictionaries.contains(dict))
             return Global.ALREADY_EXISTS;

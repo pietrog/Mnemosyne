@@ -1,4 +1,4 @@
-package com.mnemo.pietro.mnemosyne.fragments;
+package com.mnemo.pietro.mnemosyne.fragments.dictionary;
 
 
 import android.os.Bundle;
@@ -7,15 +7,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ListView;
 
 import com.mnemo.pietro.mnemosyne.R;
 
 import model.dictionary.Global;
 import model.dictionary.catalogue.Catalogue;
-import model.dictionary.catalogue.CatalogueList;
 import model.dictionary.catalogue.CatalogueListSingleton;
-import model.dictionary.dictionary.Dictionary;
 import model.dictionary.tools.Logger;
 import model.dictionary.tools.ViewTools;
 
@@ -64,7 +61,7 @@ public class CreateDictionaryFragment extends Fragment implements View.OnClickLi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_create_dictionary, container, false);
+        rootView = inflater.inflate(R.layout.dictionary_create_fragment, container, false);
         Button saveDict = (Button)rootView.findViewById(R.id.btn_save);
         saveDict.setOnClickListener(this);
         return rootView;
@@ -88,6 +85,8 @@ public class CreateDictionaryFragment extends Fragment implements View.OnClickLi
 
         int res = cat.addDictionary(dictName, dictDesc, true);
         Logger.d("CreateDictionaryFragment::saveDictionary", Global.getLogFromResult(res));
+
+        getFragmentManager().popBackStack();
 
     }
 
