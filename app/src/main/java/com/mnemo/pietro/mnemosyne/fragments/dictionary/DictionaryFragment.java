@@ -23,6 +23,7 @@ public class DictionaryFragment extends ListFragment {
 
     private String mDictionaryName;
     private String mParentCatalogueName;
+    private Cursor mRawCursor;
 
     private OnDictionaryFragmentInteractionListener mListener;
 
@@ -63,10 +64,9 @@ public class DictionaryFragment extends ListFragment {
         DictionaryDBHelper dbhelper = new DictionaryDBHelper(getActivity().getApplicationContext());
         SQLiteDatabase db = dbhelper.getReadableDatabase();
         String query = "SELECT * FROM " + DictionaryContract.Dictionary.TABLE_NAME + " WHERE " + DictionaryContract.Dictionary.COLUMN_NAME_ID + " LIKE '" + mParentCatalogueName + "_" + mDictionaryName + "%'";
-        Cursor cursor = db.rawQuery(query, null);
-        DictionaryAdapter adapter = new DictionaryAdapter(getActivity().getApplicationContext(), R.layout.dictionary_fragment, cursor, 0);
+        mRawCursor = db.rawQuery(query, null);
+        DictionaryAdapter adapter = new DictionaryAdapter(getActivity().getApplicationContext(), R.layout.dictionary_fragment, mRawCursor, 0);
         setListAdapter(adapter);
-        cursor.close();
     }
 
     //@Override
@@ -90,6 +90,15 @@ public class DictionaryFragment extends ListFragment {
     public void onResume() {
         super.onResume();
         mListener.dictionaryFragmentVisible(mDictionaryName);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        //close the cursor before leaving
+        if (mRawCursor != null && ! mRawCursor.isClosed())
+            mRawCursor.close();
     }
 
     /**

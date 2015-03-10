@@ -37,7 +37,6 @@ public class MnemoCentral
     private String mCurrentCatalogueName;
     private String mCurrentDictionaryName;
     private Button mToolbar_add_button;
-    private FragmentManager mFgtMng;
 
     /*******************/
     /// ACTIVITY LIFECYLE
@@ -47,6 +46,7 @@ public class MnemoCentral
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mnemo_central);
+
         mToolbar = (Toolbar) findViewById(R.id.global_toolbar);
         if (mToolbar != null) {
             setSupportActionBar(mToolbar);
@@ -54,10 +54,12 @@ public class MnemoCentral
         }
 
         if (savedInstanceState == null){
-            mFgtMng = getFragmentManager();
             //create the catalogue list fragment
             CatalogueListFragment fgt = CatalogueListFragment.newInstance();
-            mFgtMng.beginTransaction().add(R.id.cat_list_fgt, fgt).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
+            getFragmentManager().beginTransaction().add(R.id.cat_list_fgt, fgt).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
+        }
+        else{
+
         }
 
     }
@@ -131,8 +133,8 @@ public class MnemoCentral
     @Override
     public void onBackPressed() {
 
-        if (mFgtMng.getBackStackEntryCount() > 0){
-            mFgtMng.popBackStack();
+        if (getFragmentManager().getBackStackEntryCount() > 0){
+            getFragmentManager().popBackStack();
         }
         else
             super.onBackPressed();
