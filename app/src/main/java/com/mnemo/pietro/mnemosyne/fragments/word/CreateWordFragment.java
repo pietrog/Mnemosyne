@@ -98,6 +98,8 @@ public class CreateWordFragment extends Fragment implements View.OnClickListener
         Dictionary dict = CatalogueListSingleton.getInstance(getActivity().getApplicationContext()).getCatalogue(mCatalogueName).getDictionary(mDictionaryName);
         dict.setDBHelper(new DictionaryDBHelper(getActivity().getApplicationContext()));
         dict.addDictionaryObject(wordDef);
+
+        ViewTools.hideKeyboard(v, getActivity());
         getFragmentManager().popBackStack();
     }
 

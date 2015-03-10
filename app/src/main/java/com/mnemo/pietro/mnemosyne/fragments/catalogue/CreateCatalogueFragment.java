@@ -1,12 +1,14 @@
 package com.mnemo.pietro.mnemosyne.fragments.catalogue;
 
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 
 
@@ -64,6 +66,7 @@ public class CreateCatalogueFragment extends Fragment implements View.OnClickLis
         whole.addCatalogue(newCat);
         whole.writeToJSONFile();
 
+        ViewTools.hideKeyboard(v, getActivity());
         getFragmentManager().popBackStack();
     }
 }

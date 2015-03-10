@@ -1,6 +1,8 @@
 package model.dictionary.tools;
 
+import android.app.Activity;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import model.dictionary.Global;
@@ -18,6 +20,11 @@ public class ViewTools {
     public static String getStringFromEditableText(View view){
         EditText editableObject = (EditText) view;
         return editableObject == null ? null : editableObject.getText().toString();
+    }
+
+    public static void hideKeyboard(View view, Activity activity){
+        InputMethodManager imm = (InputMethodManager)activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
 }

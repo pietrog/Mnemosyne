@@ -95,6 +95,8 @@ public class CreateDictionaryFragment extends Fragment implements View.OnClickLi
         int res = cat.addDictionary(dictName, dictDesc, true);
         Logger.d("CreateDictionaryFragment::saveDictionary", Global.getLogFromResult(res));
 
+
+        ViewTools.hideKeyboard(rootView, getActivity());
         getFragmentManager().popBackStack();
 
     }
