@@ -66,6 +66,7 @@ public class DictionaryFragment extends ListFragment {
         Cursor cursor = db.rawQuery(query, null);
         DictionaryAdapter adapter = new DictionaryAdapter(getActivity().getApplicationContext(), R.layout.dictionary_fragment, cursor, 0);
         setListAdapter(adapter);
+        cursor.close();
     }
 
     //@Override

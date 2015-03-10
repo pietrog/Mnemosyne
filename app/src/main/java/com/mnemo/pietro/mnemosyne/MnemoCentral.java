@@ -56,7 +56,7 @@ public class MnemoCentral
         if (savedInstanceState == null){
             mFgtMng = getFragmentManager();
             //create the catalogue list fragment
-            CatalogueListFragment fgt = CatalogueListFragment.newInstance(FGT_CATALOGUE_LIST_TAG);
+            CatalogueListFragment fgt = CatalogueListFragment.newInstance();
             mFgtMng.beginTransaction().add(R.id.cat_list_fgt, fgt).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
         }
 
@@ -185,8 +185,8 @@ public class MnemoCentral
 
     /**
      *
-     * @param dictionaryName
-     * @param catalogueName
+     * @param dictionaryName gg
+     * @param catalogueName ggg
      */
     @Override
     public void createWordFragmentVisible(String dictionaryName, String catalogueName) {

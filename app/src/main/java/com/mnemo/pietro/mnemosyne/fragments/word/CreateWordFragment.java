@@ -10,7 +10,6 @@ import android.widget.Button;
 
 import com.mnemo.pietro.mnemosyne.R;
 
-import model.dictionary.catalogue.Catalogue;
 import model.dictionary.catalogue.CatalogueListSingleton;
 import model.dictionary.dictionary.Dictionary;
 import model.dictionary.dictionary.WordDefinitionObj;

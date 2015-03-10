@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.ListFragment;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AbsListView;
 import android.widget.ListView;
 
 import com.mnemo.pietro.mnemosyne.MnemoCentral;
@@ -21,12 +20,11 @@ import model.dictionary.catalogue.Catalogue;
 public class CatalogueListFragment extends ListFragment{
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String CATALOGUE_NAME = "catalogue_name";
-    private String m_sCatalogueName;
+    //private static final String CATALOGUE_NAME = "catalogue_name";
+    //private String m_sCatalogueName;
 
     private OnCatalogueListFragmentInteractionListener mListener;
 
-    private AbsListView mListView;
     private CatalogueListAdapter mAdaptater;
 
 
@@ -34,13 +32,13 @@ public class CatalogueListFragment extends ListFragment{
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param catalogueName name of the catalogue
+     //* @param catalogueName name of the catalogue
      * @return A new instance of fragment CatalogueListFragment.
      */
-    public static CatalogueListFragment newInstance(String catalogueName) {
+    public static CatalogueListFragment newInstance(/*String catalogueName*/) {
         CatalogueListFragment fragment = new CatalogueListFragment();
         Bundle args = new Bundle();
-        args.putString(CATALOGUE_NAME, catalogueName);
+        //args.putString(CATALOGUE_NAME, catalogueName);
         fragment.setArguments(args);
         return fragment;
     }
@@ -52,8 +50,8 @@ public class CatalogueListFragment extends ListFragment{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null)
-            m_sCatalogueName = getArguments().getString(CATALOGUE_NAME);
+        //if (getArguments() != null)
+            //m_sCatalogueName = getArguments().getString(CATALOGUE_NAME);
 
     }
 

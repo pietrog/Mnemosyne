@@ -22,7 +22,7 @@ import model.dictionary.tools.ViewTools;
  */
 public class CreateCatalogueFragment extends Fragment implements View.OnClickListener{
 
-    private static final String GLOBAL_TOOLBAR = "GLOBARTOOLBAR";
+    //private static final String GLOBAL_TOOLBAR = "GLOBARTOOLBAR";
 
 
     private View rootview;

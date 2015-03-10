@@ -11,21 +11,19 @@ import com.mnemo.pietro.mnemosyne.R;
 
 import model.dictionary.catalogue.Catalogue;
 import model.dictionary.dictionary.Dictionary;
-import model.dictionary.dictionary.sql.DictionaryContract;
 
 /**
  * Created by pietro on 03/03/15.
+ *
  */
 public class DictionaryListAdapter extends BaseAdapter {
 
     private Catalogue mCatalogue = null;
-    private Context mContext = null;
     private LayoutInflater mInflater = null;
 
     public DictionaryListAdapter(Catalogue catalogue, Context context){
         mCatalogue = catalogue;
-        mContext = context;
-        mInflater = LayoutInflater.from(mContext);
+        mInflater = LayoutInflater.from(context);
     }
 
     @Override

@@ -16,6 +16,8 @@ import model.dictionary.catalogue.CatalogueListSingleton;
 
 /**
  * Created by pietro on 12/02/15.
+ *
+ *
  */
 public class CatalogueListAdapter extends BaseAdapter {
 

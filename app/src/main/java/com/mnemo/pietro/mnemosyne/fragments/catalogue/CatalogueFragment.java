@@ -19,17 +19,9 @@ import model.dictionary.catalogue.CatalogueListSingleton;
 import model.dictionary.dictionary.Dictionary;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link CatalogueFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link CatalogueFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class CatalogueFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener{
 
-    private static final String CREATE_DICT_FGT_TAG = "CREATE_DICT_FGT_TAG";
+    //private static final String CREATE_DICT_FGT_TAG = "CREATE_DICT_FGT_TAG";
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String CATALOGUE_NAME = "catalogue_name";
 
@@ -112,7 +104,6 @@ public class CatalogueFragment extends Fragment implements View.OnClickListener,
     public void onClick(View v) {
         CreateDictionaryFragment fragment = CreateDictionaryFragment.newInstance(mCatalogue_name);
         getActivity().getFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.cat_list_fgt, fragment).commit();
-        return;
     }
 
     @Override

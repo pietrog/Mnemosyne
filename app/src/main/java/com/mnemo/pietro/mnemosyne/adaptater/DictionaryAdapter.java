@@ -15,6 +15,8 @@ import model.dictionary.dictionary.sql.DictionaryContract;
 
 /**
  * Created by pietro on 06/03/15.
+ *
+ *
  */
 public class DictionaryAdapter extends ResourceCursorAdapter {
 

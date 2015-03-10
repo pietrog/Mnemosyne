@@ -69,17 +69,17 @@ public class CreateDictionaryFragment extends Fragment implements View.OnClickLi
 
     @Override
     public void onClick(View v) {
-        saveDictionary(v);
+        saveDictionary();
     }
 
-    public void saveDictionary(View view){
+    public void saveDictionary(){
 
         String dictName = ViewTools.getStringFromEditableText(rootView.findViewById(R.id.dict_name));
         String dictDesc = ViewTools.getStringFromEditableText(rootView.findViewById(R.id.dict_desc));
 
         Catalogue cat = CatalogueListSingleton.getInstance(getActivity().getApplicationContext()).getCatalogue(mCatalogueName);
         if (cat == null){
-            Logger.i("CreateDictionaryFragment::saveDictionary"," catalogue " + cat+ " not found");
+            Logger.i("CreateDictionaryFragment::saveDictionary"," catalogue " + mCatalogueName+ " not found");
             return;
         }
 
