@@ -7,14 +7,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 
 import com.mnemo.pietro.mnemosyne.MnemoCentral;
 import com.mnemo.pietro.mnemosyne.R;
-import com.mnemo.pietro.mnemosyne.adaptater.DictionaryListAdapter;
+import com.mnemo.pietro.mnemosyne.adaptater.CatalogueAdapter;
 import com.mnemo.pietro.mnemosyne.fragments.dictionary.CreateDictionaryFragment;
 import com.mnemo.pietro.mnemosyne.fragments.dictionary.DictionaryFragment;
 
+import model.dictionary.catalogue.Catalogue;
+import model.dictionary.catalogue.CatalogueList;
 import model.dictionary.catalogue.CatalogueListSingleton;
 import model.dictionary.dictionary.Dictionary;
 
@@ -27,7 +30,7 @@ public class CatalogueFragment extends Fragment implements View.OnClickListener,
 
 
     private String mCatalogue_name;
-    private DictionaryListAdapter mDictionaryListAdapter;
+    private CatalogueAdapter mCatalogueAdapter;
 
 
     private OnCatalogueFragmentInteractionListener mListener;
@@ -64,11 +67,10 @@ public class CatalogueFragment extends Fragment implements View.OnClickListener,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.catalogue_fragment, container, false);
-        mDictionaryListAdapter = new DictionaryListAdapter(CatalogueListSingleton.getInstance(getActivity().getApplicationContext()).getCatalogue(mCatalogue_name), getActivity().getApplicationContext());
+        mCatalogueAdapter = new CatalogueAdapter(CatalogueListSingleton.getInstance(getActivity().getApplicationContext()).getCatalogue(mCatalogue_name), getActivity().getApplicationContext(), this);
         ListView lv = (ListView) view.findViewById(R.id.dictList);
-        lv.setAdapter(mDictionaryListAdapter);
+        lv.setAdapter(mCatalogueAdapter);
         lv.setOnItemClickListener(this);
-
         return view;
     }
 
@@ -102,14 +104,25 @@ public class CatalogueFragment extends Fragment implements View.OnClickListener,
 
     @Override
     public void onClick(View v) {
-        CreateDictionaryFragment fragment = CreateDictionaryFragment.newInstance(mCatalogue_name);
-        getActivity().getFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.cat_list_fgt, fragment).commit();
+        if (v instanceof Button){
+            String dictionaryName = (String) v.getTag();
+            CatalogueList singleton = CatalogueListSingleton.getInstance(getActivity().getApplicationContext());
+            Catalogue toRemove = singleton.getCatalogue(mCatalogue_name);
+            toRemove.removeDictionary(dictionaryName);
+            mCatalogueAdapter.notifyDataSetChanged();
+        }
+        else{
+            CreateDictionaryFragment fragment = CreateDictionaryFragment.newInstance(mCatalogue_name);
+            getActivity().getFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.cat_list_fgt, fragment).commit();
+        }
+
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        String dictionaryName = ((Dictionary)mDictionaryListAdapter.getItem(position)).getName();
+        String dictionaryName = ((Dictionary) mCatalogueAdapter.getItem(position)).getName();
         DictionaryFragment fragment = DictionaryFragment.newInstance(mCatalogue_name, dictionaryName);
         getActivity().getFragmentManager().beginTransaction().addToBackStack(MnemoCentral.FGT_DICTIONARY_TAG).replace(R.id.cat_list_fgt, fragment).commit();
     }
+
 }

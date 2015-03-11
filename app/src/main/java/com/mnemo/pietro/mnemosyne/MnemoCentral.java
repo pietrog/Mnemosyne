@@ -64,29 +64,6 @@ public class MnemoCentral
 
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Logger.i("MnemoCentral::onResume","");
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Logger.i("MnemoCentral::onPause", "");
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Logger.i("MnemoCentral::onStop", "");
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Logger.i("MnemoCentral::onDestroy", "");
-    }
 
     @Override
     public void onClick(View v) {
@@ -139,9 +116,6 @@ public class MnemoCentral
         else
             super.onBackPressed();
     }
-
-
-
 
 
 

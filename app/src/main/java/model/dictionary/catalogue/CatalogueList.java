@@ -59,6 +59,25 @@ public class CatalogueList implements JSONPersist{
     }
 
     /**
+     * Remove the cata
+     * @param catalogueName Name of the catalogue to remove
+     * @return
+     */
+    public int removeCatalogue(String catalogueName){
+
+        Catalogue toRemove = getCatalogue(catalogueName);
+        if (toRemove == null)
+            return Global.NOT_FOUND;
+
+        String fileName = Catalogue.getJSONNameFromCatalogueName(catalogueName);
+        toRemove.clear();
+        int res = m_mListOfCatalogue.remove(toRemove) ? Global.SUCCESS : Global.NOT_FOUND;
+        res = GeneralTools.deleteFile(fileName);
+
+        return res;
+    }
+
+    /**
      * Get the number of catalogue
      * @return
      */
@@ -94,6 +113,8 @@ public class CatalogueList implements JSONPersist{
         }
         return null;
     }
+
+
 
     /**
      * Load list of catalogue from the json file

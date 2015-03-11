@@ -11,7 +11,8 @@ public class DictionaryContract {
 
     public static abstract class Dictionary implements BaseColumns{
         public static final String TABLE_NAME = "dictionary";
-        public static final String COLUMN_NAME_ID = "entryid";
+        public static final String COLUMN_NAME_CATALOGUE_NAME = "catalogue";
+        public static final String COLUMN_NAME_DICTIONARY_NAME = "dictionary";
         public static final String COLUMN_NAME_WORD = "word";
         public static final String COLUMN_NAME_DEFINITION = "definition";
     }

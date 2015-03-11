@@ -22,9 +22,12 @@ public class DictionaryDBHelper extends SQLiteOpenHelper {
     private static final String SQL_CREATE_DICTIONARY_TABLE =
             "CREATE TABLE " + DictionaryContract.Dictionary.TABLE_NAME + " ( "
                     + DictionaryContract.Dictionary._ID + " INTEGER PRIMARY KEY" + COMMASEP
-                    + DictionaryContract.Dictionary.COLUMN_NAME_ID + TEXT_TYPE + COMMASEP
+                    + DictionaryContract.Dictionary.COLUMN_NAME_CATALOGUE_NAME + TEXT_TYPE + COMMASEP
+                    + DictionaryContract.Dictionary.COLUMN_NAME_DICTIONARY_NAME + TEXT_TYPE + COMMASEP
                     + DictionaryContract.Dictionary.COLUMN_NAME_WORD + TEXT_TYPE + COMMASEP
                     + DictionaryContract.Dictionary.COLUMN_NAME_DEFINITION + TEXT_TYPE + " )";
+
+    private static final String SQL_DROP_TABLE = "DROP TABLE " + DictionaryContract.Dictionary.TABLE_NAME;
 
 
     public DictionaryDBHelper(Context context){
@@ -39,5 +42,7 @@ public class DictionaryDBHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         //@todo find what to do in onUpgrade db
+        db.execSQL(SQL_DROP_TABLE);
+        onCreate(db);
     }
 }

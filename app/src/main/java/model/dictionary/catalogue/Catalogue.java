@@ -93,8 +93,38 @@ public class Catalogue implements JSONPersist{
         return Global.SUCCESS;
     }
 
+    /**
+     * Delete the specified dictionary and all its content
+     * @param dictionary dictionary to remove
+     * @return {Global.SUCCESS} if successfull, {Global.NOT_FOUND} otherwise
+     */
+    public int removeDictionary (String dictionaryName){
+        Dictionary toRemove = getDictionary(dictionaryName);
+        if (toRemove == null)
+            return Global.NOT_FOUND;
+        toRemove.clear(mContext);
+        int res = m_mDictionaries.remove(toRemove) ? Global.SUCCESS : Global.NOT_FOUND;
 
-    private static String getJSONNameFromCatalogueName(String name){
+        //@todo we should not call write from here. We should have an automatic mechanism to keep a persistent state valid
+        writeToJSONFile();
+        return res;
+    }
+
+    /**
+     * Delete the current catalogue: all the dictionaries and word in database, and the json file
+     * @return {Global.SUCCESS} if successful, {Global.FAILURE} otherwise
+     */
+    public int clear(){
+        for (Dictionary current : m_mDictionaries)
+            current.clear(mContext);
+
+        m_mDictionaries.clear();
+
+        return GeneralTools.deleteFile(getJSONNameFromCatalogueName(m_sName));
+    }
+
+
+    public static String getJSONNameFromCatalogueName(String name){
         String str = "catalogue_" + name;;
         return str.replaceAll("\\s+", "");
     }
@@ -135,7 +165,6 @@ public class Catalogue implements JSONPersist{
 
         return res;
     }
-
 
     @Override
     public int writeToJSONFile(){

@@ -5,17 +5,22 @@ import android.app.ListFragment;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.view.View;
 
 import com.mnemo.pietro.mnemosyne.R;
 import com.mnemo.pietro.mnemosyne.adaptater.DictionaryAdapter;
 
+import model.dictionary.catalogue.CatalogueList;
+import model.dictionary.catalogue.CatalogueListSingleton;
+import model.dictionary.dictionary.Dictionary;
 import model.dictionary.dictionary.sql.DictionaryContract;
 import model.dictionary.dictionary.sql.DictionaryDBHelper;
+import model.dictionary.tools.Logger;
 
 /**
  * Dictionary fragment. Manages the layout of a dictionay, add and remove words, ...
  */
-public class DictionaryFragment extends ListFragment {
+public class DictionaryFragment extends ListFragment implements View.OnClickListener{
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String DICTIONARY_NAME = "DICTIONARY_NAME";
@@ -24,6 +29,7 @@ public class DictionaryFragment extends ListFragment {
     private String mDictionaryName;
     private String mParentCatalogueName;
     private Cursor mRawCursor;
+    private DictionaryAdapter mAdapter;
 
     private OnDictionaryFragmentInteractionListener mListener;
 
@@ -63,10 +69,10 @@ public class DictionaryFragment extends ListFragment {
 
         DictionaryDBHelper dbhelper = new DictionaryDBHelper(getActivity().getApplicationContext());
         SQLiteDatabase db = dbhelper.getReadableDatabase();
-        String query = "SELECT * FROM " + DictionaryContract.Dictionary.TABLE_NAME + " WHERE " + DictionaryContract.Dictionary.COLUMN_NAME_ID + " LIKE '" + mParentCatalogueName + "_" + mDictionaryName + "%'";
+        String query = "SELECT * FROM " + DictionaryContract.Dictionary.TABLE_NAME + " WHERE " + DictionaryContract.Dictionary.COLUMN_NAME_CATALOGUE_NAME + " = '" + mParentCatalogueName + "' and " + DictionaryContract.Dictionary.COLUMN_NAME_DICTIONARY_NAME + " = '" + mDictionaryName +"'";
         mRawCursor = db.rawQuery(query, null);
-        DictionaryAdapter adapter = new DictionaryAdapter(getActivity().getApplicationContext(), R.layout.dictionary_fragment, mRawCursor, 0);
-        setListAdapter(adapter);
+        mAdapter = new DictionaryAdapter(this, getActivity().getApplicationContext(), R.layout.dictionary_fragment, mRawCursor, 0);
+        setListAdapter(mAdapter);
     }
 
     //@Override
@@ -115,4 +121,23 @@ public class DictionaryFragment extends ListFragment {
         public void dictionaryFragmentVisible(String dictionaryName);
     }
 
+
+    @Override
+    public void onClick(View v) {
+        String word = (String)v.getTag();
+        if (word == null){
+            Logger.d("DictionaryFragment::onClick"," Word not found, tag not set.");
+            return;
+        }
+        Dictionary current = CatalogueListSingleton.getInstance(getActivity().getApplicationContext()).getCatalogue(mParentCatalogueName).getDictionary(mDictionaryName);
+        int res = current.removeDictionaryObject(word, getActivity().getApplicationContext());
+        mAdapter.notifyDataSetChanged();
+        DictionaryDBHelper dbhelper = new DictionaryDBHelper(getActivity().getApplicationContext());
+        SQLiteDatabase db = dbhelper.getReadableDatabase();
+        String query = "SELECT * FROM " + DictionaryContract.Dictionary.TABLE_NAME + " WHERE " + DictionaryContract.Dictionary.COLUMN_NAME_CATALOGUE_NAME + " = '" + mParentCatalogueName + "' and " + DictionaryContract.Dictionary.COLUMN_NAME_DICTIONARY_NAME + " = '" + mDictionaryName +"'";
+        mRawCursor = db.rawQuery(query, null);
+        mAdapter = new DictionaryAdapter(this, getActivity().getApplicationContext(), R.layout.dictionary_fragment, mRawCursor, 0);
+        setListAdapter(mAdapter);
+        Logger.d("DictionaryFragment::onClick"," Word "+ word + " removed from " + mDictionaryName);
+    }
 }

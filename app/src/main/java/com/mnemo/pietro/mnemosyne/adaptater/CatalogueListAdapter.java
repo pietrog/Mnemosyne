@@ -1,14 +1,19 @@
 package com.mnemo.pietro.mnemosyne.adaptater;
 
+import android.app.Fragment;
 import android.content.Context;
+import android.nfc.cardemulation.CardEmulation;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 
 import com.mnemo.pietro.mnemosyne.R;
+import com.mnemo.pietro.mnemosyne.fragments.catalogue.CatalogueListFragment;
 
 import model.dictionary.catalogue.Catalogue;
 import model.dictionary.catalogue.CatalogueList;
@@ -23,11 +28,13 @@ public class CatalogueListAdapter extends BaseAdapter {
 
     private CatalogueList m_oCatalogues;
     private LayoutInflater m_oLayoutInflater;
+    private CatalogueListFragment frag;
 
 
-    public CatalogueListAdapter(Context context){
+    public CatalogueListAdapter(Context context, CatalogueListFragment frag){
         m_oCatalogues = CatalogueListSingleton.getInstance(context);
         m_oLayoutInflater = LayoutInflater.from(context);
+        this.frag = frag;
     }
 
     @Override
@@ -55,6 +62,7 @@ public class CatalogueListAdapter extends BaseAdapter {
             holder = new ViewHolder();
             holder.name = (TextView) convertView.findViewById(R.id.name);
             holder.description = (TextView) convertView.findViewById(R.id.description);
+            holder.removeBox = (Button) convertView.findViewById(R.id.removeButton);
             convertView.setTag(holder);
         }
         else
@@ -72,12 +80,15 @@ public class CatalogueListAdapter extends BaseAdapter {
         Catalogue current = (Catalogue) getItem(position);
         holder.name.setText(current.getName());
         holder.description.setText(current.getDescription());
+        holder.removeBox.setOnClickListener(frag);
+        holder.removeBox.setTag(current.getName());
     }
 
 
     private class ViewHolder{
         public TextView name;
         public TextView description;
+        public Button removeBox;
     }
 }
 

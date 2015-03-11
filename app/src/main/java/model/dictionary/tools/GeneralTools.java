@@ -87,4 +87,9 @@ public class GeneralTools {
 
         return Global.SUCCESS;
     }
+
+    public static int deleteFile(String filename){
+        File file = new File(filename);
+        return file.delete() ? Global.SUCCESS : Global.FAILURE;
+    }
 }

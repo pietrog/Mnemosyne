@@ -5,10 +5,12 @@ import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ResourceCursorAdapter;
 import android.widget.TextView;
 
 import com.mnemo.pietro.mnemosyne.R;
+import com.mnemo.pietro.mnemosyne.fragments.dictionary.DictionaryFragment;
 
 import model.dictionary.dictionary.sql.DictionaryContract;
 
@@ -20,8 +22,11 @@ import model.dictionary.dictionary.sql.DictionaryContract;
  */
 public class DictionaryAdapter extends ResourceCursorAdapter {
 
-    public DictionaryAdapter (Context context, int layout, Cursor cursor, int flags){
+    private DictionaryFragment mFrag;
+
+    public DictionaryAdapter (DictionaryFragment frag, Context context, int layout, Cursor cursor, int flags){
         super(context, layout, cursor, flags);
+        mFrag = frag;
     }
 
     @Override
@@ -37,5 +42,9 @@ public class DictionaryAdapter extends ResourceCursorAdapter {
         name.setText(cursor.getString(cursor.getColumnIndex(DictionaryContract.Dictionary.COLUMN_NAME_WORD)));
         TextView desc = (TextView) view.findViewById(R.id.description);
         desc.setText(cursor.getString(cursor.getColumnIndex(DictionaryContract.Dictionary.COLUMN_NAME_DEFINITION)));
+        Button removeButton = (Button) view.findViewById(R.id.removeButton);
+        removeButton.setOnClickListener(mFrag);
+        removeButton.setTag(cursor.getString(cursor.getColumnIndex(DictionaryContract.Dictionary.COLUMN_NAME_WORD)));
+
     }
 }

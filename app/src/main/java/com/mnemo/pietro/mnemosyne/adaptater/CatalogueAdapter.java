@@ -5,9 +5,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.mnemo.pietro.mnemosyne.R;
+import com.mnemo.pietro.mnemosyne.fragments.catalogue.CatalogueFragment;
 
 import model.dictionary.catalogue.Catalogue;
 import model.dictionary.dictionary.Dictionary;
@@ -16,14 +19,16 @@ import model.dictionary.dictionary.Dictionary;
  * Created by pietro on 03/03/15.
  *
  */
-public class DictionaryListAdapter extends BaseAdapter {
+public class CatalogueAdapter extends BaseAdapter {
 
     private Catalogue mCatalogue = null;
     private LayoutInflater mInflater = null;
+    private CatalogueFragment mFrag;
 
-    public DictionaryListAdapter(Catalogue catalogue, Context context){
+    public CatalogueAdapter(Catalogue catalogue, Context context, CatalogueFragment frag){
         mCatalogue = catalogue;
         mInflater = LayoutInflater.from(context);
+        mFrag = frag;
     }
 
     @Override
@@ -51,6 +56,7 @@ public class DictionaryListAdapter extends BaseAdapter {
             convertView = mInflater.inflate(R.layout.catalogue_listview_layout, parent, false);
             holder.name = (TextView) convertView.findViewById(R.id.name);
             holder.description = (TextView) convertView.findViewById(R.id.description);
+            holder.removeDict = (Button) convertView.findViewById(R.id.removeButton);
             convertView.setTag(holder);
         }
         else
@@ -65,10 +71,13 @@ public class DictionaryListAdapter extends BaseAdapter {
         Dictionary dict = mCatalogue.getElement(position);
         holder.name.setText(dict.getName());
         holder.description.setText(dict.getDescription());
+        holder.removeDict.setOnClickListener(mFrag);
+        holder.removeDict.setTag(dict.getName());
     }
 
     private class ViewHolder{
         public TextView name;
         public TextView description;
+        public Button removeDict;
     }
 }
