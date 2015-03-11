@@ -10,8 +10,6 @@ import com.mnemo.pietro.mnemosyne.MnemoCentral;
 import com.mnemo.pietro.mnemosyne.R;
 import com.mnemo.pietro.mnemosyne.adaptater.CatalogueListAdapter;
 
-import java.util.Vector;
-
 import model.dictionary.catalogue.Catalogue;
 import model.dictionary.catalogue.CatalogueList;
 import model.dictionary.catalogue.CatalogueListSingleton;
@@ -36,8 +34,7 @@ public class CatalogueListFragment extends ListFragment implements View.OnClickL
      * @return A new instance of fragment CatalogueListFragment.
      */
     public static CatalogueListFragment newInstance(/*String catalogueName*/) {
-        CatalogueListFragment fragment = new CatalogueListFragment();
-        return fragment;
+        return new CatalogueListFragment();
     }
 
     public CatalogueListFragment() {

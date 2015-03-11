@@ -95,14 +95,14 @@ public class Catalogue implements JSONPersist{
 
     /**
      * Delete the specified dictionary and all its content
-     * @param dictionary dictionary to remove
+     * @param dictionaryName dictionary to remove
      * @return {Global.SUCCESS} if successfull, {Global.NOT_FOUND} otherwise
      */
     public int removeDictionary (String dictionaryName){
         Dictionary toRemove = getDictionary(dictionaryName);
         if (toRemove == null)
             return Global.NOT_FOUND;
-        toRemove.clear(mContext);
+        toRemove.clear();
         int res = m_mDictionaries.remove(toRemove) ? Global.SUCCESS : Global.NOT_FOUND;
 
         //@todo we should not call write from here. We should have an automatic mechanism to keep a persistent state valid
@@ -116,7 +116,7 @@ public class Catalogue implements JSONPersist{
      */
     public int clear(){
         for (Dictionary current : m_mDictionaries)
-            current.clear(mContext);
+            current.clear();
 
         m_mDictionaries.clear();
 

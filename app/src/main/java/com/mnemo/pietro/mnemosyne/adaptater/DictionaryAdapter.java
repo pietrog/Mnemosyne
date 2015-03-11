@@ -32,8 +32,7 @@ public class DictionaryAdapter extends ResourceCursorAdapter {
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        View rootview = inflater.inflate(R.layout.dictionary_view, parent, false);
-        return rootview;
+        return inflater.inflate(R.layout.dictionary_view, parent, false);
     }
 
     @Override

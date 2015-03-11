@@ -10,7 +10,6 @@ import android.view.View;
 import com.mnemo.pietro.mnemosyne.R;
 import com.mnemo.pietro.mnemosyne.adaptater.DictionaryAdapter;
 
-import model.dictionary.catalogue.CatalogueList;
 import model.dictionary.catalogue.CatalogueListSingleton;
 import model.dictionary.dictionary.Dictionary;
 import model.dictionary.dictionary.sql.DictionaryContract;
@@ -130,7 +129,7 @@ public class DictionaryFragment extends ListFragment implements View.OnClickList
             return;
         }
         Dictionary current = CatalogueListSingleton.getInstance(getActivity().getApplicationContext()).getCatalogue(mParentCatalogueName).getDictionary(mDictionaryName);
-        int res = current.removeDictionaryObject(word, getActivity().getApplicationContext());
+        current.removeDictionaryObject(word);
         mAdapter.notifyDataSetChanged();
         DictionaryDBHelper dbhelper = new DictionaryDBHelper(getActivity().getApplicationContext());
         SQLiteDatabase db = dbhelper.getReadableDatabase();

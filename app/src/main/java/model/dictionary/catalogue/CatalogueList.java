@@ -6,15 +6,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.List;
-import java.util.Set;
 import java.util.Vector;
 
 import model.dictionary.Global;
@@ -35,7 +28,7 @@ public class CatalogueList implements JSONPersist{
     public static final String JSON_DESC = "description";
     public static final String JSON_LISTCATALOGUE = "all";
 
-    private Vector<Catalogue> m_mListOfCatalogue = new Vector<Catalogue>();
+    private Vector<Catalogue> m_mListOfCatalogue = new Vector<>();
 
     private final Context mContext;
 
@@ -46,7 +39,7 @@ public class CatalogueList implements JSONPersist{
 
     /**
      * Add a new catalogue, if it does not exist (name is unique)
-     * @param catalogue
+     * @param catalogue name of the new catalogue
      * @return 0 if successful, -1 if name already exists
      */
     public int addCatalogue(Catalogue catalogue){
@@ -61,7 +54,7 @@ public class CatalogueList implements JSONPersist{
     /**
      * Remove the cata
      * @param catalogueName Name of the catalogue to remove
-     * @return
+     * @return {Global.SUCCESS}
      */
     public int removeCatalogue(String catalogueName){
 
@@ -72,7 +65,7 @@ public class CatalogueList implements JSONPersist{
         String fileName = Catalogue.getJSONNameFromCatalogueName(catalogueName);
         toRemove.clear();
         int res = m_mListOfCatalogue.remove(toRemove) ? Global.SUCCESS : Global.NOT_FOUND;
-        res = GeneralTools.deleteFile(fileName);
+        GeneralTools.deleteFile(fileName);
 
         return res;
     }

@@ -1,14 +1,11 @@
 package com.mnemo.pietro.mnemosyne.adaptater;
 
-import android.app.Fragment;
 import android.content.Context;
-import android.nfc.cardemulation.CardEmulation;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.TextView;
 
 

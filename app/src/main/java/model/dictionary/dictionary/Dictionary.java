@@ -2,18 +2,16 @@ package model.dictionary.dictionary;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import java.util.HashMap;
 
 import model.dictionary.Global;
-import model.dictionary.dictionary.DictionaryObject;
 import model.dictionary.dictionary.sql.DictionaryContract;
 import model.dictionary.dictionary.sql.DictionaryDBHelper;
 
 /**
  * Created by pietro on 30/01/15.
+ *
  */
 public class Dictionary {
 
@@ -37,21 +35,14 @@ public class Dictionary {
         mDescription = description;
         mName = name;
         mCatalogueName = catalogueName;
+        mDBHelper = dbHelper;
     }
 
-    /**
-     * Get the dictionary's object associated to the key
-     * @param  key Key used for getting the object
-     * @return the object if exists, null otherwise
-     */
-    public DictionaryObject getDictionaryObject(String key){
-        return null;
-    }
 
     /**
      * Add object value associated to key to the current dictionary
      * @param value object to insert
-     * @return
+     * @return {Global.SUCCESS} if successful, {Global.FAILURE} otherwise
      */
     public int addDictionaryObject(DictionaryObject value){
 
@@ -66,9 +57,7 @@ public class Dictionary {
     }
 
 
-    public int removeDictionaryObject(String name, Context context){
-        if (mDBHelper == null)
-            mDBHelper = new DictionaryDBHelper(context);
+    public int removeDictionaryObject(String name){
         SQLiteDatabase db = mDBHelper.getWritableDatabase();
         String sqlclause = DictionaryContract.Dictionary.COLUMN_NAME_DICTIONARY_NAME + "= '" + mName +"'";
         sqlclause += " and " + DictionaryContract.Dictionary.COLUMN_NAME_CATALOGUE_NAME + "= '" + mCatalogueName+"'";
@@ -81,9 +70,7 @@ public class Dictionary {
      * Remove current dictionary and all words in database
      * @return {Global.SUCCESS} if successfull, {Global.NOT_FOUND} otherwise
      */
-    public int clear(Context context){
-        if (mDBHelper == null)
-            mDBHelper = new DictionaryDBHelper(context);
+    public int clear(){
         SQLiteDatabase db = mDBHelper.getWritableDatabase();
         String sqlclause = DictionaryContract.Dictionary.COLUMN_NAME_DICTIONARY_NAME + "= '" + mName+"'";
         sqlclause += " and " + DictionaryContract.Dictionary.COLUMN_NAME_CATALOGUE_NAME + "= '" + mCatalogueName+"'";
@@ -97,10 +84,6 @@ public class Dictionary {
 
     public String getDescription() {
         return mDescription;
-    }
-
-    public String getCatalogueName() {
-        return mCatalogueName;
     }
 
     public void setDBHelper(DictionaryDBHelper helper){
