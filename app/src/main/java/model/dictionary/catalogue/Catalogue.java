@@ -11,6 +11,7 @@ import java.util.Vector;
 import model.dictionary.Global;
 import model.dictionary.JSONPersist;
 import model.dictionary.dictionary.Dictionary;
+import model.dictionary.dictionary.sql.DictionaryDBHelper;
 import model.dictionary.tools.GeneralTools;
 import model.dictionary.tools.Logger;
 
@@ -79,7 +80,8 @@ public class Catalogue implements JSONPersist{
      */
     public int addDictionary(String name, String description, boolean checkExists){
 
-        Dictionary dict = new Dictionary(name, description, m_sName, null );
+        DictionaryDBHelper dbHelper = new DictionaryDBHelper(mContext);
+        Dictionary dict = new Dictionary(name, description, m_sName, dbHelper );
 
         if (checkExists && m_mDictionaries.contains(dict))
             return Global.ALREADY_EXISTS;
