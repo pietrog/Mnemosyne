@@ -37,13 +37,12 @@ public class DictionaryAdapter extends ResourceCursorAdapter {
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
+        String word = DictionaryContract.getWord(cursor);
         TextView name = (TextView) view.findViewById(R.id.name);
-        name.setText(cursor.getString(cursor.getColumnIndex(DictionaryContract.Dictionary.COLUMN_NAME_WORD)));
-        TextView desc = (TextView) view.findViewById(R.id.description);
-        desc.setText(cursor.getString(cursor.getColumnIndex(DictionaryContract.Dictionary.COLUMN_NAME_DEFINITION)));
+        name.setText(word);
         Button removeButton = (Button) view.findViewById(R.id.removeButton);
         removeButton.setOnClickListener(mFrag);
-        removeButton.setTag(cursor.getString(cursor.getColumnIndex(DictionaryContract.Dictionary.COLUMN_NAME_WORD)));
+        removeButton.setTag(word);
 
     }
 }

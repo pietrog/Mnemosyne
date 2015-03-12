@@ -6,12 +6,14 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ListView;
 
 import com.mnemo.pietro.mnemosyne.R;
 import com.mnemo.pietro.mnemosyne.adaptater.DictionaryAdapter;
 
 import model.dictionary.catalogue.CatalogueListSingleton;
 import model.dictionary.dictionary.Dictionary;
+import model.dictionary.dictionary.WordDefinitionObj;
 import model.dictionary.dictionary.sql.DictionaryContract;
 import model.dictionary.dictionary.sql.DictionaryDBHelper;
 import model.dictionary.tools.Logger;
@@ -138,5 +140,16 @@ public class DictionaryFragment extends ListFragment implements View.OnClickList
         mAdapter = new DictionaryAdapter(this, getActivity().getApplicationContext(), R.layout.dictionary_fragment, mRawCursor, 0);
         setListAdapter(mAdapter);
         Logger.d("DictionaryFragment::onClick"," Word "+ word + " removed from " + mDictionaryName);
+    }
+
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        Cursor cursor = mAdapter.getCursor();
+        cursor.moveToPosition(position);
+
+        WordDefinitionObj obj = new WordDefinitionObj(DictionaryContract.getWord(cursor), DictionaryContract.getDefinition(cursor));
+        DictionaryObjectWordFragment fragment = DictionaryObjectWordFragment.newInstance(obj);
+        getFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.cat_list_fgt, fragment).commit();
+
     }
 }

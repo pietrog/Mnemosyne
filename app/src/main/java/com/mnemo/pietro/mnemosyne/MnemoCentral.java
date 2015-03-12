@@ -13,6 +13,7 @@ import com.mnemo.pietro.mnemosyne.fragments.catalogue.CatalogueFragment;
 import com.mnemo.pietro.mnemosyne.fragments.catalogue.CatalogueListFragment;
 import com.mnemo.pietro.mnemosyne.fragments.catalogue.CreateCatalogueFragment;
 import com.mnemo.pietro.mnemosyne.fragments.dictionary.CreateDictionaryFragment;
+import com.mnemo.pietro.mnemosyne.fragments.dictionary.DictionaryObjectWordFragment;
 import com.mnemo.pietro.mnemosyne.fragments.word.CreateWordFragment;
 import com.mnemo.pietro.mnemosyne.fragments.dictionary.DictionaryFragment;
 
@@ -25,6 +26,7 @@ public class MnemoCentral
         CatalogueFragment.OnCatalogueFragmentInteractionListener,
         DictionaryFragment.OnDictionaryFragmentInteractionListener,
         CreateWordFragment.OnWordFragmentInteractionListener,
+        DictionaryObjectWordFragment.OnDictionaryObjectWordFragmentInteractionListener,
         View.OnClickListener{
 
     public static final String FGT_CATALOGUE_LIST_TAG = "CATALOGUELIST";
@@ -121,7 +123,9 @@ public class MnemoCentral
 
     @Override
     public void catalogueListFragmentVisible() {
-        mToolbar.setSubtitle(R.string.hint_catalogue_list);
+        mToolbar.setTitle(R.string.hint_catalogue_list);
+        mToolbar.setSubtitle("");
+        mToolbar_add_button.setVisibility(View.VISIBLE);
         mToolbar_add_button.setText(R.string.action_cat_create);
         mToolbar_add_button.setOnClickListener(this);
         mToolbar_add_button.setTag(FGT_CATALOGUE_LIST_TAG);
@@ -136,7 +140,9 @@ public class MnemoCentral
 
     @Override
     public void catalogueFragmentVisible(String catalogueName) {
-        mToolbar.setSubtitle(R.string.hint_catalogue);
+        mToolbar.setTitle(R.string.hint_catalogue);
+        mToolbar.setSubtitle(catalogueName);
+        mToolbar_add_button.setVisibility(View.VISIBLE);
         mToolbar_add_button.setText(R.string.action_dict_create);
         mToolbar_add_button.setOnClickListener(this);
         mToolbar_add_button.setTag(FGT_CATALOGUE_TAG);
@@ -148,11 +154,20 @@ public class MnemoCentral
      */
     @Override
     public void dictionaryFragmentVisible(String dictionaryName) {
-        mToolbar.setSubtitle(R.string.hint_dictionary);
+        mToolbar.setTitle(R.string.hint_dictionary);
+        mToolbar.setSubtitle(dictionaryName);
+        mToolbar_add_button.setVisibility(View.VISIBLE);
         mToolbar_add_button.setText(R.string.action_word_create);
         mToolbar_add_button.setOnClickListener(this);
         mToolbar_add_button.setTag(FGT_DICTIONARY_TAG);
         mCurrentDictionaryName = dictionaryName;
+    }
+
+    @Override
+    public void dictionaryObjectWordFragmentVisible(String word) {
+        mToolbar.setTitle(R.string.hint_word);
+        mToolbar.setSubtitle(word);
+        mToolbar_add_button.setVisibility(View.INVISIBLE);
     }
 
     /**

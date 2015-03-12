@@ -1,5 +1,6 @@
 package model.dictionary.dictionary.sql;
 
+import android.database.Cursor;
 import android.provider.BaseColumns;
 
 /**
@@ -15,5 +16,22 @@ public class DictionaryContract {
         public static final String COLUMN_NAME_DICTIONARY_NAME = "dictionary";
         public static final String COLUMN_NAME_WORD = "word";
         public static final String COLUMN_NAME_DEFINITION = "definition";
+    }
+
+
+    /**
+     *
+     */
+    public static String getWord (Cursor cursor){
+        return cursor.getString(cursor.getColumnIndex(Dictionary.COLUMN_NAME_WORD));
+    }
+    public static String getDefinition (Cursor cursor){
+        return cursor.getString(cursor.getColumnIndex(Dictionary.COLUMN_NAME_DEFINITION));
+    }
+    public static String getCatalogueName (Cursor cursor){
+        return cursor.getString(cursor.getColumnIndex(Dictionary.COLUMN_NAME_CATALOGUE_NAME));
+    }
+    public static String getDictionaryName (Cursor cursor){
+        return cursor.getString(cursor.getColumnIndex(Dictionary.COLUMN_NAME_DICTIONARY_NAME));
     }
 }

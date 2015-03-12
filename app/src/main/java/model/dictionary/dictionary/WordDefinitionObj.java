@@ -33,4 +33,12 @@ public class WordDefinitionObj extends DictionaryObject{
         content.put(DictionaryContract.Dictionary.COLUMN_NAME_DEFINITION, m_sDefinition);
         return content;
     }
+
+    public String getWord() {
+        return m_sWord;
+    }
+
+    public String getDefinition() {
+        return m_sDefinition;
+    }
 }

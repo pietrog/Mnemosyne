@@ -28,6 +28,8 @@
     <string name="action_word_create">Creer un mot</string>
     <string name="hint_word_fillIn_word">Mot a definir</string>
     <string name="hint_word_fillIn_definition">Definition</string>
+    <string name="hint_word">Word</string>
+
 
 
 </resources>
