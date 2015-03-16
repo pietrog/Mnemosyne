@@ -62,7 +62,7 @@ public class DictionaryObjectWordFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        ViewTools.setTitle(getActivity(), "Word");
+        ViewTools.setTitle(getActivity(), R.string.hint_word);
         ViewTools.setSubtitle(getActivity(), mWord);
     }
 

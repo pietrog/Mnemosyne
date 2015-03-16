@@ -1,7 +1,5 @@
 package com.mnemo.pietro.mnemosyne.fragments.dictionary;
 
-import android.app.Activity;
-import android.app.Fragment;
 import android.app.ListFragment;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -78,11 +76,6 @@ public class DictionaryFragment extends ListFragment implements View.OnClickList
         mRawCursor = db.rawQuery(query, null);
         mAdapter = new DictionaryAdapter(this, getActivity().getApplicationContext(), R.layout.dictionary_fragment, mRawCursor, 0);
         setListAdapter(mAdapter);
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
     }
 
     @Override

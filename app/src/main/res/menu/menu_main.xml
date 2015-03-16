@@ -1,11 +1,21 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:yourapp="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     >
 
     <item android:id="@+id/add_item"
         android:title="@string/action_create_item"
         android:icon="@drawable/ic_action_new"
-        android:orderInCategory="100"
-        yourapp:showAsAction="ifRoom"/>
+        android:orderInCategory="1"
+        app:showAsAction="always"
+
+        />
+
+    <item android:id="@+id/validate"
+        android:title="@string/action_save"
+        android:icon="@drawable/ic_action_accept"
+        android:orderInCategory="2"
+        app:showAsAction="always"
+
+         />
 
 </menu>

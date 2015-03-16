@@ -3,8 +3,9 @@ package com.mnemo.pietro.mnemosyne.fragments.catalogue;
 
 import android.os.Bundle;
 import android.app.Fragment;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -19,13 +20,12 @@ import model.dictionary.tools.ViewTools;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CreateCatalogueFragment extends Fragment implements View.OnClickListener{
+public class CreateCatalogueFragment extends Fragment {
 
     //private static final String GLOBAL_TOOLBAR = "GLOBARTOOLBAR";
 
 
     private View rootview;
-    private Toolbar mToolbar;
 
     public CreateCatalogueFragment(){}
 
@@ -40,28 +40,45 @@ public class CreateCatalogueFragment extends Fragment implements View.OnClickLis
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        rootview = inflater.inflate(R.layout.dictionary_create_fragment, container, false);
-        mToolbar = (Toolbar)container.getRootView().getRootView().findViewById(R.id.global_toolbar);
+        rootview = inflater.inflate(R.layout.catalogue_create_fragment, container, false);
+        setHasOptionsMenu(true); // for toolbar communcation
         return rootview;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mToolbar.setTitle(R.string.action_cat_create);
-        mToolbar.setSubtitle("");
+        ViewTools.setTitle(getActivity(), R.string.action_cat_create);
+        ViewTools.setSubtitle(getActivity(), "");
     }
 
     @Override
-    public void onClick(View v) {
-        String catalogue_name = ViewTools.getStringFromEditableText(rootview.findViewById(R.id.dict_name));
-        String catalogue_desc = ViewTools.getStringFromEditableText(rootview.findViewById(R.id.dict_desc));
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        menu.getItem(0).setVisible(false);
+        menu.getItem(1).setVisible(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.validate:
+                saveCatalogue();
+                return true;
+            default:
+                return true;
+        }
+    }
+
+    private void saveCatalogue(){
+        String catalogue_name = ViewTools.getStringFromEditableText(rootview.findViewById(R.id.name));
+        String catalogue_desc = ViewTools.getStringFromEditableText(rootview.findViewById(R.id.description));
         CatalogueList whole = CatalogueListSingleton.getInstance(getActivity().getApplicationContext());
         Catalogue newCat = Catalogue.createCatalogue(catalogue_name, catalogue_desc, getActivity().getApplicationContext());
         whole.addCatalogue(newCat);
         whole.writeToJSONFile();
 
-        ViewTools.hideKeyboard(v, getActivity());
+        ViewTools.hideKeyboard(rootview, getActivity());
         getFragmentManager().popBackStack();
     }
 }

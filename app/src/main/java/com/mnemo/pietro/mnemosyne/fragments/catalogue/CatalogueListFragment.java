@@ -43,7 +43,7 @@ public class CatalogueListFragment extends ListFragment implements View.OnClickL
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
+        setHasOptionsMenu(true); // for toolbar interaction
     }
 
     @Override
@@ -58,11 +58,6 @@ public class CatalogueListFragment extends ListFragment implements View.OnClickL
     public void onListItemClick(ListView l, View v, int position, long id) {
         CatalogueFragment cfgt = CatalogueFragment.newInstance(((Catalogue)mAdaptater.getItem(position)).getName());
         getFragmentManager().beginTransaction().replace(R.id.cat_list_fgt, cfgt).addToBackStack(MnemoCentral.FGT_CATALOGUE_TAG).commit();
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
     }
 
     @Override

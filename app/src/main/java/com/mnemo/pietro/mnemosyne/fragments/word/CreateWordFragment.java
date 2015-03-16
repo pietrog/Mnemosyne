@@ -3,9 +3,10 @@ package com.mnemo.pietro.mnemosyne.fragments.word;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import com.mnemo.pietro.mnemosyne.R;
 
@@ -18,7 +19,7 @@ import model.dictionary.tools.ViewTools;
 /**
  *
  */
-public class CreateWordFragment extends Fragment implements View.OnClickListener{
+public class CreateWordFragment extends Fragment {
     private static final String DICTIONARY_NAME = "DICT_NAME";
     private static final String CATALOGUE_NAME = "CAT_NAME";
 
@@ -43,6 +44,7 @@ public class CreateWordFragment extends Fragment implements View.OnClickListener
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         if (getArguments() != null) {
             mDictionaryName = getArguments().getString(DICTIONARY_NAME);
             mCatalogueName = getArguments().getString(CATALOGUE_NAME);
@@ -54,21 +56,36 @@ public class CreateWordFragment extends Fragment implements View.OnClickListener
                              Bundle savedInstanceState) {
 
         mRootview = inflater.inflate(R.layout.word_create_fragment, container, false);
-        Button save = (Button) mRootview.findViewById(R.id.saveButton);
-        save.setOnClickListener(this);
         return mRootview;
     }
 
     @Override
-    public void onClick(View v) {
-        String word = ViewTools.getStringFromEditableText(mRootview.findViewById(R.id.word_name));
-        String definition = ViewTools.getStringFromEditableText(mRootview.findViewById(R.id.word_definition));
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        menu.getItem(0).setVisible(false);
+        menu.getItem(1).setVisible(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()){
+            case R.id.validate:
+                saveDictionaryObject();
+                return true;
+            default:
+                return true;
+        }
+    }
+
+    private void saveDictionaryObject(){
+        String word = ViewTools.getStringFromEditableText(mRootview.findViewById(R.id.name));
+        String definition = ViewTools.getStringFromEditableText(mRootview.findViewById(R.id.description));
         WordDefinitionObj wordDef = new WordDefinitionObj(word, definition);
         Dictionary dict = CatalogueListSingleton.getInstance(getActivity().getApplicationContext()).getCatalogue(mCatalogueName).getDictionary(mDictionaryName);
         dict.setDBHelper(new DictionaryDBHelper(getActivity().getApplicationContext()));
         dict.addDictionaryObject(wordDef);
 
-        ViewTools.hideKeyboard(v, getActivity());
+        ViewTools.hideKeyboard(mRootview, getActivity());
         getFragmentManager().popBackStack();
     }
 

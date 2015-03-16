@@ -76,11 +76,6 @@ public class CatalogueFragment extends Fragment implements View.OnClickListener,
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
         ViewTools.setTitle(getActivity(), R.string.hint_catalogue);

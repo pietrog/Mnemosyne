@@ -4,6 +4,7 @@ package com.mnemo.pietro.mnemosyne.fragments.dictionary;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -67,6 +68,15 @@ public class CreateDictionaryFragment extends Fragment implements View.OnClickLi
     @Override
     public void onResume() {
         super.onResume();
+        ViewTools.setTitle(getActivity(), R.string.action_dict_create);
+        ViewTools.setSubtitle(getActivity(), "");
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        menu.getItem(0).setVisible(false);
+        menu.getItem(1).setVisible(true);
     }
 
     @Override
@@ -76,8 +86,8 @@ public class CreateDictionaryFragment extends Fragment implements View.OnClickLi
 
     public void saveDictionary(){
 
-        String dictName = ViewTools.getStringFromEditableText(rootView.findViewById(R.id.dict_name));
-        String dictDesc = ViewTools.getStringFromEditableText(rootView.findViewById(R.id.dict_desc));
+        String dictName = ViewTools.getStringFromEditableText(rootView.findViewById(R.id.name));
+        String dictDesc = ViewTools.getStringFromEditableText(rootView.findViewById(R.id.description));
 
         Catalogue cat = CatalogueListSingleton.getInstance(getActivity().getApplicationContext()).getCatalogue(mCatalogueName);
         if (cat == null){

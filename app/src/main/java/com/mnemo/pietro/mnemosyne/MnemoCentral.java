@@ -59,6 +59,7 @@ public class MnemoCentral
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        menu.getItem(1).setVisible(false);
         return true;
     }
 

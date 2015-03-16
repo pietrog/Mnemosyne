@@ -5,10 +5,24 @@
         <item name="android:textSize">25dp</item>
         <item name="android:textStyle">bold</item>
     </style>
+
     <style name="description">
         <item name="android:textSize">15dp</item>
         <item name="android:textStyle">italic</item>
     </style>
+
+    <!-- Passive text when editing -->
+    <style name="passiveText">
+        <item name="android:textSize">20dp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="editingZone">
+        <item name="android:background">@color/editBackColor</item>
+        <item name="android:layout_margin">10dp</item>
+        <item name="android:padding">5dp</item>
+    </style>
+
+    <!-- RemoveButton of CatalogueList, Catalogue and Dictionary fragments -->
     <style name="removeButton">
         <item name="android:layout_width">30dp</item>
         <item name="android:layout_height">30dp</item>
