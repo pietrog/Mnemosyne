@@ -9,10 +9,4 @@
         android:layout_alignParentLeft="true"
         />
 
-    <Button
-        android:id="@+id/removeButton"
-        android:text="X"
-        android:layout_alignParentRight="true"
-        style="@style/removeButton" />
-
 </RelativeLayout>

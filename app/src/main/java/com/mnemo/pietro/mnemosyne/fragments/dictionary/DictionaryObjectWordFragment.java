@@ -3,7 +3,6 @@ package com.mnemo.pietro.mnemosyne.fragments.dictionary;
 
 import android.os.Bundle;
 import android.app.Fragment;
-import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 /**
  * Created by pietro on 06/03/15.
+ * 
  */
 public class DictionaryDBHelper extends SQLiteOpenHelper {
 

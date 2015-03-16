@@ -5,12 +5,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.mnemo.pietro.mnemosyne.R;
-import com.mnemo.pietro.mnemosyne.fragments.catalogue.CatalogueFragment;
 
 import model.dictionary.catalogue.Catalogue;
 import model.dictionary.dictionary.Dictionary;
@@ -23,12 +20,10 @@ public class CatalogueAdapter extends BaseAdapter {
 
     private Catalogue mCatalogue = null;
     private LayoutInflater mInflater = null;
-    private CatalogueFragment mFrag;
 
-    public CatalogueAdapter(Catalogue catalogue, Context context, CatalogueFragment frag){
+    public CatalogueAdapter(Catalogue catalogue, Context context){
         mCatalogue = catalogue;
         mInflater = LayoutInflater.from(context);
-        mFrag = frag;
     }
 
     @Override
@@ -56,7 +51,6 @@ public class CatalogueAdapter extends BaseAdapter {
             convertView = mInflater.inflate(R.layout.catalogue_listview_layout, parent, false);
             holder.name = (TextView) convertView.findViewById(R.id.name);
             holder.description = (TextView) convertView.findViewById(R.id.description);
-            holder.removeDict = (ImageButton) convertView.findViewById(R.id.removeButton);
             convertView.setTag(holder);
         }
         else
@@ -71,13 +65,10 @@ public class CatalogueAdapter extends BaseAdapter {
         Dictionary dict = mCatalogue.getElement(position);
         holder.name.setText(dict.getName());
         holder.description.setText(dict.getDescription());
-        holder.removeDict.setOnClickListener(mFrag);
-        holder.removeDict.setTag(dict.getName());
     }
 
     private class ViewHolder{
         public TextView name;
         public TextView description;
-        public ImageButton removeDict;
     }
 }

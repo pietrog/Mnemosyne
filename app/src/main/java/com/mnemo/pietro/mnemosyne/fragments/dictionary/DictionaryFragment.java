@@ -4,8 +4,11 @@ import android.app.ListFragment;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.mnemo.pietro.mnemosyne.R;
@@ -23,7 +26,7 @@ import model.dictionary.tools.ViewTools;
 /**
  * Dictionary fragment. Manages the layout of a dictionay, add and remove words, ...
  */
-public class DictionaryFragment extends ListFragment implements View.OnClickListener{
+public class DictionaryFragment extends ListFragment {
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String DICTIONARY_NAME = "DICTIONARY_NAME";
@@ -74,8 +77,9 @@ public class DictionaryFragment extends ListFragment implements View.OnClickList
         SQLiteDatabase db = dbhelper.getReadableDatabase();
         String query = "SELECT * FROM " + DictionaryContract.Dictionary.TABLE_NAME + " WHERE " + DictionaryContract.Dictionary.COLUMN_NAME_CATALOGUE_NAME + " = '" + mParentCatalogueName + "' and " + DictionaryContract.Dictionary.COLUMN_NAME_DICTIONARY_NAME + " = '" + mDictionaryName +"'";
         mRawCursor = db.rawQuery(query, null);
-        mAdapter = new DictionaryAdapter(this, getActivity().getApplicationContext(), R.layout.dictionary_fragment, mRawCursor, 0);
+        mAdapter = new DictionaryAdapter(getActivity().getApplicationContext(), R.layout.dictionary_fragment, mRawCursor, 0);
         setListAdapter(mAdapter);
+        registerForContextMenu(getListView());
     }
 
     @Override
@@ -96,25 +100,6 @@ public class DictionaryFragment extends ListFragment implements View.OnClickList
     }
 
     @Override
-    public void onClick(View v) {
-        String word = (String)v.getTag();
-        if (word == null){
-            Logger.d("DictionaryFragment::onClick"," Word not found, tag not set.");
-            return;
-        }
-        Dictionary current = CatalogueListSingleton.getInstance(getActivity().getApplicationContext()).getCatalogue(mParentCatalogueName).getDictionary(mDictionaryName);
-        current.removeDictionaryObject(word);
-        mAdapter.notifyDataSetChanged();
-        DictionaryDBHelper dbhelper = new DictionaryDBHelper(getActivity().getApplicationContext());
-        SQLiteDatabase db = dbhelper.getReadableDatabase();
-        String query = "SELECT * FROM " + DictionaryContract.Dictionary.TABLE_NAME + " WHERE " + DictionaryContract.Dictionary.COLUMN_NAME_CATALOGUE_NAME + " = '" + mParentCatalogueName + "' and " + DictionaryContract.Dictionary.COLUMN_NAME_DICTIONARY_NAME + " = '" + mDictionaryName +"'";
-        mRawCursor = db.rawQuery(query, null);
-        mAdapter = new DictionaryAdapter(this, getActivity().getApplicationContext(), R.layout.dictionary_fragment, mRawCursor, 0);
-        setListAdapter(mAdapter);
-        Logger.d("DictionaryFragment::onClick"," Word "+ word + " removed from " + mDictionaryName);
-    }
-
-    @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         Cursor cursor = mAdapter.getCursor();
         cursor.moveToPosition(position);
@@ -130,5 +115,43 @@ public class DictionaryFragment extends ListFragment implements View.OnClickList
         CreateWordFragment fragment = CreateWordFragment.newInstance(mDictionaryName, mParentCatalogueName);
         getFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.cat_list_fgt, fragment).commit();
         return true;
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = getActivity().getMenuInflater();
+        inflater.inflate(R.menu.item_content_menu, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
+
+        switch (item.getItemId()) {
+            case R.id.remove_item:
+                removeWord(info.position);
+                return true;
+            default:
+                return true;
+        }
+    }
+
+    private void removeWord(int position){
+        String word = DictionaryContract.getWord((Cursor)mAdapter.getItem(position));
+        if (word == null){
+            Logger.d("DictionaryFragment::onClick"," Word not found, tag not set.");
+            return;
+        }
+        Dictionary current = CatalogueListSingleton.getInstance(getActivity().getApplicationContext()).getCatalogue(mParentCatalogueName).getDictionary(mDictionaryName);
+        current.removeDictionaryObject(word);
+        mAdapter.notifyDataSetChanged();
+        DictionaryDBHelper dbhelper = new DictionaryDBHelper(getActivity().getApplicationContext());
+        SQLiteDatabase db = dbhelper.getReadableDatabase();
+        String query = "SELECT * FROM " + DictionaryContract.Dictionary.TABLE_NAME + " WHERE " + DictionaryContract.Dictionary.COLUMN_NAME_CATALOGUE_NAME + " = '" + mParentCatalogueName + "' and " + DictionaryContract.Dictionary.COLUMN_NAME_DICTIONARY_NAME + " = '" + mDictionaryName +"'";
+        mRawCursor = db.rawQuery(query, null);
+        mAdapter = new DictionaryAdapter(getActivity().getApplicationContext(), R.layout.dictionary_fragment, mRawCursor, 0);
+        setListAdapter(mAdapter);
+        Logger.d("DictionaryFragment::onClick"," Word "+ word + " removed from " + mDictionaryName);
     }
 }

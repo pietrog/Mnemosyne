@@ -28,8 +28,7 @@ public class Catalogue implements JSONPersist{
 
     private String m_sName;
     private String m_sDescription;
-    private Vector<Dictionary> m_mDictionaries = new Vector<Dictionary>();
-    private boolean mHasBeenModifier = false;
+    private Vector<Dictionary> m_mDictionaries = new Vector<>();
     private final Context mContext;
 
     /**
@@ -64,7 +63,7 @@ public class Catalogue implements JSONPersist{
 
     public Dictionary getDictionary(String name){
         for (Dictionary current : m_mDictionaries){
-            if (current.getName() == name)
+            if (current.getName().compareTo(name) == 0)
                 return current;
         }
 
@@ -87,7 +86,6 @@ public class Catalogue implements JSONPersist{
             return Global.ALREADY_EXISTS;
 
         m_mDictionaries.add(dict);
-        mHasBeenModifier = true;
 
         //@TODO remove this
         writeToJSONFile();
@@ -127,7 +125,7 @@ public class Catalogue implements JSONPersist{
 
 
     public static String getJSONNameFromCatalogueName(String name){
-        String str = "catalogue_" + name;;
+        String str = "catalogue_" + name;
         return str.replaceAll("\\s+", "");
     }
 

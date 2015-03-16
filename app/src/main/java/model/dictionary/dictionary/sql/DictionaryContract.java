@@ -5,6 +5,7 @@ import android.provider.BaseColumns;
 
 /**
  * Created by pietro on 06/03/15.
+ *
  */
 public class DictionaryContract {
 

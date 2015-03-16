@@ -9,7 +9,7 @@
     <string name="hint_catalogue">Catalogue</string>
     <string name="hint_dictionary">Dictionnaire</string>
     <string name="action_create_item">Creer un item</string>
-    <string name="action_remove_item">Supprimer un item</string>
+    <string name="action_remove_item">Supprimer</string>
 
     <!-- Catalogue -->
     <string name="action_cat_create">Creer un catalogue</string>

@@ -2,8 +2,11 @@ package com.mnemo.pietro.mnemosyne.fragments.catalogue;
 
 import android.app.ListFragment;
 import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.mnemo.pietro.mnemosyne.MnemoCentral;
@@ -49,7 +52,8 @@ public class CatalogueListFragment extends ListFragment implements View.OnClickL
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mAdaptater = new CatalogueListAdapter(getActivity(), this);
+        mAdaptater = new CatalogueListAdapter(getActivity());
+        registerForContextMenu(getListView());
         setListAdapter(mAdaptater);
     }
 
@@ -79,10 +83,33 @@ public class CatalogueListFragment extends ListFragment implements View.OnClickL
     @Override
     public void onClick(View v) {
 
-        String name = (String)v.getTag();
+
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = getActivity().getMenuInflater();
+        inflater.inflate(R.menu.item_content_menu, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
+        switch(item.getItemId()){
+
+            case R.id.remove_item:
+                removeCatalogue(info.position);
+                return true;
+        }
+        return true;
+    }
+
+    private void removeCatalogue(int position){
+        String name = ((Catalogue)mAdaptater.getItem(position)).getName();
         CatalogueList cl = CatalogueListSingleton.getInstance(getActivity().getApplicationContext());
         cl.removeCatalogue(name);
         mAdaptater.notifyDataSetChanged();
     }
-
 }

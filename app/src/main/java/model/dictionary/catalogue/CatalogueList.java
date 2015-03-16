@@ -6,13 +6,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Vector;
 
 import model.dictionary.Global;
 import model.dictionary.JSONPersist;
 import model.dictionary.tools.GeneralTools;
+import model.dictionary.tools.Logger;
 
 /**
  * Created by pietro on 09/02/15.
@@ -72,7 +71,7 @@ public class CatalogueList implements JSONPersist{
 
     /**
      * Get the number of catalogue
-     * @return
+     * @return number of item
      */
     public int getCount(){
 
@@ -120,7 +119,7 @@ public class CatalogueList implements JSONPersist{
 
         try {
             JSONObject obj = GeneralTools.getJSONObjectFromFile(path, Global.catalogueList_JSON_filename);
-            JSONArray listOfCatalogue = null;
+            JSONArray listOfCatalogue ;
             //if file does not exist, we create it (first launch of the application)
             if (obj == null)
             {
@@ -139,6 +138,7 @@ public class CatalogueList implements JSONPersist{
             }
         }
         catch(JSONException e){
+            Logger.d("CatalogueList::LoadCatalogueListFromJSONFile"," Problem occured while loading json catalogueList: " + e.getMessage());
         }
 
         return res;
@@ -174,16 +174,6 @@ public class CatalogueList implements JSONPersist{
             return Global.FAILURE;
 
         return GeneralTools.writeFile(json, Global.catalogueList_JSON_filename, mContext);
-    }
-
-    public List<String> getArrayOfString(){
-
-        List<String> res = new ArrayList<String>();
-
-        for(Catalogue key: m_mListOfCatalogue){
-            res.add(key.getName() + " => " + key.getDescription());
-        }
-        return res;
     }
 
 }

@@ -1,7 +1,6 @@
 package model.dictionary.dictionary;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
 

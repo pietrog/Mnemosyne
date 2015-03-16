@@ -2,13 +2,13 @@ package com.mnemo.pietro.mnemosyne.fragments.catalogue;
 
 import android.os.Bundle;
 import android.app.Fragment;
-import android.support.v7.app.ActionBarActivity;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
 
 import com.mnemo.pietro.mnemosyne.MnemoCentral;
@@ -24,7 +24,7 @@ import model.dictionary.dictionary.Dictionary;
 import model.dictionary.tools.ViewTools;
 
 
-public class CatalogueFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener{
+public class CatalogueFragment extends Fragment implements AdapterView.OnItemClickListener{
 
     //private static final String CREATE_DICT_FGT_TAG = "CREATE_DICT_FGT_TAG";
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -68,10 +68,11 @@ public class CatalogueFragment extends Fragment implements View.OnClickListener,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.catalogue_fragment, container, false);
-        mCatalogueAdapter = new CatalogueAdapter(CatalogueListSingleton.getInstance(getActivity().getApplicationContext()).getCatalogue(mCatalogue_name), getActivity().getApplicationContext(), this);
+        mCatalogueAdapter = new CatalogueAdapter(CatalogueListSingleton.getInstance(getActivity().getApplicationContext()).getCatalogue(mCatalogue_name), getActivity().getApplicationContext());
         ListView lv = (ListView) view.findViewById(R.id.dictList);
         lv.setAdapter(mCatalogueAdapter);
         lv.setOnItemClickListener(this);
+        registerForContextMenu(lv);
         return view;
     }
 
@@ -90,28 +91,37 @@ public class CatalogueFragment extends Fragment implements View.OnClickListener,
     }
 
     @Override
-    public void onClick(View v) {
-        if (v instanceof Button){
-            String dictionaryName = (String) v.getTag();
-            CatalogueList singleton = CatalogueListSingleton.getInstance(getActivity().getApplicationContext());
-            Catalogue toRemove = singleton.getCatalogue(mCatalogue_name);
-            toRemove.removeDictionary(dictionaryName);
-            mCatalogueAdapter.notifyDataSetChanged();
-        }
-        else{
-            CreateDictionaryFragment fragment = CreateDictionaryFragment.newInstance(mCatalogue_name);
-            getActivity().getFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.cat_list_fgt, fragment).commit();
-        }
-
-    }
-
-    @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         String dictionaryName = ((Dictionary) mCatalogueAdapter.getItem(position)).getName();
         DictionaryFragment fragment = DictionaryFragment.newInstance(mCatalogue_name, dictionaryName);
         getActivity().getFragmentManager().beginTransaction().addToBackStack(MnemoCentral.FGT_DICTIONARY_TAG).replace(R.id.cat_list_fgt, fragment).commit();
     }
 
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = getActivity().getMenuInflater();
+        inflater.inflate(R.menu.item_content_menu, menu);
+    }
 
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
 
+        switch (item.getItemId()) {
+            case R.id.remove_item:
+                removeDictionary(info.position);
+                return true;
+            default:
+                return true;
+        }
+    }
+
+    private void removeDictionary(int position){
+        String dictionaryName = ((Dictionary)mCatalogueAdapter.getItem(position)).getName();
+        CatalogueList singleton = CatalogueListSingleton.getInstance(getActivity().getApplicationContext());
+        Catalogue toRemove = singleton.getCatalogue(mCatalogue_name);
+        toRemove.removeDictionary(dictionaryName);
+        mCatalogueAdapter.notifyDataSetChanged();
+    }
 }
