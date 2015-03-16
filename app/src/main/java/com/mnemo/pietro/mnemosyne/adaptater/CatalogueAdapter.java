@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.mnemo.pietro.mnemosyne.R;
@@ -55,7 +56,7 @@ public class CatalogueAdapter extends BaseAdapter {
             convertView = mInflater.inflate(R.layout.catalogue_listview_layout, parent, false);
             holder.name = (TextView) convertView.findViewById(R.id.name);
             holder.description = (TextView) convertView.findViewById(R.id.description);
-            holder.removeDict = (Button) convertView.findViewById(R.id.removeButton);
+            holder.removeDict = (ImageButton) convertView.findViewById(R.id.removeButton);
             convertView.setTag(holder);
         }
         else
@@ -77,6 +78,6 @@ public class CatalogueAdapter extends BaseAdapter {
     private class ViewHolder{
         public TextView name;
         public TextView description;
-        public Button removeDict;
+        public ImageButton removeDict;
     }
 }

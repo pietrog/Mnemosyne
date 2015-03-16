@@ -1,8 +1,8 @@
 package com.mnemo.pietro.mnemosyne.fragments.catalogue;
 
-import android.app.Activity;
 import android.app.ListFragment;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 
@@ -13,6 +13,7 @@ import com.mnemo.pietro.mnemosyne.adaptater.CatalogueListAdapter;
 import model.dictionary.catalogue.Catalogue;
 import model.dictionary.catalogue.CatalogueList;
 import model.dictionary.catalogue.CatalogueListSingleton;
+import model.dictionary.tools.ViewTools;
 
 /**
  * Fragment containing the list of all catalogues.
@@ -20,8 +21,6 @@ import model.dictionary.catalogue.CatalogueListSingleton;
  *
  */
 public class CatalogueListFragment extends ListFragment implements View.OnClickListener{
-
-    private OnCatalogueListFragmentInteractionListener mListener;
 
     private CatalogueListAdapter mAdaptater;
 
@@ -44,6 +43,7 @@ public class CatalogueListFragment extends ListFragment implements View.OnClickL
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -61,39 +61,33 @@ public class CatalogueListFragment extends ListFragment implements View.OnClickL
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mListener = (OnCatalogueListFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
     }
 
     @Override
     public void onResume() {
         super.onResume();
         mAdaptater.notifyDataSetChanged();
-        mListener.catalogueListFragmentVisible(); //visibility for add catalogue button
+        ViewTools.setTitle(getActivity(), R.string.hint_catalogue_list);
+        ViewTools.setSubtitle(getActivity(), "");
     }
 
 
-    public interface OnCatalogueListFragmentInteractionListener {
-        public void catalogueListFragmentVisible();
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        CreateCatalogueFragment fragment = CreateCatalogueFragment.newInstance();
+        getFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.cat_list_fgt, fragment).commit();
+        return true;
     }
 
     @Override
     public void onClick(View v) {
+
         String name = (String)v.getTag();
         CatalogueList cl = CatalogueListSingleton.getInstance(getActivity().getApplicationContext());
         cl.removeCatalogue(name);
         mAdaptater.notifyDataSetChanged();
     }
+
 }

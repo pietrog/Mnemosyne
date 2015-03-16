@@ -1,9 +1,9 @@
 package com.mnemo.pietro.mnemosyne.fragments.dictionary;
 
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,9 +25,6 @@ public class DictionaryObjectWordFragment extends Fragment {
 
     private String mWord;
     private String mDefinition;
-    private View mRootView;
-
-    private OnDictionaryObjectWordFragmentInteractionListener mListener;
 
 
     public static DictionaryObjectWordFragment newInstance(WordDefinitionObj obj) {
@@ -56,33 +53,17 @@ public class DictionaryObjectWordFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        mRootView = inflater.inflate(R.layout.dictionary_object_word_fragment, container, false);
+        View mRootView = inflater.inflate(R.layout.dictionary_object_word_fragment, container, false);
         ViewTools.setStringOfTextView((TextView)mRootView.findViewById(R.id.word_name), mWord);
         ViewTools.setStringOfTextView((TextView)mRootView.findViewById(R.id.word_definition), mDefinition);
         return mRootView;
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try{
-            mListener = (OnDictionaryObjectWordFragmentInteractionListener) activity;
-        }
-        catch (ClassCastException e){
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnDictionaryObjectWordFragmentInteractionListener");
-        }
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
-        mListener.dictionaryObjectWordFragmentVisible(mWord);
+        ViewTools.setTitle(getActivity(), "Word");
+        ViewTools.setSubtitle(getActivity(), mWord);
     }
-
-    public interface OnDictionaryObjectWordFragmentInteractionListener {
-        public void dictionaryObjectWordFragmentVisible(String word);
-    }
-
 
 }

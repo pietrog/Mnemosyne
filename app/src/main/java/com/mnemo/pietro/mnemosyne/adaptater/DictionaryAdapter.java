@@ -5,7 +5,7 @@ import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ResourceCursorAdapter;
 import android.widget.TextView;
 
@@ -40,9 +40,9 @@ public class DictionaryAdapter extends ResourceCursorAdapter {
         String word = DictionaryContract.getWord(cursor);
         TextView name = (TextView) view.findViewById(R.id.name);
         name.setText(word);
-        Button removeButton = (Button) view.findViewById(R.id.removeButton);
+        /*ImageButton removeButton = (ImageButton) view.findViewById(R.id.removeButton);
         removeButton.setOnClickListener(mFrag);
-        removeButton.setTag(word);
+        removeButton.setTag(word);*/
 
     }
 }

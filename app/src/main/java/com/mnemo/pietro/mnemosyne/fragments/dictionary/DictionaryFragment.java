@@ -1,15 +1,18 @@
 package com.mnemo.pietro.mnemosyne.fragments.dictionary;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.app.ListFragment;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 
 import com.mnemo.pietro.mnemosyne.R;
 import com.mnemo.pietro.mnemosyne.adaptater.DictionaryAdapter;
+import com.mnemo.pietro.mnemosyne.fragments.word.CreateWordFragment;
 
 import model.dictionary.catalogue.CatalogueListSingleton;
 import model.dictionary.dictionary.Dictionary;
@@ -17,6 +20,7 @@ import model.dictionary.dictionary.WordDefinitionObj;
 import model.dictionary.dictionary.sql.DictionaryContract;
 import model.dictionary.dictionary.sql.DictionaryDBHelper;
 import model.dictionary.tools.Logger;
+import model.dictionary.tools.ViewTools;
 
 /**
  * Dictionary fragment. Manages the layout of a dictionay, add and remove words, ...
@@ -31,8 +35,6 @@ public class DictionaryFragment extends ListFragment implements View.OnClickList
     private String mParentCatalogueName;
     private Cursor mRawCursor;
     private DictionaryAdapter mAdapter;
-
-    private OnDictionaryFragmentInteractionListener mListener;
 
     /**
      * Use this factory method to create a new instance of
@@ -56,8 +58,10 @@ public class DictionaryFragment extends ListFragment implements View.OnClickList
     }
 
     @Override
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         if (getArguments() != null) {
             mDictionaryName = getArguments().getString(DICTIONARY_NAME);
             mParentCatalogueName = getArguments().getString(PARENT_CATALOGUE_NAME);
@@ -76,27 +80,17 @@ public class DictionaryFragment extends ListFragment implements View.OnClickList
         setListAdapter(mAdapter);
     }
 
-    //@Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mListener = (OnDictionaryFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnDictionaryFragmentInteractionListener");
-        }
-    }
-
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mListener.dictionaryFragmentVisible(mDictionaryName);
+        ViewTools.setTitle(getActivity(), R.string.hint_dictionary);
+        ViewTools.setSubtitle(getActivity(), mDictionaryName);
+
     }
 
     @Override
@@ -107,21 +101,6 @@ public class DictionaryFragment extends ListFragment implements View.OnClickList
         if (mRawCursor != null && ! mRawCursor.isClosed())
             mRawCursor.close();
     }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnDictionaryFragmentInteractionListener {
-        public void dictionaryFragmentVisible(String dictionaryName);
-    }
-
 
     @Override
     public void onClick(View v) {
@@ -151,5 +130,12 @@ public class DictionaryFragment extends ListFragment implements View.OnClickList
         DictionaryObjectWordFragment fragment = DictionaryObjectWordFragment.newInstance(obj);
         getFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.cat_list_fgt, fragment).commit();
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        CreateWordFragment fragment = CreateWordFragment.newInstance(mDictionaryName, mParentCatalogueName);
+        getFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.cat_list_fgt, fragment).commit();
+        return true;
     }
 }

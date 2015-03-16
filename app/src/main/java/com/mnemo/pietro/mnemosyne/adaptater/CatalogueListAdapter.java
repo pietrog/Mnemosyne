@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 
@@ -59,7 +60,7 @@ public class CatalogueListAdapter extends BaseAdapter {
             holder = new ViewHolder();
             holder.name = (TextView) convertView.findViewById(R.id.name);
             holder.description = (TextView) convertView.findViewById(R.id.description);
-            holder.removeBox = (Button) convertView.findViewById(R.id.removeButton);
+            holder.removeBox = (ImageButton) convertView.findViewById(R.id.removeButton);
             convertView.setTag(holder);
         }
         else
@@ -85,7 +86,7 @@ public class CatalogueListAdapter extends BaseAdapter {
     private class ViewHolder{
         public TextView name;
         public TextView description;
-        public Button removeBox;
+        public ImageButton removeBox;
     }
 }
 

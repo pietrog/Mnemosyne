@@ -8,6 +8,8 @@
     <string name="hint_catalogue_list">Liste des catalogues</string>
     <string name="hint_catalogue">Catalogue</string>
     <string name="hint_dictionary">Dictionnaire</string>
+    <string name="action_create_item">Creer un item</string>
+    <string name="action_remove_item">Supprimer un item</string>
 
     <!-- Catalogue -->
     <string name="action_cat_create">Creer un catalogue</string>
@@ -29,6 +31,7 @@
     <string name="hint_word_fillIn_word">Mot a definir</string>
     <string name="hint_word_fillIn_definition">Definition</string>
     <string name="hint_word">Word</string>
+    
 
 
 

@@ -3,11 +3,9 @@ package com.mnemo.pietro.mnemosyne.fragments.dictionary;
 
 import android.os.Bundle;
 import android.app.Fragment;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import com.mnemo.pietro.mnemosyne.R;
 
@@ -30,7 +28,6 @@ public class CreateDictionaryFragment extends Fragment implements View.OnClickLi
     //catalogue containing this dictionary
     private String mCatalogueName;
     private View rootView = null;
-    private Toolbar mToolbar;
 
 
     /**
@@ -64,16 +61,12 @@ public class CreateDictionaryFragment extends Fragment implements View.OnClickLi
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.dictionary_create_fragment, container, false);
-        mToolbar = (Toolbar) container.getRootView().getRootView().findViewById(R.id.global_toolbar);
         return rootView;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        Button b =(Button) mToolbar.findViewById(R.id.add_button);
-        b.setText(R.string.action_save);
-        b.setOnClickListener(this);
     }
 
     @Override

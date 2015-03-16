@@ -1,9 +1,10 @@
 package com.mnemo.pietro.mnemosyne.fragments.catalogue;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -20,6 +21,7 @@ import model.dictionary.catalogue.Catalogue;
 import model.dictionary.catalogue.CatalogueList;
 import model.dictionary.catalogue.CatalogueListSingleton;
 import model.dictionary.dictionary.Dictionary;
+import model.dictionary.tools.ViewTools;
 
 
 public class CatalogueFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener{
@@ -32,8 +34,6 @@ public class CatalogueFragment extends Fragment implements View.OnClickListener,
     private String mCatalogue_name;
     private CatalogueAdapter mCatalogueAdapter;
 
-
-    private OnCatalogueFragmentInteractionListener mListener;
 
     /**
      * Use this factory method to create a new instance of
@@ -57,6 +57,7 @@ public class CatalogueFragment extends Fragment implements View.OnClickListener,
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         if (getArguments() != null) {
             mCatalogue_name = getArguments().getString(CATALOGUE_NAME);
         }
@@ -75,31 +76,22 @@ public class CatalogueFragment extends Fragment implements View.OnClickListener,
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mListener = (OnCatalogueFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mListener.catalogueFragmentVisible(mCatalogue_name);
+        ViewTools.setTitle(getActivity(), R.string.hint_catalogue);
+        ViewTools.setSubtitle(getActivity(), mCatalogue_name);
     }
 
-    public interface OnCatalogueFragmentInteractionListener {
-
-        public void catalogueFragmentVisible(String catalogueName);
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        CreateDictionaryFragment fragment = CreateDictionaryFragment.newInstance(mCatalogue_name);
+        getFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.cat_list_fgt, fragment).commit();
+        return true;
     }
 
     @Override
@@ -124,5 +116,7 @@ public class CatalogueFragment extends Fragment implements View.OnClickListener,
         DictionaryFragment fragment = DictionaryFragment.newInstance(mCatalogue_name, dictionaryName);
         getActivity().getFragmentManager().beginTransaction().addToBackStack(MnemoCentral.FGT_DICTIONARY_TAG).replace(R.id.cat_list_fgt, fragment).commit();
     }
+
+
 
 }

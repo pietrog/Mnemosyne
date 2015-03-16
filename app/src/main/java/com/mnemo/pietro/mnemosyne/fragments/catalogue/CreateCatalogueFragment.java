@@ -7,7 +7,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 
 import com.mnemo.pietro.mnemosyne.R;
@@ -49,10 +48,8 @@ public class CreateCatalogueFragment extends Fragment implements View.OnClickLis
     @Override
     public void onResume() {
         super.onResume();
-        mToolbar.setSubtitle(R.string.action_cat_create);
-        Button add = (Button) mToolbar.findViewById(R.id.add_button);
-        add.setText(R.string.action_save);
-        add.setOnClickListener(this);
+        mToolbar.setTitle(R.string.action_cat_create);
+        mToolbar.setSubtitle("");
     }
 
     @Override
