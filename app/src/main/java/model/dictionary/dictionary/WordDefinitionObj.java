@@ -9,11 +9,15 @@ import model.dictionary.dictionary.sql.DictionaryContract;
  */
 public class WordDefinitionObj extends DictionaryObject{
 
-    private String m_sWord; //
-    private String m_sDefinition; //
+    private String m_sWord; // word
+    private String m_sDefinition; // definition of word
 
 
-
+    /**
+     * Cstor for WordDefinitionObj
+     * @param word word
+     * @param definition definition of word
+     */
     public WordDefinitionObj(String word, String definition)
     {
         super( word+ "(" + definition + "...)");
