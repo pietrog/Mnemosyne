@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -21,7 +22,7 @@ import model.dictionary.tools.ViewTools;
  * Use the {@link CreateDictionaryFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CreateDictionaryFragment extends Fragment implements View.OnClickListener{
+public class CreateDictionaryFragment extends Fragment {
 
     private static final String CATALOGUE_NAME = "DICT_NAME";
 
@@ -53,6 +54,7 @@ public class CreateDictionaryFragment extends Fragment implements View.OnClickLi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         if (getArguments() != null) {
             mCatalogueName = getArguments().getString(CATALOGUE_NAME);
         }
@@ -80,8 +82,14 @@ public class CreateDictionaryFragment extends Fragment implements View.OnClickLi
     }
 
     @Override
-    public void onClick(View v) {
-        saveDictionary();
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()){
+            case R.id.validate:
+                saveDictionary();
+                return true;
+            default:
+                return true;
+        }
     }
 
     public void saveDictionary(){

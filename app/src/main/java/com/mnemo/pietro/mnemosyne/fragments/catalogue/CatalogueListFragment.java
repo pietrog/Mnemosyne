@@ -23,7 +23,7 @@ import model.dictionary.tools.ViewTools;
  * You can click on a catalogue to open the catalogue fragment and obtain the list of dictionaries
  *
  */
-public class CatalogueListFragment extends ListFragment implements View.OnClickListener{
+public class CatalogueListFragment extends ListFragment {
 
     private CatalogueListAdapter mAdaptater;
 
@@ -78,12 +78,6 @@ public class CatalogueListFragment extends ListFragment implements View.OnClickL
         CreateCatalogueFragment fragment = CreateCatalogueFragment.newInstance();
         getFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.cat_list_fgt, fragment).commit();
         return true;
-    }
-
-    @Override
-    public void onClick(View v) {
-
-
     }
 
     @Override
