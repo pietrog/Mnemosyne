@@ -69,7 +69,7 @@ public class CatalogueFragment extends Fragment implements AdapterView.OnItemCli
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.catalogue_fragment, container, false);
         mCatalogueAdapter = new CatalogueAdapter(CatalogueListSingleton.getInstance(getActivity().getApplicationContext()).getCatalogue(mCatalogue_name), getActivity().getApplicationContext());
-        ListView lv = (ListView) view.findViewById(R.id.dictList);
+        ListView lv = (ListView) view.findViewById(R.id.list);
         lv.setAdapter(mCatalogueAdapter);
         lv.setOnItemClickListener(this);
         registerForContextMenu(lv);

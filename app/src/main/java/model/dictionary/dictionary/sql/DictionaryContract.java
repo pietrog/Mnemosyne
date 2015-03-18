@@ -21,7 +21,7 @@ public class DictionaryContract {
 
 
     /**
-     *
+     * CURSOR GETTER/SETTER
      */
     public static String getWord (Cursor cursor){
         return cursor.getString(cursor.getColumnIndex(Dictionary.COLUMN_NAME_WORD));

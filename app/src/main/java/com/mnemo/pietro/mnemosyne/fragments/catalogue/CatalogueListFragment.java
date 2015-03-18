@@ -1,11 +1,15 @@
 package com.mnemo.pietro.mnemosyne.fragments.catalogue;
 
+import android.app.Fragment;
 import android.app.ListFragment;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.ContextMenu;
+import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
@@ -23,7 +27,7 @@ import model.dictionary.tools.ViewTools;
  * You can click on a catalogue to open the catalogue fragment and obtain the list of dictionaries
  *
  */
-public class CatalogueListFragment extends ListFragment {
+public class CatalogueListFragment extends Fragment implements AdapterView.OnItemClickListener {
 
     private CatalogueListAdapter mAdaptater;
 
@@ -50,16 +54,23 @@ public class CatalogueListFragment extends ListFragment {
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.catalogue_list_fragment, container, false);
         mAdaptater = new CatalogueListAdapter(getActivity());
-        registerForContextMenu(getListView());
-        setListAdapter(mAdaptater);
+        ListView lv = (ListView) view.findViewById(R.id.list);
+        registerForContextMenu(lv);
+        lv.setAdapter(mAdaptater);
+        lv.setOnItemClickListener(this);
+        return view;
     }
 
     @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+    }
 
-    public void onListItemClick(ListView l, View v, int position, long id) {
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         CatalogueFragment cfgt = CatalogueFragment.newInstance(((Catalogue)mAdaptater.getItem(position)).getName());
         getFragmentManager().beginTransaction().replace(R.id.cat_list_fgt, cfgt).addToBackStack(MnemoCentral.FGT_CATALOGUE_TAG).commit();
     }
@@ -106,4 +117,7 @@ public class CatalogueListFragment extends ListFragment {
         cl.removeCatalogue(name);
         mAdaptater.notifyDataSetChanged();
     }
+
+
+
 }

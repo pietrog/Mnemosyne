@@ -2,14 +2,23 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
+    style="@style/wordobjectname"
     >
     <TextView
+        android:text="NAME"
         android:id="@+id/word_name"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content"
+        style="@style/description"
+        android:layout_alignParentTop="true"
+        />
 
     <TextView
+        android:text="DEFINITION"
         android:id="@+id/word_definition"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content"
+        style="@style/description"
+        android:layout_below="@+id/word_name"/>
+
 </RelativeLayout>

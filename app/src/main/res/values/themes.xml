@@ -1,29 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="name">
-        <item name="android:textSize">25dp</item>
-        <item name="android:textStyle">bold</item>
+    <!-- WORDDEF OBJECT-->
+    <style name="wordobjectname" parent="AppTheme">
+        <item name="android:background">#F0F0F0</item>
     </style>
 
-    <style name="description">
+
+    <style name="name" parent="AppTheme">
+        <item name="android:textSize">25dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/material_blue_grey_800</item>
+        <item name="android:layout_centerInParent">true</item>
+    </style>
+
+    <style name="description" parent="AppTheme">
+        <item name="android:textColor">@color/black_translucent</item>
         <item name="android:textSize">15dp</item>
         <item name="android:textStyle">italic</item>
     </style>
 
     <!-- Passive text when editing -->
-    <style name="passiveText">
+    <style name="passiveText" parent="AppTheme">
         <item name="android:textSize">20dp</item>
         <item name="android:textStyle">bold</item>
     </style>
-    <style name="editingZone">
-        <item name="android:background">@color/editBackColor</item>
+    <style name="editingZone" parent="AppTheme">
+        <item name="android:background">@color/colorSecondaryDark</item>
         <item name="android:layout_margin">10dp</item>
         <item name="android:padding">5dp</item>
     </style>
 
     <!-- RemoveButton of CatalogueList, Catalogue and Dictionary fragments -->
-    <style name="removeButton">
+    <style name="removeButton" parent="AppTheme">
         <item name="android:layout_width">30dp</item>
         <item name="android:layout_height">30dp</item>
         <item name="android:focusableInTouchMode">false</item>
@@ -31,11 +40,13 @@
     </style>
 
     <style name="AppTheme" parent="AppTheme.Base">
+        <item name="android:actionBarStyle">@color/colorPrimaryDark</item>
     </style>
 
-    <style name="AppTheme.Base" parent="Theme.AppCompat">
+    <style name="AppTheme.Base" parent="Theme.AppCompat.Light">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="android:windowBackground">@color/windowBackgroundColor</item>
         <item name="android:windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
     </style>
