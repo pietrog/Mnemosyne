@@ -20,7 +20,7 @@ public class DictionaryDBHelper extends SQLiteOpenHelper {
     private static final String COMMASEP = " ,";
 
     //sql request for dictionary table creation
-    private static final String SQL_CREATE_DICTIONARY_TABLE =
+    private static final String SQL_CREATE_TABLE =
             "CREATE TABLE " + DictionaryContract.Dictionary.TABLE_NAME + " ( "
                     + DictionaryContract.Dictionary._ID + " INTEGER PRIMARY KEY" + COMMASEP
                     + DictionaryContract.Dictionary.COLUMN_NAME_CATALOGUE_NAME + TEXT_TYPE + COMMASEP
@@ -37,7 +37,7 @@ public class DictionaryDBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(SQL_CREATE_DICTIONARY_TABLE);
+        db.execSQL(SQL_CREATE_TABLE);
     }
 
     @Override

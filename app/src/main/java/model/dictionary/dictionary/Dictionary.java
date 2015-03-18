@@ -1,12 +1,14 @@
 package model.dictionary.dictionary;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 
 import model.dictionary.Global;
 import model.dictionary.dictionary.sql.DictionaryContract;
 import model.dictionary.dictionary.sql.DictionaryDBHelper;
+import model.dictionary.tools.Logger;
 
 /**
  * Created by pietro on 30/01/15.
@@ -20,7 +22,7 @@ public class Dictionary {
     private String mName;
     private String mDescription;
     private String mCatalogueName;
-    private DictionaryDBHelper mDBHelper;
+    private SQLDictionary mDictionaryPersitence;
 
     //structure that store the elements
 
@@ -34,7 +36,7 @@ public class Dictionary {
         mDescription = description;
         mName = name;
         mCatalogueName = catalogueName;
-        mDBHelper = dbHelper;
+        mDictionaryPersitence = new SQLDictionary(dbHelper);
     }
 
 
@@ -44,36 +46,21 @@ public class Dictionary {
      * @return {Global.SUCCESS} if successful, {Global.FAILURE} otherwise
      */
     public int addDictionaryObject(DictionaryObject value){
-
-        //if key or value is empty
-        SQLiteDatabase db = mDBHelper.getWritableDatabase();
-        ContentValues val = value.toContentValues();
-        val.put(DictionaryContract.Dictionary.COLUMN_NAME_CATALOGUE_NAME, mCatalogueName);
-        val.put(DictionaryContract.Dictionary.COLUMN_NAME_DICTIONARY_NAME, mName);
-        if (db.insert(TABLE_NAME, null, val) == -1)
-            return Global.FAILURE;
-        return Global.SUCCESS;
+        return mDictionaryPersitence.addObject(mCatalogueName, mName, value);
     }
 
 
     public int removeDictionaryObject(String name){
-        SQLiteDatabase db = mDBHelper.getWritableDatabase();
-        String sqlclause = DictionaryContract.Dictionary.COLUMN_NAME_DICTIONARY_NAME + "= '" + mName +"'";
-        sqlclause += " and " + DictionaryContract.Dictionary.COLUMN_NAME_CATALOGUE_NAME + "= '" + mCatalogueName+"'";
-        sqlclause += " and " + DictionaryContract.Dictionary.COLUMN_NAME_WORD + "= '" + name +"'";
-        return db.delete(TABLE_NAME, sqlclause, null);
+        return mDictionaryPersitence.removeObject(mCatalogueName, mName, name);
     }
 
 
     /**
-     * Remove current dictionary and all words in database
+     * Remove all words in database of current dictionary
      * @return {Global.SUCCESS} if successfull, {Global.NOT_FOUND} otherwise
      */
     public int clear(){
-        SQLiteDatabase db = mDBHelper.getWritableDatabase();
-        String sqlclause = DictionaryContract.Dictionary.COLUMN_NAME_DICTIONARY_NAME + "= '" + mName+"'";
-        sqlclause += " and " + DictionaryContract.Dictionary.COLUMN_NAME_CATALOGUE_NAME + "= '" + mCatalogueName+"'";
-        return db.delete(TABLE_NAME, sqlclause, null);
+        return mDictionaryPersitence.clearAll(mCatalogueName, mName);
     }
 
 
@@ -86,6 +73,68 @@ public class Dictionary {
     }
 
     public void setDBHelper(DictionaryDBHelper helper){
-        mDBHelper = helper;
+        mDictionaryPersitence.setDBHelper(helper);
+    }
+
+
+    private class SQLDictionary{
+
+        private DictionaryDBHelper mDBHelper = null;
+        private SQLiteDatabase mDB;
+
+        public SQLDictionary(DictionaryDBHelper dbHelper){
+            setDBHelper(dbHelper);
+        }
+
+        public void setDBHelper(DictionaryDBHelper dbHelper){
+            if (dbHelper != null && mDBHelper == null){
+                mDBHelper = dbHelper;
+                mDB = mDBHelper.getWritableDatabase();
+            }
+        }
+
+        private boolean isDBReady(){
+            boolean res = (mDB != null && mDB.isOpen());
+            Logger.w("SQLDictionary::isDBReady", " mDB is not ready");
+            return res;
+        }
+
+
+        public int addObject(String catalogueName, String dictionaryName, DictionaryObject value){
+            ContentValues val = value.toContentValues();
+            val.put(DictionaryContract.Dictionary.COLUMN_NAME_CATALOGUE_NAME, catalogueName);
+            val.put(DictionaryContract.Dictionary.COLUMN_NAME_DICTIONARY_NAME, dictionaryName);
+            if (mDB.insert(TABLE_NAME, null, val) == -1)
+                return Global.FAILURE;
+            return Global.SUCCESS;
+        }
+
+        public int removeObject(String catalogueName, String dictionaryName, String objectName){
+            String sqlclause = DictionaryContract.Dictionary.COLUMN_NAME_DICTIONARY_NAME + "= '" + dictionaryName +"'";
+            sqlclause += " and " + DictionaryContract.Dictionary.COLUMN_NAME_CATALOGUE_NAME + "= '" + catalogueName+"'";
+            sqlclause += " and " + DictionaryContract.Dictionary.COLUMN_NAME_WORD + "= '" + objectName +"'";
+            return mDB.delete(TABLE_NAME, sqlclause, null);
+        }
+
+
+        public DictionaryObject getObjectFromID(int _id){
+            if (!isDBReady())
+                return null;
+
+            String sqlclause = "SELECT * FROM " + TABLE_NAME
+                    + " WHERE " + DictionaryContract.Dictionary._ID + " = " + _id;
+            Cursor cursor = mDB.rawQuery(sqlclause, null);
+            if (!cursor.moveToFirst())
+                return null;
+
+            DictionaryObject res= new WordDefinitionObj(DictionaryContract.getWord(cursor), DictionaryContract.getDefinition(cursor));
+            return res;
+        }
+
+        public int clearAll(String catalogueName, String dictionaryName){
+            String sqlclause = DictionaryContract.Dictionary.COLUMN_NAME_DICTIONARY_NAME + "= '" + dictionaryName+"'";
+            sqlclause += " and " + DictionaryContract.Dictionary.COLUMN_NAME_CATALOGUE_NAME + "= '" + catalogueName+"'";
+            return mDB.delete(TABLE_NAME, sqlclause, null);
+        }
     }
 }
