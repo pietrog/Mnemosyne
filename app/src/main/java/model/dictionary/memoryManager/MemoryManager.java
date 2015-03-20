@@ -1,6 +1,7 @@
 package model.dictionary.memoryManager;
 
 
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -20,14 +21,27 @@ import model.dictionary.tools.Logger;
  */
 public class MemoryManager {
 
-    public MemoryManager (){
+    private MemoryManagerSQL mMemMgrSQL;
 
+    public MemoryManager (Context context){
+        MemoryMNanagerDBHelper dbhelper = new MemoryMNanagerDBHelper(context);
+        mMemMgrSQL = new MemoryManagerSQL(dbhelper);
     }
+
 
 
     public int addWordManager(){
 
         return Global.SUCCESS;
+    }
+
+
+    /**
+     * Retrieve the list of all dictionary objects saved in column COLUMN_NAME_IDLIST for today's date
+     * @return list of integer (object ids)
+     */
+    public Vector<Integer> getTodayListOfObjectIDs(){
+        return mMemMgrSQL.getTodayListOfObjectIDs();
     }
 
 
