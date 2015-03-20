@@ -17,6 +17,8 @@ public class DictionaryContract {
         public static final String COLUMN_NAME_DICTIONARY_NAME = "dictionary";
         public static final String COLUMN_NAME_WORD = "word";
         public static final String COLUMN_NAME_DEFINITION = "definition";
+        public static final String COLUMN_NAME_DATE_NEXT_ALERT = "date_next_alert"; // date for the next alert on this object
+        public static final String COLUMN_NAME_MEMORY_PHASE = "memory_phase"; // phase of the memory cycle
     }
 
 
@@ -24,15 +26,25 @@ public class DictionaryContract {
      * CURSOR GETTER/SETTER
      */
     public static String getWord (Cursor cursor){
-        return cursor.getString(cursor.getColumnIndex(Dictionary.COLUMN_NAME_WORD));
+        return getColumnElement(cursor, Dictionary.COLUMN_NAME_WORD);
     }
     public static String getDefinition (Cursor cursor){
-        return cursor.getString(cursor.getColumnIndex(Dictionary.COLUMN_NAME_DEFINITION));
+        return getColumnElement(cursor, Dictionary.COLUMN_NAME_DEFINITION);
     }
     public static String getCatalogueName (Cursor cursor){
-        return cursor.getString(cursor.getColumnIndex(Dictionary.COLUMN_NAME_CATALOGUE_NAME));
+        return getColumnElement(cursor, Dictionary.COLUMN_NAME_CATALOGUE_NAME);
     }
     public static String getDictionaryName (Cursor cursor){
-        return cursor.getString(cursor.getColumnIndex(Dictionary.COLUMN_NAME_DICTIONARY_NAME));
+        return getColumnElement(cursor, Dictionary.COLUMN_NAME_DICTIONARY_NAME);
+    }
+    public static String getDateNextAlert(Cursor cursor){
+        return getColumnElement(cursor, Dictionary.COLUMN_NAME_DATE_NEXT_ALERT);
+    }
+    public static String getMemoryPhase(Cursor cursor){
+        return getColumnElement(cursor, Dictionary.COLUMN_NAME_MEMORY_PHASE);
+    }
+
+    private static String getColumnElement(Cursor cursor, String column){
+        return cursor.getString(cursor.getColumnIndex(column));
     }
 }

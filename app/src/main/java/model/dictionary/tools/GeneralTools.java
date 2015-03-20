@@ -14,6 +14,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Vector;
 
 import model.dictionary.Global;
 
@@ -91,5 +94,18 @@ public class GeneralTools {
     public static int deleteFile(String filename){
         File file = new File(filename);
         return file.delete() ? Global.SUCCESS : Global.FAILURE;
+    }
+
+    public static String getTodayDateFormatted(Date date){
+        SimpleDateFormat sdf = new SimpleDateFormat("dd:MMM:yyyy");
+        return sdf.format(date);
+    }
+
+    public static String getStringFrom(Vector<?> vect){
+        String res = "";
+        for(Object curr : vect)
+            res += curr.toString() + ",";
+
+        return res.substring(0, res.length()-1);
     }
 }

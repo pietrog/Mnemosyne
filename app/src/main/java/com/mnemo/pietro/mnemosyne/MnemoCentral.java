@@ -1,6 +1,7 @@
 package com.mnemo.pietro.mnemosyne;
 
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 
@@ -38,7 +39,6 @@ public class MnemoCentral
             CatalogueListFragment fgt = CatalogueListFragment.newInstance();
             getFragmentManager().beginTransaction().add(R.id.cat_list_fgt, fgt).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
         }
-
     }
 
 

@@ -22,8 +22,19 @@ public class MemoryManagerContract {
     public static String getIDList (Cursor cursor){
         if (cursor == null)
             return "";
-
         return cursor.getString(cursor.getColumnIndex(MemoryManager.COLUMN_NAME_IDLIST));
+    }
+
+    public static String getDate(Cursor cursor){
+        if (cursor == null)
+            return "";
+        return cursor.getString(cursor.getColumnIndex(MemoryManager.COLUMN_NAME_DATE));
+    }
+
+    public static long getID(Cursor cursor){
+        if (cursor == null)
+            return -1;
+        return cursor.getLong(cursor.getColumnIndex(MemoryManager._ID));
     }
 
 

@@ -45,8 +45,10 @@ public class Dictionary {
      * @param value object to insert
      * @return {Global.SUCCESS} if successful, {Global.FAILURE} otherwise
      */
-    public int addDictionaryObject(DictionaryObject value){
-        return mDictionaryPersitence.addObject(mCatalogueName, mName, value);
+    public long addDictionaryObject(DictionaryObject value){
+        long res = mDictionaryPersitence.addObject(mCatalogueName, mName, value);
+
+        return res;
     }
 
 
@@ -100,13 +102,11 @@ public class Dictionary {
         }
 
 
-        public int addObject(String catalogueName, String dictionaryName, DictionaryObject value){
+        public long addObject(String catalogueName, String dictionaryName, DictionaryObject value){
             ContentValues val = value.toContentValues();
             val.put(DictionaryContract.Dictionary.COLUMN_NAME_CATALOGUE_NAME, catalogueName);
             val.put(DictionaryContract.Dictionary.COLUMN_NAME_DICTIONARY_NAME, dictionaryName);
-            if (mDB.insert(TABLE_NAME, null, val) == -1)
-                return Global.FAILURE;
-            return Global.SUCCESS;
+            return mDB.insert(TABLE_NAME, null, val);
         }
 
         public int removeObject(String catalogueName, String dictionaryName, String objectName){

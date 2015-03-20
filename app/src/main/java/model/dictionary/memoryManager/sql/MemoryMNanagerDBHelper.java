@@ -24,7 +24,7 @@ public class MemoryMNanagerDBHelper extends SQLiteOpenHelper{
             "CREATE TABLE " + MemoryManagerContract.MemoryManager.TABLE_NAME + "( "
             + MemoryManagerContract.MemoryManager._ID + " INTEGER PRIMARY KEY" + COMMASEP
             + MemoryManagerContract.MemoryManager.COLUMN_NAME_DATE + TEXT_TYPE + COMMASEP
-            + MemoryManagerContract.MemoryManager.COLUMN_NAME_IDLIST + TEXT_TYPE + COMMASEP
+            + MemoryManagerContract.MemoryManager.COLUMN_NAME_IDLIST + TEXT_TYPE
             + ")"
             ;
 

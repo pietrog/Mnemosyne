@@ -8,12 +8,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.mnemo.pietro.mnemosyne.MnemoMemoryManager;
 import com.mnemo.pietro.mnemosyne.R;
 
 import model.dictionary.catalogue.CatalogueListSingleton;
 import model.dictionary.dictionary.Dictionary;
 import model.dictionary.dictionary.WordDefinitionObj;
 import model.dictionary.dictionary.sql.DictionaryDBHelper;
+import model.dictionary.memoryManager.MemoryManager;
+import model.dictionary.memoryManager.MemoryManagerSingleton;
 import model.dictionary.tools.ViewTools;
 
 /**
@@ -83,10 +86,17 @@ public class CreateWordFragment extends Fragment {
         WordDefinitionObj wordDef = new WordDefinitionObj(word, definition);
         Dictionary dict = CatalogueListSingleton.getInstance(getActivity().getApplicationContext()).getCatalogue(mCatalogueName).getDictionary(mDictionaryName);
         dict.setDBHelper(new DictionaryDBHelper(getActivity().getApplicationContext()));
-        dict.addDictionaryObject(wordDef);
+        long rowID = dict.addDictionaryObject(wordDef);
+
+
+        MemoryManager mgr = MemoryManagerSingleton.getInstance(getActivity().getApplicationContext());
+        long id = mgr.addWordManagerForToday(rowID);
+
 
         ViewTools.hideKeyboard(mRootview, getActivity());
         getFragmentManager().popBackStack();
+
+        MnemoMemoryManager.startActionRiseTodayList(getActivity().getApplicationContext(), "");
     }
 
 }
