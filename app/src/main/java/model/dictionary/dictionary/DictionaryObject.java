@@ -14,41 +14,18 @@ import java.util.Date;
 public abstract class DictionaryObject {
 
     //object content
-    private String str_desc; // the string description of the object
+    private long mID; // Unique identifier of this object
 
     //memory management
-    private Date lastTimeChecked; // last time the user checked this object
-    private Date firstTimeChecked; // first time the user checked this object
+    private Date lastTimeLearnt; // last time the user checked this object
+    private Date nextTimeToLearn; // first time the user checked this object
 
     /**
      * Constructor
-     * @param desc string description of the object
+     * @param id object's identifier
      */
-    DictionaryObject(String desc){
-        str_desc = desc;
-    }
-
-    /**
-     * Empty constructor, just return an empty object for type checking
-     * Private, can be used only by internals methods like getEmptyForType
-     */
-    private DictionaryObject(){}
-
-
-    /**
-     * Merge this object with one given as parameter
-     * @param toMerge object to merge with current object
-     */
-    public void mergeObjectWith(DictionaryObject toMerge){
-        //TODO merge two objects together
-    }
-
-    /**
-     * Get the string description of the object
-     * @return string
-     */
-    public String getStrDesc(){
-        return str_desc;
+    DictionaryObject(long id){
+        mID = id;
     }
 
 

@@ -16,11 +16,12 @@ import model.dictionary.tools.Logger;
 /**
  * Created by pietro on 09/02/15.
  *
+ * Class that manage the list of catalogues
  * The entry point. Contains the list of all catalogues. Catalogues contain list of dictionaries, that contain list of couples
  * It loads a json file containing a list of catalogues
  */
 
-public class CatalogueList implements JSONPersist{
+public class CatalogueList implements ICatalogueList, JSONPersist{
 
     // JSON KEYS
     public static final String JSON_NAME = "name";
@@ -53,7 +54,7 @@ public class CatalogueList implements JSONPersist{
     /**
      * Remove the cata
      * @param catalogueName Name of the catalogue to remove
-     * @return {Global.SUCCESS}
+     * @return {Global.SUCCESS} if everyting is deleted
      */
     public int removeCatalogue(String catalogueName){
 
@@ -63,10 +64,9 @@ public class CatalogueList implements JSONPersist{
 
         String fileName = Catalogue.getJSONNameFromCatalogueName(catalogueName);
         toRemove.clear();
-        int res = m_mListOfCatalogue.remove(toRemove) ? Global.SUCCESS : Global.NOT_FOUND;
-        GeneralTools.deleteFile(fileName);
+        m_mListOfCatalogue.remove(toRemove);
 
-        return res;
+        return GeneralTools.deleteFile(fileName);
     }
 
     /**
