@@ -5,9 +5,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 
-import model.dictionary.Global;
-import model.dictionary.dictionary.sql.DictionaryContract;
+import model.dictionary.dictionary.sql.DictionaryContractBase;
 import model.dictionary.dictionary.sql.DictionaryDBHelper;
+import model.dictionary.dictionary.sql.DictionaryOfWordContract;
 import model.dictionary.tools.Logger;
 
 /**
@@ -16,7 +16,7 @@ import model.dictionary.tools.Logger;
  */
 public class Dictionary {
 
-    private static final String TABLE_NAME = DictionaryContract.Dictionary.TABLE_NAME;
+    private static final String TABLE_NAME = DictionaryContractBase.DictionaryBase.TABLE_NAME;
 
     //description of the dictionary
     private String mName;
@@ -104,15 +104,14 @@ public class Dictionary {
 
         public long addObject(String catalogueName, String dictionaryName, DictionaryObject value){
             ContentValues val = value.toContentValues();
-            val.put(DictionaryContract.Dictionary.COLUMN_NAME_CATALOGUE_NAME, catalogueName);
-            val.put(DictionaryContract.Dictionary.COLUMN_NAME_DICTIONARY_NAME, dictionaryName);
+            val.put(DictionaryContractBase.DictionaryBase.COLUMN_NAME_CATALOGUE_NAME, catalogueName);
+            val.put(DictionaryContractBase.DictionaryBase.COLUMN_NAME_DICTIONARY_NAME, dictionaryName);
             return mDB.insert(TABLE_NAME, null, val);
         }
-
         public int removeObject(String catalogueName, String dictionaryName, String objectName){
-            String sqlclause = DictionaryContract.Dictionary.COLUMN_NAME_DICTIONARY_NAME + "= '" + dictionaryName +"'";
-            sqlclause += " and " + DictionaryContract.Dictionary.COLUMN_NAME_CATALOGUE_NAME + "= '" + catalogueName+"'";
-            sqlclause += " and " + DictionaryContract.Dictionary.COLUMN_NAME_WORD + "= '" + objectName +"'";
+            String sqlclause = DictionaryContractBase.DictionaryBase.COLUMN_NAME_DICTIONARY_NAME + "= '" + dictionaryName +"'";
+            sqlclause += " and " + DictionaryContractBase.DictionaryBase.COLUMN_NAME_CATALOGUE_NAME + "= '" + catalogueName+"'";
+            sqlclause += " and " + DictionaryContractBase.DictionaryBase.COLUMN_NAME_WORD + "= '" + objectName +"'";
             return mDB.delete(TABLE_NAME, sqlclause, null);
         }
 
@@ -122,19 +121,20 @@ public class Dictionary {
                 return null;
 
             String sqlclause = "SELECT * FROM " + TABLE_NAME
-                    + " WHERE " + DictionaryContract.Dictionary._ID + " = " + _id;
+                    + " WHERE " + DictionaryContractBase.DictionaryBase._ID + " = " + _id;
             Cursor cursor = mDB.rawQuery(sqlclause, null);
             if (!cursor.moveToFirst())
                 return null;
 
-            DictionaryObject res= new WordDefinitionObj(DictionaryContract.getWord(cursor), DictionaryContract.getDefinition(cursor));
+            DictionaryObject res= new WordDefinitionObj(1, DictionaryOfWordContract.getWord(cursor), DictionaryOfWordContract.getDefinition(cursor));
             return res;
         }
 
         public int clearAll(String catalogueName, String dictionaryName){
-            String sqlclause = DictionaryContract.Dictionary.COLUMN_NAME_DICTIONARY_NAME + "= '" + dictionaryName+"'";
-            sqlclause += " and " + DictionaryContract.Dictionary.COLUMN_NAME_CATALOGUE_NAME + "= '" + catalogueName+"'";
+            String sqlclause = DictionaryContractBase.DictionaryBase.COLUMN_NAME_DICTIONARY_NAME + "= '" + dictionaryName+"'";
+            sqlclause += " and " + DictionaryContractBase.DictionaryBase.COLUMN_NAME_CATALOGUE_NAME + "= '" + catalogueName+"'";
             return mDB.delete(TABLE_NAME, sqlclause, null);
         }
     }
+
 }

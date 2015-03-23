@@ -10,7 +10,8 @@ import android.widget.TextView;
 
 import com.mnemo.pietro.mnemosyne.R;
 
-import model.dictionary.dictionary.sql.DictionaryContract;
+import model.dictionary.dictionary.sql.DictionaryContractBase;
+import model.dictionary.dictionary.sql.DictionaryOfWordContract;
 
 
 /**
@@ -33,7 +34,7 @@ public class DictionaryAdapter extends ResourceCursorAdapter {
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
-        String word = DictionaryContract.getWord(cursor);
+        String word = DictionaryOfWordContract.getWord(cursor);
         TextView name = (TextView) view.findViewById(R.id.name);
         name.setText(word);
     }

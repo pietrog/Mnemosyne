@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 public class DictionaryDBHelper extends SQLiteOpenHelper {
 
-    public static final int DATABASE_VERSION = 2;
+    public static final int DATABASE_VERSION = 3;
     public static final String DATABASE_NAME = "dictionary.db";
 
     /**
@@ -21,14 +21,14 @@ public class DictionaryDBHelper extends SQLiteOpenHelper {
 
     //sql request for dictionary table creation
     private static final String SQL_CREATE_TABLE =
-            "CREATE TABLE " + DictionaryContract.Dictionary.TABLE_NAME + " ( "
-                    + DictionaryContract.Dictionary._ID + " INTEGER PRIMARY KEY" + COMMASEP
-                    + DictionaryContract.Dictionary.COLUMN_NAME_CATALOGUE_NAME + TEXT_TYPE + COMMASEP
-                    + DictionaryContract.Dictionary.COLUMN_NAME_DICTIONARY_NAME + TEXT_TYPE + COMMASEP
-                    + DictionaryContract.Dictionary.COLUMN_NAME_WORD + TEXT_TYPE + COMMASEP
-                    + DictionaryContract.Dictionary.COLUMN_NAME_DEFINITION + TEXT_TYPE + " )";
+            "CREATE TABLE " + DictionaryContractBase.DictionaryBase.TABLE_NAME + " ( "
+                    + DictionaryContractBase.DictionaryBase._ID + " INTEGER PRIMARY KEY" + COMMASEP
+                    + DictionaryContractBase.DictionaryBase.COLUMN_NAME_CATALOGUE_NAME + TEXT_TYPE + COMMASEP
+                    + DictionaryContractBase.DictionaryBase.COLUMN_NAME_DICTIONARY_NAME + TEXT_TYPE + COMMASEP
+                    + DictionaryContractBase.DictionaryBase.COLUMN_NAME_WORD + TEXT_TYPE + COMMASEP
+                    + DictionaryContractBase.DictionaryBase.COLUMN_NAME_DEFINITION + TEXT_TYPE + " )";
 
-    private static final String SQL_DROP_TABLE = "DROP TABLE " + DictionaryContract.Dictionary.TABLE_NAME;
+    private static final String SQL_DROP_TABLE = "DROP TABLE " + DictionaryContractBase.DictionaryBase.TABLE_NAME;
 
 
     public DictionaryDBHelper(Context context){

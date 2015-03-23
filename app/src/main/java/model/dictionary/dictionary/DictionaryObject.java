@@ -4,6 +4,9 @@ import android.content.ContentValues;
 
 import java.util.Date;
 
+import model.dictionary.dictionary.sql.DictionaryContractBase;
+import model.dictionary.tools.GeneralTools;
+
 
 /**
  * Created by pietro on 30/01/15.
@@ -15,19 +18,37 @@ public abstract class DictionaryObject {
 
     //object content
     private long mID; // Unique identifier of this object
+    private String mCatalogueName;
+    private String mDictionaryName;
 
     //memory management
-    private Date lastTimeLearnt; // last time the user checked this object
-    private Date nextTimeToLearn; // first time the user checked this object
+    private Date mLastTimeLearnt; // last time the user checked this object
+    private Date mNextTimeToLearn; // first time the user checked this object
 
     /**
-     * Constructor
-     * @param id object's identifier
+     * Empty constructor. Used when we create a new dictionary object
      */
-    DictionaryObject(long id){
+    protected DictionaryObject(){}
+
+    protected DictionaryObject(long id, String catalogueName, String dictionaryName, String lastTimeLearnt, String nextTimeToLearn){
         mID = id;
+        mCatalogueName = catalogueName;
+        mDictionaryName = dictionaryName;
+        mLastTimeLearnt = GeneralTools.getDateFromSQLDate(lastTimeLearnt);
+        mNextTimeToLearn = GeneralTools.getDateFromSQLDate(nextTimeToLearn);
     }
 
+    public long getID() {
+        return mID;
+    }
+
+    public Date getLastTimeLearnt(){
+        return mLastTimeLearnt;
+    }
+
+    public Date getNextTimeToLearn(){
+        return mNextTimeToLearn;
+    }
 
     /**
      * Return type of the current object
@@ -35,6 +56,17 @@ public abstract class DictionaryObject {
      */
     public abstract DictionaryObjectType getType();
 
-    public abstract ContentValues toContentValues();
+    /**
+     * Get the object in ContentValues container, for sql. Method to override in all subclasses
+     * @return ContentValues of this object
+     */
+    public ContentValues toContentValues(){
+        ContentValues value = new ContentValues();
+        value.put(DictionaryContractBase.DictionaryBase.COLUMN_NAME_CATALOGUE_NAME, mCatalogueName);
+        value.put(DictionaryContractBase.DictionaryBase.COLUMN_NAME_DICTIONARY_NAME, mDictionaryName);
+        value.put(DictionaryContractBase.DictionaryBase.COLUMN_NAME_DATE_LAST_LEARNING, GeneralTools.getSQLDate(mLastTimeLearnt));
+        value.put(DictionaryContractBase.DictionaryBase.COLUMN_NAME_DATE_NEXT_LEARNING, GeneralTools.getSQLDate(mNextTimeToLearn));
+        return value;
+    }
 
 }

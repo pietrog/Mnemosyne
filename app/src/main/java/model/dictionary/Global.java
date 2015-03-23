@@ -9,6 +9,7 @@ public class Global {
 
     public static final String catalogueList_JSON_filename = "JSON_catalogue_list";
 
+    public static final String FORMAT_SQL_DATE = "dd:MMM:yyyy";
 
 
     public static final int SUCCESS = 0;

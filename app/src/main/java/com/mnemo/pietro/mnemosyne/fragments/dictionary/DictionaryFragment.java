@@ -18,8 +18,9 @@ import com.mnemo.pietro.mnemosyne.fragments.word.CreateWordFragment;
 import model.dictionary.catalogue.CatalogueListSingleton;
 import model.dictionary.dictionary.Dictionary;
 import model.dictionary.dictionary.WordDefinitionObj;
-import model.dictionary.dictionary.sql.DictionaryContract;
+import model.dictionary.dictionary.sql.DictionaryContractBase;
 import model.dictionary.dictionary.sql.DictionaryDBHelper;
+import model.dictionary.dictionary.sql.DictionaryOfWordContract;
 import model.dictionary.tools.Logger;
 import model.dictionary.tools.ViewTools;
 
@@ -75,7 +76,7 @@ public class DictionaryFragment extends ListFragment {
 
         DictionaryDBHelper dbhelper = new DictionaryDBHelper(getActivity().getApplicationContext());
         SQLiteDatabase db = dbhelper.getReadableDatabase();
-        String query = "SELECT * FROM " + DictionaryContract.Dictionary.TABLE_NAME + " WHERE " + DictionaryContract.Dictionary.COLUMN_NAME_CATALOGUE_NAME + " = '" + mParentCatalogueName + "' and " + DictionaryContract.Dictionary.COLUMN_NAME_DICTIONARY_NAME + " = '" + mDictionaryName +"'";
+        String query = "SELECT * FROM " + DictionaryContractBase.DictionaryBase.TABLE_NAME + " WHERE " + DictionaryContractBase.DictionaryBase.COLUMN_NAME_CATALOGUE_NAME + " = '" + mParentCatalogueName + "' and " + DictionaryContractBase.DictionaryBase.COLUMN_NAME_DICTIONARY_NAME + " = '" + mDictionaryName +"'";
         mRawCursor = db.rawQuery(query, null);
         mAdapter = new DictionaryAdapter(getActivity().getApplicationContext(), R.layout.dictionary_fragment, mRawCursor, 0);
         setListAdapter(mAdapter);
@@ -104,7 +105,7 @@ public class DictionaryFragment extends ListFragment {
         Cursor cursor = mAdapter.getCursor();
         cursor.moveToPosition(position);
 
-        WordDefinitionObj obj = new WordDefinitionObj(DictionaryContract.getWord(cursor), DictionaryContract.getDefinition(cursor));
+        WordDefinitionObj obj = new WordDefinitionObj(1, DictionaryOfWordContract.getWord(cursor), DictionaryOfWordContract.getDefinition(cursor));
         DictionaryObjectWordFragment fragment = DictionaryObjectWordFragment.newInstance(obj);
         getFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.cat_list_fgt, fragment).commit();
 
@@ -138,7 +139,7 @@ public class DictionaryFragment extends ListFragment {
     }
 
     private void removeWord(int position){
-        String word = DictionaryContract.getWord((Cursor)mAdapter.getItem(position));
+        String word = DictionaryOfWordContract.getWord((Cursor) mAdapter.getItem(position));
         if (word == null){
             Logger.d("DictionaryFragment::onClick"," Word not found, tag not set.");
             return;
@@ -148,7 +149,7 @@ public class DictionaryFragment extends ListFragment {
         mAdapter.notifyDataSetChanged();
         DictionaryDBHelper dbhelper = new DictionaryDBHelper(getActivity().getApplicationContext());
         SQLiteDatabase db = dbhelper.getReadableDatabase();
-        String query = "SELECT * FROM " + DictionaryContract.Dictionary.TABLE_NAME + " WHERE " + DictionaryContract.Dictionary.COLUMN_NAME_CATALOGUE_NAME + " = '" + mParentCatalogueName + "' and " + DictionaryContract.Dictionary.COLUMN_NAME_DICTIONARY_NAME + " = '" + mDictionaryName +"'";
+        String query = "SELECT * FROM " + DictionaryContractBase.DictionaryBase.TABLE_NAME + " WHERE " + DictionaryContractBase.DictionaryBase.COLUMN_NAME_CATALOGUE_NAME + " = '" + mParentCatalogueName + "' and " + DictionaryContractBase.DictionaryBase.COLUMN_NAME_DICTIONARY_NAME + " = '" + mDictionaryName +"'";
         mRawCursor = db.rawQuery(query, null);
         mAdapter = new DictionaryAdapter(getActivity().getApplicationContext(), R.layout.dictionary_fragment, mRawCursor, 0);
         setListAdapter(mAdapter);

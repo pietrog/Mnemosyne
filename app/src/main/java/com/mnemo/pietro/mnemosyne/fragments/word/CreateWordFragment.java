@@ -83,7 +83,7 @@ public class CreateWordFragment extends Fragment {
     private void saveDictionaryObject(){
         String word = ViewTools.getStringFromEditableText(mRootview.findViewById(R.id.name));
         String definition = ViewTools.getStringFromEditableText(mRootview.findViewById(R.id.description));
-        WordDefinitionObj wordDef = new WordDefinitionObj(word, definition);
+        WordDefinitionObj wordDef = new WordDefinitionObj(1, word, definition);
         Dictionary dict = CatalogueListSingleton.getInstance(getActivity().getApplicationContext()).getCatalogue(mCatalogueName).getDictionary(mDictionaryName);
         dict.setDBHelper(new DictionaryDBHelper(getActivity().getApplicationContext()));
         long rowID = dict.addDictionaryObject(wordDef);

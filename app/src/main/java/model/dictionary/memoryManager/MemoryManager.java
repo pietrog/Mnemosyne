@@ -11,7 +11,6 @@ import java.util.Date;
 import java.util.Vector;
 
 import model.dictionary.Global;
-import model.dictionary.dictionary.sql.DictionaryContract;
 import model.dictionary.memoryManager.sql.MemoryMNanagerDBHelper;
 import model.dictionary.memoryManager.sql.MemoryManagerContract;
 import model.dictionary.tools.GeneralTools;
@@ -92,7 +91,7 @@ public class MemoryManager {
             //insert
             if (list == null){
                 ContentValues value = new ContentValues();
-                String strdate = GeneralTools.getTodayDateFormatted(date);
+                String strdate = GeneralTools.getSQLDate(date);
                 Logger.i("MemoryManagerSQL::addWordManager"," Insert wordManager: id "+ _IDWord + " date " + strdate);
                 value.put(MemoryManagerContract.MemoryManager.COLUMN_NAME_DATE, strdate);
                 value.put(MemoryManagerContract.MemoryManager.COLUMN_NAME_IDLIST, _IDWord);
@@ -104,7 +103,7 @@ public class MemoryManager {
                 list.add((int)_IDWord);
                 value.put(MemoryManagerContract.MemoryManager.COLUMN_NAME_IDLIST, GeneralTools.getStringFrom(list));
 
-                return mDB.update(TABLE_NAME, value, MemoryManagerContract.MemoryManager.COLUMN_NAME_DATE + " = '" + GeneralTools.getTodayDateFormatted(date) + "'", null);
+                return mDB.update(TABLE_NAME, value, MemoryManagerContract.MemoryManager.COLUMN_NAME_DATE + " = '" + GeneralTools.getSQLDate(date) + "'", null);
             }
         }
 
@@ -127,7 +126,7 @@ public class MemoryManager {
                 return null;
             }
 
-            String strDate = GeneralTools.getTodayDateFormatted(date);
+            String strDate = GeneralTools.getSQLDate(date);
             String SQL_TODAYLIST = "SELECT * FROM " + MemoryManagerContract.MemoryManager.TABLE_NAME + " WHERE "
                     + MemoryManagerContract.MemoryManager.COLUMN_NAME_DATE + " = '" + strDate + "'";
 
@@ -157,7 +156,7 @@ public class MemoryManager {
 
         public int clearAtDate(Date date){
 
-            mDB.delete(TABLE_NAME, MemoryManagerContract.MemoryManager.COLUMN_NAME_DATE + " = '" + GeneralTools.getTodayDateFormatted(date) + "'", null);
+            mDB.delete(TABLE_NAME, MemoryManagerContract.MemoryManager.COLUMN_NAME_DATE + " = '" + GeneralTools.getSQLDate(date) + "'", null);
             return Global.SUCCESS;
         }
 
