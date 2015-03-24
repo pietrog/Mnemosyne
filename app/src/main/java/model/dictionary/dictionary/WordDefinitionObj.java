@@ -1,6 +1,7 @@
 package model.dictionary.dictionary;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 
 import model.dictionary.dictionary.sql.DictionaryContractBase;
 import model.dictionary.dictionary.sql.DictionaryOfWordContract;
@@ -15,20 +16,23 @@ public class WordDefinitionObj extends DictionaryObject{
     private String m_sDefinition; // definition of word
 
 
-    /*public static WordDefinitionObj getWordDefinitionObjFromSQL( ){
-
-    }*/
-
     /**
-     * Constructor for WordDefinitionObj
-     * @param word word
-     * @param definition definition of word
+     * Complete constructor for WordDefinitionObj
+     * @param id sql id
+     * @param catalogueName catalogue narme
+     * @param dictionaryName dictionary name
+     * @param lastTimeLearnt date
+     * @param nextTimeToLearn date
+     * @param word word name
+     * @param definition definition of the word
      */
-    public WordDefinitionObj(long id, String word, String definition)
+    public WordDefinitionObj(long id, String catalogueName, String dictionaryName, String lastTimeLearnt, String nextTimeToLearn, String word, String definition)
     {
+        super(id, catalogueName, dictionaryName, lastTimeLearnt, nextTimeToLearn);
         m_sWord = word;
         m_sDefinition = definition;
     }
+
 
 
     public String getWord() {
@@ -57,4 +61,24 @@ public class WordDefinitionObj extends DictionaryObject{
         content.put(DictionaryOfWordContract.DictionaryOfWord.COLUMN_NAME_DEFINITION, m_sDefinition);
         return content;
     }
+
+
+    /**
+     * STATIC METHODS
+     */
+
+    /**
+     * Load a new WordDefinitionObj from a cursor
+     * @param cursor cursor from an adapter
+     * @return WordDefinitionObj loaded from cursor
+     */
+    public static WordDefinitionObj LoadFromCursor(Cursor cursor){
+        return new WordDefinitionObj(DictionaryOfWordContract.getID(cursor),
+                DictionaryOfWordContract.getCatalogueName(cursor),
+                DictionaryOfWordContract.getDictionaryName(cursor), null, null,
+                DictionaryOfWordContract.getWord(cursor),
+                DictionaryOfWordContract.getDefinition(cursor));
+    }
+
+
 }

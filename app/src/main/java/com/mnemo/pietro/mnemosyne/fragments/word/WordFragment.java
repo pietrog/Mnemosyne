@@ -1,4 +1,4 @@
-package com.mnemo.pietro.mnemosyne.fragments.dictionary;
+package com.mnemo.pietro.mnemosyne.fragments.word;
 
 
 import android.os.Bundle;
@@ -15,10 +15,10 @@ import model.dictionary.tools.ViewTools;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link DictionaryObjectWordFragment#newInstance} factory method to
+ * Use the {@link WordFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class DictionaryObjectWordFragment extends Fragment {
+public class WordFragment extends Fragment {
     private static final String WORD = "WORD";
     private static final String DEFINITION = "DEFINITION";
 
@@ -26,8 +26,8 @@ public class DictionaryObjectWordFragment extends Fragment {
     private String mDefinition;
 
 
-    public static DictionaryObjectWordFragment newInstance(WordDefinitionObj obj) {
-        DictionaryObjectWordFragment fragment = new DictionaryObjectWordFragment();
+    public static WordFragment newInstance(WordDefinitionObj obj) {
+        WordFragment fragment = new WordFragment();
         Bundle args = new Bundle();
         args.putString(WORD, obj.getWord());
         args.putString(DEFINITION, obj.getDefinition());
@@ -35,7 +35,7 @@ public class DictionaryObjectWordFragment extends Fragment {
         return fragment;
     }
 
-    public DictionaryObjectWordFragment() {
+    public WordFragment() {
         // Required empty public constructor
     }
 
@@ -52,7 +52,7 @@ public class DictionaryObjectWordFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View mRootView = inflater.inflate(R.layout.dictionary_object_word_fragment, container, false);
+        View mRootView = inflater.inflate(R.layout.word_fragment, container, false);
         ViewTools.setStringOfTextView((TextView)mRootView.findViewById(R.id.word_name), mWord);
         ViewTools.setStringOfTextView((TextView)mRootView.findViewById(R.id.word_definition), mDefinition);
         return mRootView;

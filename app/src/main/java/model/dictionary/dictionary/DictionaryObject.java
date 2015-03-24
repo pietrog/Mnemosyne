@@ -26,16 +26,19 @@ public abstract class DictionaryObject {
     private Date mNextTimeToLearn; // first time the user checked this object
 
     /**
-     * Empty constructor. Used when we create a new dictionary object
+     * Constructor for a dictionary object
+     * @param id sql id id -1, we do not get this object from sql
+     * @param catalogueName catalogue name
+     * @param dictionaryName dictionary name
+     * @param lastTimeLearnt date
+     * @param nextTimeToLearn date
      */
-    protected DictionaryObject(){}
-
     protected DictionaryObject(long id, String catalogueName, String dictionaryName, String lastTimeLearnt, String nextTimeToLearn){
         mID = id;
         mCatalogueName = catalogueName;
         mDictionaryName = dictionaryName;
-        mLastTimeLearnt = GeneralTools.getDateFromSQLDate(lastTimeLearnt);
-        mNextTimeToLearn = GeneralTools.getDateFromSQLDate(nextTimeToLearn);
+        mLastTimeLearnt = lastTimeLearnt == null ? null : GeneralTools.getDateFromSQLDate(lastTimeLearnt);
+        mNextTimeToLearn = nextTimeToLearn == null ? null : GeneralTools.getDateFromSQLDate(nextTimeToLearn);
     }
 
     public long getID() {

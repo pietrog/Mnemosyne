@@ -1,6 +1,7 @@
 package model.dictionary.tools;
 
 import android.content.Context;
+import android.database.Cursor;
 
 
 import org.json.JSONException;
@@ -143,5 +144,16 @@ public class GeneralTools {
             res += curr.toString() + ",";
 
         return res.substring(0, res.length()-1);
+    }
+
+
+    /**
+     * SQL
+     */
+    public static String getStringElement(Cursor cursor, String column){
+        return cursor.getString(cursor.getColumnIndex(column));
+    }
+    public static long getLongElement(Cursor cursor, String column){
+        return cursor.getLong(cursor.getColumnIndex(column));
     }
 }

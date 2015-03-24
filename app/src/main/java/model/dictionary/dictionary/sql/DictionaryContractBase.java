@@ -3,6 +3,8 @@ package model.dictionary.dictionary.sql;
 import android.database.Cursor;
 import android.provider.BaseColumns;
 
+import model.dictionary.tools.GeneralTools;
+
 /**
  * Created by pietro on 06/03/15.
  *
@@ -32,22 +34,23 @@ public class DictionaryContractBase {
      */
 
     public static String getCatalogueName (Cursor cursor){
-        return getColumnElement(cursor, DictionaryBase.COLUMN_NAME_CATALOGUE_NAME);
+        return GeneralTools.getStringElement(cursor, DictionaryBase.COLUMN_NAME_CATALOGUE_NAME);
     }
     public static String getDictionaryName (Cursor cursor){
-        return getColumnElement(cursor, DictionaryBase.COLUMN_NAME_DICTIONARY_NAME);
+        return GeneralTools.getStringElement(cursor, DictionaryBase.COLUMN_NAME_DICTIONARY_NAME);
     }
     public static String getDateLaseLearning(Cursor cursor){
-        return getColumnElement(cursor, DictionaryBase.COLUMN_NAME_DATE_LAST_LEARNING);
+        return GeneralTools.getStringElement(cursor, DictionaryBase.COLUMN_NAME_DATE_LAST_LEARNING);
     }
     public static String getDateNextLearning(Cursor cursor){
-        return getColumnElement(cursor, DictionaryBase.COLUMN_NAME_DATE_NEXT_LEARNING);
+        return GeneralTools.getStringElement(cursor, DictionaryBase.COLUMN_NAME_DATE_NEXT_LEARNING);
     }
     public static String getMemoryPhase(Cursor cursor){
-        return getColumnElement(cursor, DictionaryBase.COLUMN_NAME_MEMORY_PHASE);
+        return GeneralTools.getStringElement(cursor, DictionaryBase.COLUMN_NAME_MEMORY_PHASE);
+    }
+    public static long getID(Cursor cursor){
+        return GeneralTools.getLongElement(cursor, DictionaryBase._ID);
     }
 
-    protected static String getColumnElement(Cursor cursor, String column){
-        return cursor.getString(cursor.getColumnIndex(column));
-    }
+
 }

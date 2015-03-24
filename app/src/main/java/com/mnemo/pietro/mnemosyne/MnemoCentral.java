@@ -1,7 +1,6 @@
 package com.mnemo.pietro.mnemosyne;
 
 import android.app.FragmentTransaction;
-import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 
@@ -9,8 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 
 
-import com.mnemo.pietro.mnemosyne.fragments.catalogue.CatalogueListFragment;
-
+import com.mnemo.pietro.mnemosyne.fragments.library.LibraryFragment;
 
 
 public class MnemoCentral
@@ -36,8 +34,8 @@ public class MnemoCentral
 
         if (savedInstanceState == null){
             //create the catalogue list fragment
-            CatalogueListFragment fgt = CatalogueListFragment.newInstance();
-            getFragmentManager().beginTransaction().add(R.id.cat_list_fgt, fgt).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
+            LibraryFragment fgt = LibraryFragment.newInstance();
+            getFragmentManager().beginTransaction().add(R.id.main_subscreen, fgt).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
         }
     }
 

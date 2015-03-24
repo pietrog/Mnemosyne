@@ -8,22 +8,19 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 
 import com.mnemo.pietro.mnemosyne.R;
 
-import model.dictionary.catalogue.Catalogue;
-import model.dictionary.catalogue.CatalogueList;
-import model.dictionary.catalogue.CatalogueListSingleton;
+import model.dictionary.Global;
+import model.dictionary.library.sql.LibrarySQLManager;
 import model.dictionary.tools.ViewTools;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class CreateCatalogueFragment extends Fragment {
-
-    //private static final String GLOBAL_TOOLBAR = "GLOBARTOOLBAR";
-
 
     private View rootview;
 
@@ -73,12 +70,17 @@ public class CreateCatalogueFragment extends Fragment {
     private void saveCatalogue(){
         String catalogue_name = ViewTools.getStringFromEditableText(rootview.findViewById(R.id.name));
         String catalogue_desc = ViewTools.getStringFromEditableText(rootview.findViewById(R.id.description));
-        CatalogueList whole = CatalogueListSingleton.getInstance(getActivity().getApplicationContext());
-        Catalogue newCat = Catalogue.createCatalogue(catalogue_name, catalogue_desc, getActivity().getApplicationContext());
-        whole.addCatalogue(newCat);
-        whole.writeToJSONFile();
+        LibrarySQLManager manager = LibrarySQLManager.getInstance(getActivity().getApplicationContext());
+        long id = manager.add(catalogue_name, catalogue_desc);
 
+        if (id == Global.FAILURE)
+            Toast.makeText(getActivity().getApplicationContext(), "Catalogue " + catalogue_name + " already exists.", Toast.LENGTH_SHORT).show();
+        else
+            Toast.makeText(getActivity().getApplicationContext(), "Catalogue " + catalogue_name + " added to library.", Toast.LENGTH_SHORT).show();
+
+        //hide keyboard
         ViewTools.hideKeyboard(rootview, getActivity());
+        //replace the fragment
         getFragmentManager().popBackStack();
     }
 }

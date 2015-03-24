@@ -2,7 +2,6 @@ package com.mnemo.pietro.mnemosyne.fragments.dictionary;
 
 import android.app.ListFragment;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.MenuInflater;
@@ -12,15 +11,16 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.mnemo.pietro.mnemosyne.R;
-import com.mnemo.pietro.mnemosyne.adaptater.DictionaryAdapter;
-import com.mnemo.pietro.mnemosyne.fragments.word.CreateWordFragment;
+import com.mnemo.pietro.mnemosyne.fragments.dictionary.tools.DictionaryAdapter;
 
-import model.dictionary.catalogue.CatalogueListSingleton;
-import model.dictionary.dictionary.Dictionary;
-import model.dictionary.dictionary.WordDefinitionObj;
 import model.dictionary.dictionary.sql.DictionaryContractBase;
-import model.dictionary.dictionary.sql.DictionaryDBHelper;
+import model.dictionary.dictionary.sql.DictionarySQLManager;
+import com.mnemo.pietro.mnemosyne.fragments.word.CreateWordFragment;
+import com.mnemo.pietro.mnemosyne.fragments.word.WordFragment;
+
+import model.dictionary.dictionary.WordDefinitionObj;
 import model.dictionary.dictionary.sql.DictionaryOfWordContract;
+import model.dictionary.tools.GeneralTools;
 import model.dictionary.tools.Logger;
 import model.dictionary.tools.ViewTools;
 
@@ -34,8 +34,7 @@ public class DictionaryFragment extends ListFragment {
     private static final String PARENT_CATALOGUE_NAME = "PARENT_CATALOGUE_NAME";
 
     private String mDictionaryName;
-    private String mParentCatalogueName;
-    private Cursor mRawCursor;
+    private String mCatalogueName;
     private DictionaryAdapter mAdapter;
 
     /**
@@ -60,13 +59,12 @@ public class DictionaryFragment extends ListFragment {
     }
 
     @Override
-
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         if (getArguments() != null) {
             mDictionaryName = getArguments().getString(DICTIONARY_NAME);
-            mParentCatalogueName = getArguments().getString(PARENT_CATALOGUE_NAME);
+            mCatalogueName = getArguments().getString(PARENT_CATALOGUE_NAME);
         }
     }
 
@@ -74,11 +72,9 @@ public class DictionaryFragment extends ListFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        DictionaryDBHelper dbhelper = new DictionaryDBHelper(getActivity().getApplicationContext());
-        SQLiteDatabase db = dbhelper.getReadableDatabase();
-        String query = "SELECT * FROM " + DictionaryContractBase.DictionaryBase.TABLE_NAME + " WHERE " + DictionaryContractBase.DictionaryBase.COLUMN_NAME_CATALOGUE_NAME + " = '" + mParentCatalogueName + "' and " + DictionaryContractBase.DictionaryBase.COLUMN_NAME_DICTIONARY_NAME + " = '" + mDictionaryName +"'";
-        mRawCursor = db.rawQuery(query, null);
-        mAdapter = new DictionaryAdapter(getActivity().getApplicationContext(), R.layout.dictionary_fragment, mRawCursor, 0);
+        DictionarySQLManager sqlManager = DictionarySQLManager.getInstance(getActivity().getApplicationContext());
+        Cursor mRawCursor = sqlManager.getAllDictionaryObjectsCursor(mCatalogueName, mDictionaryName);
+        mAdapter = new DictionaryAdapter(getActivity().getApplicationContext(), R.layout.std_list_fragment, mRawCursor, 0);
         setListAdapter(mAdapter);
         registerForContextMenu(getListView());
     }
@@ -96,25 +92,25 @@ public class DictionaryFragment extends ListFragment {
         super.onStop();
 
         //close the cursor before leaving
-        if (mRawCursor != null && ! mRawCursor.isClosed())
-            mRawCursor.close();
+        if (mAdapter.getCursor() != null)
+            mAdapter.getCursor().close();
     }
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         Cursor cursor = mAdapter.getCursor();
         cursor.moveToPosition(position);
-
-        WordDefinitionObj obj = new WordDefinitionObj(1, DictionaryOfWordContract.getWord(cursor), DictionaryOfWordContract.getDefinition(cursor));
-        DictionaryObjectWordFragment fragment = DictionaryObjectWordFragment.newInstance(obj);
-        getFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.cat_list_fgt, fragment).commit();
+        WordDefinitionObj obj = WordDefinitionObj.LoadFromCursor(cursor);
+        WordFragment fragment = WordFragment.newInstance(obj);
+        getFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.main_subscreen, fragment).commit();
 
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        CreateWordFragment fragment = CreateWordFragment.newInstance(mDictionaryName, mParentCatalogueName);
-        getFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.cat_list_fgt, fragment).commit();
+        //go to create wordFragment
+        CreateWordFragment fragment = CreateWordFragment.newInstance(mDictionaryName, mCatalogueName);
+        getFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.main_subscreen, fragment).commit();
         return true;
     }
 
@@ -139,20 +135,17 @@ public class DictionaryFragment extends ListFragment {
     }
 
     private void removeWord(int position){
-        String word = DictionaryOfWordContract.getWord((Cursor) mAdapter.getItem(position));
-        if (word == null){
-            Logger.d("DictionaryFragment::onClick"," Word not found, tag not set.");
-            return;
-        }
-        Dictionary current = CatalogueListSingleton.getInstance(getActivity().getApplicationContext()).getCatalogue(mParentCatalogueName).getDictionary(mDictionaryName);
-        current.removeDictionaryObject(word);
-        mAdapter.notifyDataSetChanged();
-        DictionaryDBHelper dbhelper = new DictionaryDBHelper(getActivity().getApplicationContext());
-        SQLiteDatabase db = dbhelper.getReadableDatabase();
-        String query = "SELECT * FROM " + DictionaryContractBase.DictionaryBase.TABLE_NAME + " WHERE " + DictionaryContractBase.DictionaryBase.COLUMN_NAME_CATALOGUE_NAME + " = '" + mParentCatalogueName + "' and " + DictionaryContractBase.DictionaryBase.COLUMN_NAME_DICTIONARY_NAME + " = '" + mDictionaryName +"'";
-        mRawCursor = db.rawQuery(query, null);
-        mAdapter = new DictionaryAdapter(getActivity().getApplicationContext(), R.layout.dictionary_fragment, mRawCursor, 0);
-        setListAdapter(mAdapter);
-        Logger.d("DictionaryFragment::onClick"," Word "+ word + " removed from " + mDictionaryName);
-    }
+        mAdapter.getCursor().moveToPosition(position);
+        long [] id = {GeneralTools.getLongElement(mAdapter.getCursor(), DictionaryContractBase.DictionaryBase._ID)};
+
+        DictionarySQLManager manager = DictionarySQLManager.getInstance(getActivity().getApplicationContext());
+        int result = manager.remove(id);
+
+        Logger.i("DictionaryFragment::removeWord", " Word removed "+ DictionaryOfWordContract.getWord((Cursor) mAdapter.getItem(position)) + ": res => " + result);
+
+        //@todo remove also from memory manager !!!
+
+        DictionarySQLManager sqlManager = DictionarySQLManager.getInstance(getActivity().getApplicationContext());
+        Cursor mRawCursor = sqlManager.getAllDictionaryObjectsCursor(mCatalogueName, mDictionaryName);
+        mAdapter.changeCursor(mRawCursor);}
 }

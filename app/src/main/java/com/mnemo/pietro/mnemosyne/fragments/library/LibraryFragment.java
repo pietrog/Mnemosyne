@@ -1,25 +1,26 @@
-package com.mnemo.pietro.mnemosyne.fragments.catalogue;
+package com.mnemo.pietro.mnemosyne.fragments.library;
 
-import android.app.Fragment;
 import android.app.ListFragment;
+import android.database.Cursor;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.ContextMenu;
-import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.mnemo.pietro.mnemosyne.MnemoCentral;
 import com.mnemo.pietro.mnemosyne.R;
-import com.mnemo.pietro.mnemosyne.adaptater.CatalogueListAdapter;
+import com.mnemo.pietro.mnemosyne.fragments.catalogue.CatalogueFragment;
+import com.mnemo.pietro.mnemosyne.fragments.catalogue.CreateCatalogueFragment;
+import com.mnemo.pietro.mnemosyne.fragments.library.tools.LibraryAdapter;
 
 import model.dictionary.catalogue.Catalogue;
-import model.dictionary.catalogue.CatalogueList;
-import model.dictionary.catalogue.CatalogueListSingleton;
+import model.dictionary.library.sql.LibraryContract;
+import model.dictionary.library.sql.LibrarySQLManager;
+import model.dictionary.tools.GeneralTools;
+import model.dictionary.tools.Logger;
 import model.dictionary.tools.ViewTools;
 
 /**
@@ -27,9 +28,9 @@ import model.dictionary.tools.ViewTools;
  * You can click on a catalogue to open the catalogue fragment and obtain the list of dictionaries
  *
  */
-public class CatalogueListFragment extends Fragment implements AdapterView.OnItemClickListener {
+public class LibraryFragment extends ListFragment {
 
-    private CatalogueListAdapter mAdaptater;
+    private LibraryAdapter mAdapter;
 
 
     /**
@@ -37,13 +38,13 @@ public class CatalogueListFragment extends Fragment implements AdapterView.OnIte
      * this fragment using the provided parameters.
      *
      //* @param catalogueName name of the catalogue
-     * @return A new instance of fragment CatalogueListFragment.
+     * @return A new instance of fragment LibraryFragment.
      */
-    public static CatalogueListFragment newInstance(/*String catalogueName*/) {
-        return new CatalogueListFragment();
+    public static LibraryFragment newInstance(/*String catalogueName*/) {
+        return new LibraryFragment();
     }
 
-    public CatalogueListFragment() {
+    public LibraryFragment() {
         // Required empty public constructor
     }
 
@@ -53,32 +54,31 @@ public class CatalogueListFragment extends Fragment implements AdapterView.OnIte
         setHasOptionsMenu(true); // for toolbar interaction
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.catalogue_list_fragment, container, false);
-        mAdaptater = new CatalogueListAdapter(getActivity());
-        ListView lv = (ListView) view.findViewById(R.id.list);
-        registerForContextMenu(lv);
-        lv.setAdapter(mAdaptater);
-        lv.setOnItemClickListener(this);
-        return view;
-    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        //bind the adapter
+        LibrarySQLManager manager = LibrarySQLManager.getInstance(getActivity().getApplicationContext());
+        mAdapter = new LibraryAdapter(getActivity().getApplicationContext(), R.layout.library_view, manager.getAll(), 0);
+        setListAdapter(mAdapter);
+        registerForContextMenu(getListView());
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        CatalogueFragment cfgt = CatalogueFragment.newInstance(((Catalogue)mAdaptater.getItem(position)).getName());
-        getFragmentManager().beginTransaction().replace(R.id.cat_list_fgt, cfgt).addToBackStack(MnemoCentral.FGT_CATALOGUE_TAG).commit();
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        Cursor cursor = mAdapter.getCursor();
+        cursor.moveToPosition(position);
+        Catalogue catalogue = Catalogue.LoadFromSQL(cursor);
+        CatalogueFragment cfgt = CatalogueFragment.newInstance(catalogue.getID(), catalogue.getName(), catalogue.getDescription());
+        getFragmentManager().beginTransaction().replace(R.id.main_subscreen, cfgt).addToBackStack(MnemoCentral.FGT_CATALOGUE_TAG).commit();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mAdaptater.notifyDataSetChanged();
+        mAdapter.notifyDataSetChanged();
         ViewTools.setTitle(getActivity(), R.string.hint_catalogue_list);
         ViewTools.setSubtitle(getActivity(), "");
     }
@@ -87,7 +87,7 @@ public class CatalogueListFragment extends Fragment implements AdapterView.OnIte
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         CreateCatalogueFragment fragment = CreateCatalogueFragment.newInstance();
-        getFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.cat_list_fgt, fragment).commit();
+        getFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.main_subscreen, fragment).commit();
         return true;
     }
 
@@ -112,10 +112,14 @@ public class CatalogueListFragment extends Fragment implements AdapterView.OnIte
     }
 
     private void removeCatalogue(int position){
-        String name = ((Catalogue)mAdaptater.getItem(position)).getName();
-        CatalogueList cl = CatalogueListSingleton.getInstance(getActivity().getApplicationContext());
-        cl.removeCatalogue(name);
-        mAdaptater.notifyDataSetChanged();
+        mAdapter.getCursor().moveToPosition(position);
+        long[] listIDs = {GeneralTools.getLongElement(mAdapter.getCursor(), LibraryContract.Library._ID)};
+
+        LibrarySQLManager.getInstance(getActivity().getApplicationContext()).remove(listIDs);
+        Logger.i("LibraryFragment::removeCatalogue", " catalogue(s) " + listIDs.toString() + " removed");
+
+        mAdapter.notifyDataSetChanged();
+        //@todo remove also from memory manager !!!
     }
 
 

@@ -14,9 +14,15 @@ public class Global {
 
     public static final int SUCCESS = 0;
     public static final int FAILURE = -1;
+    public static final int NOT_AVAILABLE = 3;
     public static final int ALREADY_EXISTS = 4;
     public static final int NOT_FOUND = 5;
     public static final int OUT_OF_BOUNDS = 6;
+
+
+    public static final String TEXT_TYPE = " TEXT";
+    public static final String INTEGER_TYPE = " INTEGER ";
+    public static final String COMMASEP = " ,";
 
 
 
@@ -32,6 +38,8 @@ public class Global {
                 return " FAILURE ";
             case Global.OUT_OF_BOUNDS:
                 return "OUT OF BOUNDS";
+            case Global.NOT_AVAILABLE:
+                return "NOT_AVAILABLE";
             default:
                 return " CODE(" + result+") unknown ";
 

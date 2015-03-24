@@ -1,4 +1,4 @@
-package com.mnemo.pietro.mnemosyne.adaptater;
+package com.mnemo.pietro.mnemosyne.fragments.dictionary.tools;
 
 import android.content.Context;
 import android.database.Cursor;

@@ -8,12 +8,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.mnemo.pietro.mnemosyne.R;
 
 import model.dictionary.Global;
 import model.dictionary.catalogue.Catalogue;
-import model.dictionary.catalogue.CatalogueListSingleton;
+import model.dictionary.catalogue.sql.CatalogueSQLManager;
 import model.dictionary.tools.Logger;
 import model.dictionary.tools.ViewTools;
 
@@ -97,17 +98,17 @@ public class CreateDictionaryFragment extends Fragment {
         String dictName = ViewTools.getStringFromEditableText(rootView.findViewById(R.id.name));
         String dictDesc = ViewTools.getStringFromEditableText(rootView.findViewById(R.id.description));
 
-        Catalogue cat = CatalogueListSingleton.getInstance(getActivity().getApplicationContext()).getCatalogue(mCatalogueName);
-        if (cat == null){
-            Logger.i("CreateDictionaryFragment::saveDictionary"," catalogue " + mCatalogueName+ " not found");
-            return;
-        }
+        CatalogueSQLManager manager = CatalogueSQLManager.getInstance(getActivity().getApplicationContext());
+        long id = manager.add(mCatalogueName, dictName, dictDesc);
 
-        int res = cat.addDictionary(dictName, dictDesc, true);
-        Logger.d("CreateDictionaryFragment::saveDictionary", Global.getLogFromResult(res));
+        if (id == Global.FAILURE)
+            Toast.makeText(getActivity().getApplicationContext(), "Dictionary " + dictName + " already exists.", Toast.LENGTH_SHORT).show();
+        else
+            Toast.makeText(getActivity().getApplicationContext(), "Dictionary " + dictName + " added to " + mCatalogueName, Toast.LENGTH_SHORT).show();
 
-
+        //hide keyboard
         ViewTools.hideKeyboard(rootView, getActivity());
+        //pop the fragment
         getFragmentManager().popBackStack();
 
     }

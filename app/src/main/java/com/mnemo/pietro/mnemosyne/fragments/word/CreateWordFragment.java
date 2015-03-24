@@ -7,14 +7,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.mnemo.pietro.mnemosyne.MnemoMemoryManager;
 import com.mnemo.pietro.mnemosyne.R;
 
-import model.dictionary.catalogue.CatalogueListSingleton;
-import model.dictionary.dictionary.Dictionary;
-import model.dictionary.dictionary.WordDefinitionObj;
-import model.dictionary.dictionary.sql.DictionaryDBHelper;
+import model.dictionary.Global;
+import model.dictionary.dictionary.sql.DictionarySQLManager;
+
 import model.dictionary.memoryManager.MemoryManager;
 import model.dictionary.memoryManager.MemoryManagerSingleton;
 import model.dictionary.tools.ViewTools;
@@ -83,16 +83,23 @@ public class CreateWordFragment extends Fragment {
     private void saveDictionaryObject(){
         String word = ViewTools.getStringFromEditableText(mRootview.findViewById(R.id.name));
         String definition = ViewTools.getStringFromEditableText(mRootview.findViewById(R.id.description));
-        WordDefinitionObj wordDef = new WordDefinitionObj(1, word, definition);
-        Dictionary dict = CatalogueListSingleton.getInstance(getActivity().getApplicationContext()).getCatalogue(mCatalogueName).getDictionary(mDictionaryName);
-        dict.setDBHelper(new DictionaryDBHelper(getActivity().getApplicationContext()));
-        long rowID = dict.addDictionaryObject(wordDef);
+
+        //add word in dictionary via DictionarySQLManager
+        DictionarySQLManager manager = DictionarySQLManager.getInstance(getActivity().getApplicationContext());
+        long id = manager.add(mCatalogueName, mDictionaryName, word, definition);
 
 
+        if (id == Global.FAILURE)
+            Toast.makeText(getActivity().getApplicationContext(), word + " already exists.", Toast.LENGTH_SHORT).show();
+        else
+            Toast.makeText(getActivity().getApplicationContext(), word + " added to " + mDictionaryName, Toast.LENGTH_SHORT).show();
+
+        //add word in memory manager via MemoryManager
         MemoryManager mgr = MemoryManagerSingleton.getInstance(getActivity().getApplicationContext());
-        long id = mgr.addWordManagerForToday(rowID);
+        long memId = mgr.addWordManagerForToday(id);
 
 
+        //hide the keyboard and exit the create fragment
         ViewTools.hideKeyboard(mRootview, getActivity());
         getFragmentManager().popBackStack();
 

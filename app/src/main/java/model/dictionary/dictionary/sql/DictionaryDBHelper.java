@@ -4,6 +4,10 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import model.dictionary.Global;
+
+import model.dictionary.dictionary.sql.DictionaryContractBase.DictionaryBase;
+
 /**
  * Created by pietro on 06/03/15.
  * 
@@ -13,20 +17,15 @@ public class DictionaryDBHelper extends SQLiteOpenHelper {
     public static final int DATABASE_VERSION = 3;
     public static final String DATABASE_NAME = "dictionary.db";
 
-    /**
-     * Here we describe the db schema
-     */
-    private static final String TEXT_TYPE = " TEXT";
-    private static final String COMMASEP = " ,";
 
     //sql request for dictionary table creation
     private static final String SQL_CREATE_TABLE =
             "CREATE TABLE " + DictionaryContractBase.DictionaryBase.TABLE_NAME + " ( "
-                    + DictionaryContractBase.DictionaryBase._ID + " INTEGER PRIMARY KEY" + COMMASEP
-                    + DictionaryContractBase.DictionaryBase.COLUMN_NAME_CATALOGUE_NAME + TEXT_TYPE + COMMASEP
-                    + DictionaryContractBase.DictionaryBase.COLUMN_NAME_DICTIONARY_NAME + TEXT_TYPE + COMMASEP
-                    + DictionaryContractBase.DictionaryBase.COLUMN_NAME_WORD + TEXT_TYPE + COMMASEP
-                    + DictionaryContractBase.DictionaryBase.COLUMN_NAME_DEFINITION + TEXT_TYPE + " )";
+                    + DictionaryBase._ID + " INTEGER PRIMARY KEY" + Global.COMMASEP
+                    + DictionaryBase.COLUMN_NAME_CATALOGUE_NAME + Global.TEXT_TYPE + Global.COMMASEP
+                    + DictionaryBase.COLUMN_NAME_DICTIONARY_NAME + Global.TEXT_TYPE + Global.COMMASEP
+                    + DictionaryBase.COLUMN_NAME_WORD + Global.TEXT_TYPE + Global.COMMASEP
+                    + DictionaryBase.COLUMN_NAME_DEFINITION + Global.TEXT_TYPE + " )";
 
     private static final String SQL_DROP_TABLE = "DROP TABLE " + DictionaryContractBase.DictionaryBase.TABLE_NAME;
 
