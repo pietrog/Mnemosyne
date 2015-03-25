@@ -3,7 +3,6 @@
 
     <!-- General -->
     <string name="app_name">Mnemosyne</string>
-    <string name="action_settings">Settings</string>
     <string name="action_save">Enregistrer</string>
     <string name="hint_catalogue_list">Liste des catalogues</string>
     <string name="hint_catalogue">Catalogue</string>
@@ -13,24 +12,24 @@
 
     <!-- Catalogue -->
     <string name="action_cat_create">Creer un catalogue</string>
-    <string name="action_cat_remove">Supprimer le catalogue</string>
     <string name="hint_cat_fillIn_name">Nom du catalogue</string>
     <string name="hint_cat_fillIn_desc">Description du catalogue</string>
-    <string name="title_activity_list_of_catalogue">ListOfCatalogueActivity</string>
-    <string name="action_list_of_catalogue">Consulter les catalogues</string>
 
     <!-- Dictionary -->
     <string name="action_dict_create">Creer un dictionnaire</string>
     <string name="hint_dict_fillIn_name">Nom du dictionnaire</string>
     <string name="hint_dict_fillIn_desc">Description du dictionnaire</string>
-    <string name="title_activity_create_catalogue">CreateCatalogueActivity</string>
 
     <!-- Word -->
-    <string name="hint_word_create">Ajout d\'un mot</string>
-    <string name="action_word_create">Creer un mot</string>
     <string name="hint_word_fillIn_word">Mot a definir</string>
     <string name="hint_word_fillIn_definition">Definition</string>
     <string name="hint_word">Word</string>
+
+    <!-- Memory manager -->
+    <string name="hint_remember">Je maitrise, aucun probleme</string>
+    <string name="hint_almost_remember">J\'ai de bons restes</string>
+    <string name="hint_almost_forgotten">J\'ai du mal a me souvenir</string>
+    <string name="hint_forgot">C\'est le neant</string>
     
 
 

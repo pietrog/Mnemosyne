@@ -130,7 +130,7 @@ public class CatalogueFragment extends ListFragment {
         long[] listIDs = {GeneralTools.getLongElement(mAdapter.getCursor(), CatalogueContract.Catalogue._ID)};
 
         CatalogueSQLManager.getInstance(getActivity().getApplicationContext()).remove(listIDs);
-        Logger.i("CatalogueFragment::removeCatalogue", " dictionaries(s) " + listIDs.toString() + " removed");
+        Logger.i("CatalogueFragment::removeCatalogue", " dictionaries(s) " + listIDs[0] + " removed");
 
         mAdapter.notifyDataSetChanged();
         //@todo remove also from memory manager !!!

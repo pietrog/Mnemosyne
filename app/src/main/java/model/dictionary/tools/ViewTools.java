@@ -1,18 +1,15 @@
 package model.dictionary.tools;
 
-import android.app.ActionBar;
 import android.app.Activity;
-import android.app.Notification;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import model.dictionary.Global;
-
 /**
  * Created by pietro on 09/02/15.
+ * Class providing some useful UI functions
  */
 public class ViewTools {
 

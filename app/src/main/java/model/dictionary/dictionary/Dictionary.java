@@ -3,7 +3,6 @@ package model.dictionary.dictionary;
 
 import android.database.Cursor;
 
-import model.dictionary.Global;
 import model.dictionary.catalogue.sql.CatalogueContract;
 import model.dictionary.tools.GeneralTools;
 

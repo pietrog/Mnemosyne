@@ -13,9 +13,7 @@ import android.widget.Toast;
 import com.mnemo.pietro.mnemosyne.R;
 
 import model.dictionary.Global;
-import model.dictionary.catalogue.Catalogue;
 import model.dictionary.catalogue.sql.CatalogueSQLManager;
-import model.dictionary.tools.Logger;
 import model.dictionary.tools.ViewTools;
 
 /**

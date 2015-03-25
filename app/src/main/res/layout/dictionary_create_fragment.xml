@@ -15,6 +15,7 @@
         android:layout_height="wrap_content"
         android:maxLines="1"
         android:layout_below="@+id/textname"
+        android:hint="@string/hint_dict_fillIn_name"
         style="@style/editingZone"/>
 
     <TextView
@@ -31,6 +32,7 @@
         android:lines="6"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:hint="@string/hint_dict_fillIn_desc"
         style="@style/editingZone"
         android:layout_below="@+id/textdesc" />
 </RelativeLayout>

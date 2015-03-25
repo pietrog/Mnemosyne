@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import com.mnemo.pietro.mnemosyne.R;
 
-import model.dictionary.dictionary.sql.DictionaryContractBase;
 import model.dictionary.dictionary.sql.DictionaryOfWordContract;
 
 

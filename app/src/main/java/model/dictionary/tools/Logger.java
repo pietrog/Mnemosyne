@@ -1,12 +1,12 @@
 package model.dictionary.tools;
 
-import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.mnemo.pietro.mnemosyne.BuildConfig;
 
 /**
  * Created by pietro on 25/02/15.
+ *
  */
 public class Logger {
 

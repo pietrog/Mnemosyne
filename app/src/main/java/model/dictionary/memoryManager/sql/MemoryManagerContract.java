@@ -3,10 +3,10 @@ package model.dictionary.memoryManager.sql;
 import android.database.Cursor;
 import android.provider.BaseColumns;
 
-import model.dictionary.memoryManager.MemoryManager;
 
 /**
  * Created by pietro on 18/03/15.
+ * SQL contract for MemoryManager
  */
 public class MemoryManagerContract {
 
@@ -17,25 +17,5 @@ public class MemoryManagerContract {
         public static final String COLUMN_NAME_DATE = "date";
         public static final String COLUMN_NAME_IDLIST = "idlist";
     }
-
-
-    public static String getIDList (Cursor cursor){
-        if (cursor == null)
-            return "";
-        return cursor.getString(cursor.getColumnIndex(MemoryManager.COLUMN_NAME_IDLIST));
-    }
-
-    public static String getDate(Cursor cursor){
-        if (cursor == null)
-            return "";
-        return cursor.getString(cursor.getColumnIndex(MemoryManager.COLUMN_NAME_DATE));
-    }
-
-    public static long getID(Cursor cursor){
-        if (cursor == null)
-            return -1;
-        return cursor.getLong(cursor.getColumnIndex(MemoryManager._ID));
-    }
-
 
 }

@@ -33,7 +33,7 @@ public class CatalogueAdapter extends ResourceCursorAdapter {
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
-        String name = GeneralTools.getStringElement(cursor, CatalogueContract.Catalogue.COLUMN_CATALOGUE_NAME);
+        String name = GeneralTools.getStringElement(cursor, CatalogueContract.Catalogue.COLUMN_DICTIONARY_NAME);
         String desc = GeneralTools.getStringElement(cursor, CatalogueContract.Catalogue.COLUMN_DICTIONARY_DESCRIPTION);
         ViewTools.setStringOfTextView((TextView) view.findViewById(R.id.name), name);
         ViewTools.setStringOfTextView((TextView)view.findViewById(R.id.description), desc);
