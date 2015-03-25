@@ -3,10 +3,13 @@ package model.dictionary.dictionary.sql;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import model.dictionary.Global;
 
+import model.dictionary.dictionary.Dictionary;
 import model.dictionary.dictionary.sql.DictionaryContractBase.DictionaryBase;
+import model.dictionary.tools.Logger;
 
 /**
  * Created by pietro on 06/03/15.
@@ -40,6 +43,7 @@ public class DictionaryDBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        Logger.i("DictionaryDBHelper::onCreate", " creation of " + DictionaryBase.TABLE_NAME +" sql : " + SQL_CREATE_TABLE);
         db.execSQL(SQL_CREATE_TABLE);
     }
 

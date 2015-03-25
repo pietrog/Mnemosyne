@@ -12,14 +12,12 @@ import model.dictionary.memoryManager.sql.MemoryManagerSQLManager;
 
 public class MnemoMemoryManager extends IntentService {
 
-    private static final String ACTION_RISE_TODAY_LIST = "com.mnemo.pietro.mnemosyne.action.RISETODAYLIST";
+    public static final String ACTION_RISE_TODAY_LIST = "RISETODAYLIST";
 
-    private static final String EXTRA_PARAM1 = "com.mnemo.pietro.mnemosyne.extra.PARAM1";
 
-    public static void startActionRiseTodayList(Context context, String param1) {
+    public static void startActionRiseTodayList(Context context) {
         Intent intent = new Intent(context, MnemoMemoryManager.class);
         intent.setAction(ACTION_RISE_TODAY_LIST);
-        intent.putExtra(EXTRA_PARAM1, param1);
         context.startService(intent);
     }
 
@@ -29,14 +27,18 @@ public class MnemoMemoryManager extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        if (intent != null) {
-            final String param1 = intent.getStringExtra(EXTRA_PARAM1);
-            handleActionRiseTodayList(param1);
-        }
+        if (intent != null)
+            switch (intent.getAction()){
+                case ACTION_RISE_TODAY_LIST:
+                    riseTodayList();
+                    break;
+                default:
+                    break;
+            }
     }
 
 
-    private void handleActionRiseTodayList(String param1) {
+    private void riseTodayList() {
         MemoryManagerSQLManager manager = MemoryManagerSQLManager.getInstance(getApplicationContext());
         Vector<Integer> list = manager.getTodayList();
         if (list == null)

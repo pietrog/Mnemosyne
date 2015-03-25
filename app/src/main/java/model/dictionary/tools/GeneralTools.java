@@ -151,6 +151,7 @@ public class GeneralTools {
      * SQL
      */
     public static String getStringElement(Cursor cursor, String column){
+        Logger.i("GeneralTools::getStringElement", " get string from " + column + " ; cursor index : " + cursor.getColumnIndex(column)) ;
         return cursor.getString(cursor.getColumnIndex(column));
     }
     public static long getLongElement(Cursor cursor, String column){

@@ -97,12 +97,9 @@ public class CreateWordFragment extends Fragment {
             managerMem.addNewWord(id);
         }
 
-
         //hide the keyboard and exit the create fragment
         ViewTools.hideKeyboard(mRootview, getActivity());
         getFragmentManager().popBackStack();
-
-        MnemoMemoryManager.startActionRiseTodayList(getActivity().getApplicationContext(), "");
     }
 
 }
