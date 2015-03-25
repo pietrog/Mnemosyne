@@ -24,4 +24,13 @@ public class DictionaryOfWordContract extends DictionaryContractBase{
         return GeneralTools.getStringElement(cursor, DictionaryOfWord.COLUMN_NAME_DEFINITION);
     }
 
+
+    public static String getWordSQL(long id){
+        return "SELECT * FROM "+ DictionaryOfWord.TABLE_NAME + " WHERE " + DictionaryOfWord._ID + " = " + id;
+    }
+
+    public static String getWhereWordSQL(long  id){
+        return DictionaryOfWord._ID + " = " + id;
+    }
+
 }

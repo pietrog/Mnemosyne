@@ -23,7 +23,7 @@ public class DictionaryContractBase {
         /**
          * MEMORY MANAGER DATAS
          */
-        public static final String COLUMN_NAME_DATE_LAST_LEARNING = "date_lase_learning"; // date of the last learning of this object
+        public static final String COLUMN_NAME_DATE_LAST_LEARNING = "date_last_learning"; // date of the last learning of this object
         public static final String COLUMN_NAME_DATE_NEXT_LEARNING = "date_next_learning"; // date of the next alert on this object for learning
         public static final String COLUMN_NAME_MEMORY_PHASE = "memory_phase"; // phase of the memory cycle
     }

@@ -15,8 +15,7 @@ import com.mnemo.pietro.mnemosyne.R;
 import model.dictionary.Global;
 import model.dictionary.dictionary.sql.DictionarySQLManager;
 
-import model.dictionary.memoryManager.MemoryManager;
-import model.dictionary.memoryManager.MemoryManagerSingleton;
+import model.dictionary.memoryManager.sql.MemoryManagerSQLManager;
 import model.dictionary.tools.ViewTools;
 
 /**
@@ -91,12 +90,12 @@ public class CreateWordFragment extends Fragment {
 
         if (id == Global.FAILURE)
             Toast.makeText(getActivity().getApplicationContext(), word + " already exists.", Toast.LENGTH_SHORT).show();
-        else
+        else {
             Toast.makeText(getActivity().getApplicationContext(), word + " added to " + mDictionaryName, Toast.LENGTH_SHORT).show();
-
-        //add word in memory manager via MemoryManager
-        MemoryManager mgr = MemoryManagerSingleton.getInstance(getActivity().getApplicationContext());
-        long memId = mgr.addWordManagerForToday(id);
+            //add word in memory manager via MemoryManager
+            MemoryManagerSQLManager managerMem = MemoryManagerSQLManager.getInstance(getActivity().getApplicationContext());
+            managerMem.addNewWord(id);
+        }
 
 
         //hide the keyboard and exit the create fragment

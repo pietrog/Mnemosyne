@@ -4,7 +4,13 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 
+import java.util.Calendar;
+import java.util.Date;
+
+import model.dictionary.memoryManager.sql.MemoryManagerSQLManager;
 import model.dictionary.tools.BaseSQLManager;
+import model.dictionary.tools.GeneralTools;
+import model.dictionary.tools.Logger;
 
 /**
  * Created by pietro on 23/03/15.
@@ -22,6 +28,10 @@ public class DictionarySQLManager extends BaseSQLManager{
         if (instance == null){
             instance = new DictionarySQLManager(context);
         }
+        return instance;
+    }
+
+    public static synchronized DictionarySQLManager getInstance(){
         return instance;
     }
 
@@ -77,4 +87,32 @@ public class DictionarySQLManager extends BaseSQLManager{
         return remove(listIDs, DictionaryOfWordContract.DictionaryBase.TABLE_NAME);
     }
 
+    /**
+     * Update the next alert date for the word identified by id
+     * @param id id of the word to update
+     * @param nextDate next date for word alert
+     * @return row affected
+     */
+    public int updateNextDateForWord(long id, Date nextDate){
+        Cursor cursor = rawQuery(DictionaryOfWordContract.getWordSQL(id));
+
+        if (cursor.getCount() == 0){
+            Logger.w("DictionarySQLManager::updateNextDateForWord", " no word to update for this id "+id);
+            return -1;
+        }
+
+        //replace the last by the today s date, and next by the new one
+        String newNext = GeneralTools.getSQLDate(nextDate);
+        String oldNext = GeneralTools.getStringElement(cursor, DictionaryContractBase.DictionaryBase.COLUMN_NAME_DATE_NEXT_LEARNING);
+        //if new next and old next are different, we remove id from the oldNext date list
+        if (newNext.compareTo(oldNext) != 0)
+            MemoryManagerSQLManager.getInstance().removeIDsFromList(id, oldNext);
+
+        String today = GeneralTools.getSQLDate(Calendar.getInstance().getTime());
+
+        ContentValues value = new ContentValues();
+        value.put(DictionaryOfWordContract.DictionaryOfWord.COLUMN_NAME_DATE_NEXT_LEARNING, newNext);
+        value.put(DictionaryOfWordContract.DictionaryOfWord.COLUMN_NAME_DATE_LAST_LEARNING, today);
+        return update(value, DictionaryOfWordContract.DictionaryOfWord.TABLE_NAME, DictionaryOfWordContract.getWhereWordSQL(id));
+    }
 }

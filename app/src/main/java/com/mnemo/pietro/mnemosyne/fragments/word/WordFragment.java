@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.mnemo.pietro.mnemosyne.R;
 
 import model.dictionary.dictionary.WordDefinitionObj;
+import model.dictionary.tools.GeneralTools;
 import model.dictionary.tools.ViewTools;
 
 /**
@@ -21,9 +22,14 @@ import model.dictionary.tools.ViewTools;
 public class WordFragment extends Fragment {
     private static final String WORD = "WORD";
     private static final String DEFINITION = "DEFINITION";
+    private static final String LASTDATE = "LAST";
+    private static final String NEXTDATE = "NEXT";
+
 
     private String mWord;
     private String mDefinition;
+    private String mlastDate;
+    private String mnextDate;
 
 
     public static WordFragment newInstance(WordDefinitionObj obj) {
@@ -31,6 +37,8 @@ public class WordFragment extends Fragment {
         Bundle args = new Bundle();
         args.putString(WORD, obj.getWord());
         args.putString(DEFINITION, obj.getDefinition());
+        args.putString(LASTDATE, GeneralTools.getSQLDate(obj.getLastTimeLearnt()));
+        args.putString(NEXTDATE, GeneralTools.getSQLDate(obj.getNextTimeToLearn()));
         fragment.setArguments(args);
         return fragment;
     }
@@ -45,6 +53,8 @@ public class WordFragment extends Fragment {
         if (getArguments() != null) {
             mWord = getArguments().getString(WORD);
             mDefinition = getArguments().getString(DEFINITION);
+            mlastDate = getArguments().getString(LASTDATE);
+            mnextDate = getArguments().getString(NEXTDATE);
         }
     }
 
@@ -55,6 +65,8 @@ public class WordFragment extends Fragment {
         View mRootView = inflater.inflate(R.layout.word_fragment, container, false);
         ViewTools.setStringOfTextView((TextView)mRootView.findViewById(R.id.word_name), mWord);
         ViewTools.setStringOfTextView((TextView)mRootView.findViewById(R.id.word_definition), mDefinition);
+        ViewTools.setStringOfTextView((TextView)mRootView.findViewById(R.id.lastDate), mlastDate);
+        ViewTools.setStringOfTextView((TextView)mRootView.findViewById(R.id.nextDate), mnextDate);
         return mRootView;
     }
 

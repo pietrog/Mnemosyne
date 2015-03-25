@@ -3,7 +3,6 @@ package model.dictionary.dictionary;
 import android.content.ContentValues;
 import android.database.Cursor;
 
-import model.dictionary.dictionary.sql.DictionaryContractBase;
 import model.dictionary.dictionary.sql.DictionaryOfWordContract;
 
 /**
@@ -75,7 +74,9 @@ public class WordDefinitionObj extends DictionaryObject{
     public static WordDefinitionObj LoadFromCursor(Cursor cursor){
         return new WordDefinitionObj(DictionaryOfWordContract.getID(cursor),
                 DictionaryOfWordContract.getCatalogueName(cursor),
-                DictionaryOfWordContract.getDictionaryName(cursor), null, null,
+                DictionaryOfWordContract.getDictionaryName(cursor),
+                DictionaryOfWordContract.getDateLaseLearning(cursor),
+                DictionaryOfWordContract.getDateNextLearning(cursor),
                 DictionaryOfWordContract.getWord(cursor),
                 DictionaryOfWordContract.getDefinition(cursor));
     }

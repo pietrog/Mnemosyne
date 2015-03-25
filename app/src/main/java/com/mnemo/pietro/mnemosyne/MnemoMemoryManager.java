@@ -8,8 +8,7 @@ import android.support.v4.app.NotificationCompat;
 
 import java.util.Vector;
 
-import model.dictionary.memoryManager.MemoryManager;
-import model.dictionary.memoryManager.MemoryManagerSingleton;
+import model.dictionary.memoryManager.sql.MemoryManagerSQLManager;
 
 public class MnemoMemoryManager extends IntentService {
 
@@ -31,15 +30,17 @@ public class MnemoMemoryManager extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         if (intent != null) {
-            final String action = intent.getAction();
             final String param1 = intent.getStringExtra(EXTRA_PARAM1);
             handleActionRiseTodayList(param1);
         }
     }
 
+
     private void handleActionRiseTodayList(String param1) {
-        MemoryManager mg = MemoryManagerSingleton.getInstance(getApplicationContext());
-        Vector<Integer> list = mg.getTodayListOfObjectIDs();
+        MemoryManagerSQLManager manager = MemoryManagerSQLManager.getInstance(getApplicationContext());
+        Vector<Integer> list = manager.getTodayList();
+        if (list == null)
+            return;
 
         /**
          * test notif

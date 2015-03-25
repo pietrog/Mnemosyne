@@ -7,8 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 
-import model.dictionary.dictionary.sql.DictionaryOfWordContract;
-
 /**
  * Created by pietro on 23/03/15.
  * Base abstract class for a SQL manager.
@@ -69,6 +67,10 @@ public abstract class BaseSQLManager {
      */
     protected final Cursor rawQuery(String sqlClause){
         return getSQLDBRead().rawQuery(sqlClause, null);
+    }
+
+    protected final int update(ContentValues value, String tableName, String whereClause){
+        return getSQLDBWrite().update(tableName, value, whereClause, null);
     }
 
 }

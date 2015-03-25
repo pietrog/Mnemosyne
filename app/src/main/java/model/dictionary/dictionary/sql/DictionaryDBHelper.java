@@ -25,7 +25,11 @@ public class DictionaryDBHelper extends SQLiteOpenHelper {
                     + DictionaryBase.COLUMN_NAME_CATALOGUE_NAME + Global.TEXT_TYPE + Global.COMMASEP
                     + DictionaryBase.COLUMN_NAME_DICTIONARY_NAME + Global.TEXT_TYPE + Global.COMMASEP
                     + DictionaryBase.COLUMN_NAME_WORD + Global.TEXT_TYPE + Global.COMMASEP
-                    + DictionaryBase.COLUMN_NAME_DEFINITION + Global.TEXT_TYPE + " )";
+                    + DictionaryBase.COLUMN_NAME_DEFINITION + Global.TEXT_TYPE + Global.COMMASEP
+                    + DictionaryBase.COLUMN_NAME_DATE_LAST_LEARNING + Global.TEXT_TYPE + Global.COMMASEP
+                    + DictionaryBase.COLUMN_NAME_DATE_NEXT_LEARNING + Global.TEXT_TYPE + Global.COMMASEP
+                    + " UNIQUE ( " + DictionaryBase.COLUMN_NAME_CATALOGUE_NAME + Global.COMMASEP + DictionaryBase.COLUMN_NAME_DICTIONARY_NAME + Global.COMMASEP + DictionaryBase.COLUMN_NAME_WORD +")"
+                    + " )";
 
     private static final String SQL_DROP_TABLE = "DROP TABLE " + DictionaryContractBase.DictionaryBase.TABLE_NAME;
 

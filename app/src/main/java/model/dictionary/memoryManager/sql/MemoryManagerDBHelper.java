@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  *
  * SQL dbHelper for MemoryManager class
  */
-public class MemoryMNanagerDBHelper extends SQLiteOpenHelper{
+public class MemoryManagerDBHelper extends SQLiteOpenHelper{
 
     private static final int DATABASE_VESRION = 1;
     private static final String DATABASE_NAME = "memorymanager.db";
@@ -23,7 +23,7 @@ public class MemoryMNanagerDBHelper extends SQLiteOpenHelper{
     private static final String SQL_CREATE_TABLE =
             "CREATE TABLE " + MemoryManagerContract.MemoryManager.TABLE_NAME + "( "
             + MemoryManagerContract.MemoryManager._ID + " INTEGER PRIMARY KEY" + COMMASEP
-            + MemoryManagerContract.MemoryManager.COLUMN_NAME_DATE + TEXT_TYPE + COMMASEP
+            + MemoryManagerContract.MemoryManager.COLUMN_NAME_DATE + TEXT_TYPE + " UNIQUE " + COMMASEP
             + MemoryManagerContract.MemoryManager.COLUMN_NAME_IDLIST + TEXT_TYPE
             + ")"
             ;
@@ -31,7 +31,7 @@ public class MemoryMNanagerDBHelper extends SQLiteOpenHelper{
     private static final String SQL_DROP_TABLE = "DROP TABLE " + MemoryManagerContract.MemoryManager.TABLE_NAME;
 
 
-    public MemoryMNanagerDBHelper(Context context){
+    public MemoryManagerDBHelper(Context context){
         super(context, DATABASE_NAME, null, DATABASE_VESRION);
     }
 
