@@ -23,6 +23,8 @@ public class Global {
     public static final String TEXT_TYPE = " TEXT";
     public static final String INTEGER_TYPE = " INTEGER ";
     public static final String COMMASEP = " ,";
+    public static final String DEFAULT_EMPTY_STRING = " DEFAULT '' ";
+
 
 
 

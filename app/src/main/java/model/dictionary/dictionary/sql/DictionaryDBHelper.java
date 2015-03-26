@@ -3,11 +3,9 @@ package model.dictionary.dictionary.sql;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import model.dictionary.Global;
 
-import model.dictionary.dictionary.Dictionary;
 import model.dictionary.dictionary.sql.DictionaryContractBase.DictionaryBase;
 import model.dictionary.tools.Logger;
 
@@ -29,8 +27,8 @@ public class DictionaryDBHelper extends SQLiteOpenHelper {
                     + DictionaryBase.COLUMN_NAME_DICTIONARY_NAME + Global.TEXT_TYPE + Global.COMMASEP
                     + DictionaryBase.COLUMN_NAME_WORD + Global.TEXT_TYPE + Global.COMMASEP
                     + DictionaryBase.COLUMN_NAME_DEFINITION + Global.TEXT_TYPE + Global.COMMASEP
-                    + DictionaryBase.COLUMN_NAME_DATE_LAST_LEARNING + Global.TEXT_TYPE + Global.COMMASEP
-                    + DictionaryBase.COLUMN_NAME_DATE_NEXT_LEARNING + Global.TEXT_TYPE + Global.COMMASEP
+                    + DictionaryBase.COLUMN_NAME_DATE_LAST_LEARNING + Global.TEXT_TYPE + Global.DEFAULT_EMPTY_STRING + Global.COMMASEP
+                    + DictionaryBase.COLUMN_NAME_DATE_NEXT_LEARNING + Global.TEXT_TYPE + Global.DEFAULT_EMPTY_STRING + Global.COMMASEP
                     + " UNIQUE ( " + DictionaryBase.COLUMN_NAME_CATALOGUE_NAME + Global.COMMASEP + DictionaryBase.COLUMN_NAME_DICTIONARY_NAME + Global.COMMASEP + DictionaryBase.COLUMN_NAME_WORD +")"
                     + " )";
 

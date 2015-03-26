@@ -96,7 +96,7 @@ public class DictionarySQLManager extends BaseSQLManager{
     public int updateNextDateForWord(long id, Date nextDate){
         Cursor cursor = rawQuery(DictionaryOfWordContract.getWordSQL(id));
 
-        if (cursor.getCount() == 0){
+        if (!cursor.moveToFirst()){
             Logger.w("DictionarySQLManager::updateNextDateForWord", " no word to update for this id "+id);
             return -1;
         }

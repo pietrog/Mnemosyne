@@ -75,7 +75,7 @@ public class WordDefinitionObj extends DictionaryObject{
         return new WordDefinitionObj(DictionaryOfWordContract.getID(cursor),
                 DictionaryOfWordContract.getCatalogueName(cursor),
                 DictionaryOfWordContract.getDictionaryName(cursor),
-                DictionaryOfWordContract.getDateLaseLearning(cursor),
+                DictionaryOfWordContract.getDateLastLearning(cursor),
                 DictionaryOfWordContract.getDateNextLearning(cursor),
                 DictionaryOfWordContract.getWord(cursor),
                 DictionaryOfWordContract.getDefinition(cursor));

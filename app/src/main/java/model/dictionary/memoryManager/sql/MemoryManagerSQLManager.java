@@ -140,8 +140,10 @@ public class MemoryManagerSQLManager extends BaseSQLManager{
     public int removeIDsFromList(long id, String date) {
         //get the list and remove given id
         Vector<Integer> list = getListOfObjectIDs(date);
-        list.remove((int)id);
+        if (list == null)
+            return -1;
 
+        list.remove((int)id);
         //update the list
         ContentValues value = new ContentValues();
         value.put(MemoryManagerContract.MemoryManager.COLUMN_NAME_IDLIST, GeneralTools.getStringFrom(list));

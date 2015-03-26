@@ -39,7 +39,7 @@ public class DictionaryContractBase {
     public static String getDictionaryName (Cursor cursor){
         return GeneralTools.getStringElement(cursor, DictionaryBase.COLUMN_NAME_DICTIONARY_NAME);
     }
-    public static String getDateLaseLearning(Cursor cursor){
+    public static String getDateLastLearning(Cursor cursor){
         return GeneralTools.getStringElement(cursor, DictionaryBase.COLUMN_NAME_DATE_LAST_LEARNING);
     }
     public static String getDateNextLearning(Cursor cursor){
