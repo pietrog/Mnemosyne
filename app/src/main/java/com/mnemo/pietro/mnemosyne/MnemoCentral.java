@@ -10,7 +10,10 @@ import android.view.Menu;
 
 import com.mnemo.pietro.mnemosyne.fragments.library.LibraryFragment;
 
-
+//@TODO: refaire l'ecran de visionnage d'un mot
+//@TODO: implementer un rappel basé sur l'alarme
+//@TODO: impémenter le report de jour pour les mots n'ayant pas été revisés le jour ou ils auraient du
+//@TODO: finir l'ecran d'affichage des mot a réviser, avec couleurs pour noter l'importance(jours de retard)
 public class MnemoCentral
         extends ActionBarActivity {
 

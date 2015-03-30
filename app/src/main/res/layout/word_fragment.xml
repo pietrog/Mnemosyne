@@ -5,6 +5,7 @@
     style="@style/wordobjectname"
     >
     <TextView
+        android:text="TEXT"
         android:id="@+id/word_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -20,15 +21,28 @@
         android:layout_below="@+id/word_name"/>
 
     <TextView
+        android:id="@+id/hintNextDate"
+        android:text="@string/hin t_last_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/word_definition" />
+    <TextView
         android:id="@+id/lastDate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/word_definition"/>
+        android:layout_toRightOf="@id/hintNextDate" />
 
+    <TextView
+        android:id="@+id/hintLastDate"
+        android:text="@string/hint_next_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/lastDate" />
     <TextView
         android:id="@+id/nextDate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/lastDate"/>
+        android:layout_toRightOf="@id/hintLastDate"
+        />
 
 </RelativeLayout>

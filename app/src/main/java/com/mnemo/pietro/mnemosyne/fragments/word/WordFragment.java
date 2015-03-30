@@ -24,12 +24,14 @@ public class WordFragment extends Fragment {
     private static final String DEFINITION = "DEFINITION";
     private static final String LASTDATE = "LAST";
     private static final String NEXTDATE = "NEXT";
+    private static final long WORDID = "ID";
 
 
     private String mWord;
     private String mDefinition;
     private String mlastDate;
     private String mnextDate;
+    private long mID;
 
 
     public static WordFragment newInstance(WordDefinitionObj obj) {
@@ -39,6 +41,7 @@ public class WordFragment extends Fragment {
         args.putString(DEFINITION, obj.getDefinition());
         args.putString(LASTDATE, GeneralTools.getSQLDate(obj.getLastTimeLearnt()));
         args.putString(NEXTDATE, GeneralTools.getSQLDate(obj.getNextTimeToLearn()));
+        args.putLong(WORD, obj.getID());
         fragment.setArguments(args);
         return fragment;
     }
@@ -55,6 +58,7 @@ public class WordFragment extends Fragment {
             mDefinition = getArguments().getString(DEFINITION);
             mlastDate = getArguments().getString(LASTDATE);
             mnextDate = getArguments().getString(NEXTDATE);
+            mID = getArguments().getLong(WORDID);
         }
     }
 

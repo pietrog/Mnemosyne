@@ -24,6 +24,8 @@
     <string name="hint_word_fillIn_word">Mot a definir</string>
     <string name="hint_word_fillIn_definition">Definition</string>
     <string name="hint_word">Word</string>
+    <string name="hint_next_date">Prochaine revision</string>
+    <string name="hint_last_date">Dernière révision</string>
 
     <!-- Memory manager -->
     <string name="hint_remember">Je maitrise, aucun probleme</string>
@@ -32,6 +34,13 @@
     <string name="hint_forgot">C\'est le neant</string>
     
 
+
+    <!-- Mnemosyne description -->
+    <string name="mnemosyne_description">Mnemosyne est une application dont le but est d\'aider à mémoriser de façon efficace et sur le long terme un ou des ensembles de mots.
+        Nous avons tous accès a différents types de mémoire. La mémoire qui nous intéresse est la mémoire \'sémantique\', une mémoire à long terme (plus d\'informations ici).
+        Pour parvenir à stocker ce que nous voulons dans cette mémoire, nous devons suivre un processus de mémorisation. C'est la qu'intervient Mnemosyne, qui vous force à suivre
+        ce processus.
+    </string>
 
 
 </resources>
