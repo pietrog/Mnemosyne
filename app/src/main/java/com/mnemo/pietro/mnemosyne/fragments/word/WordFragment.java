@@ -24,7 +24,7 @@ public class WordFragment extends Fragment {
     private static final String DEFINITION = "DEFINITION";
     private static final String LASTDATE = "LAST";
     private static final String NEXTDATE = "NEXT";
-    private static final long WORDID = "ID";
+    private static final String WORDID = "ID";
 
 
     private String mWord;
