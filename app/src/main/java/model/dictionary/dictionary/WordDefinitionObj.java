@@ -3,7 +3,9 @@ package model.dictionary.dictionary;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+import model.dictionary.dictionary.sql.DictionaryContractBase;
 import model.dictionary.dictionary.sql.DictionaryOfWordContract;
+import model.dictionary.tools.GeneralTools;
 
 /**
  * Created by pietro on 02/02/15.
@@ -20,14 +22,12 @@ public class WordDefinitionObj extends DictionaryObject{
      * @param id sql id
      * @param catalogueName catalogue narme
      * @param dictionaryName dictionary name
-     * @param lastTimeLearnt date
-     * @param nextTimeToLearn date
      * @param word word name
      * @param definition definition of the word
      */
-    public WordDefinitionObj(long id, String catalogueName, String dictionaryName, String lastTimeLearnt, String nextTimeToLearn, String word, String definition)
+    public WordDefinitionObj(long id, String catalogueName, String dictionaryName, String word, String definition)
     {
-        super(id, catalogueName, dictionaryName, lastTimeLearnt, nextTimeToLearn);
+        super(id, catalogueName, dictionaryName);
         m_sWord = word;
         m_sDefinition = definition;
     }
@@ -72,13 +72,11 @@ public class WordDefinitionObj extends DictionaryObject{
      * @return WordDefinitionObj loaded from cursor
      */
     public static WordDefinitionObj LoadFromCursor(Cursor cursor){
-        return new WordDefinitionObj(DictionaryOfWordContract.getID(cursor),
-                DictionaryOfWordContract.getCatalogueName(cursor),
-                DictionaryOfWordContract.getDictionaryName(cursor),
-                DictionaryOfWordContract.getDateLastLearning(cursor),
-                DictionaryOfWordContract.getDateNextLearning(cursor),
-                DictionaryOfWordContract.getWord(cursor),
-                DictionaryOfWordContract.getDefinition(cursor));
+        return new WordDefinitionObj(GeneralTools.getLongElement(cursor, DictionaryContractBase.DictionaryBase._ID),
+                GeneralTools.getStringElement(cursor, DictionaryContractBase.DictionaryBase.COLUMN_NAME_CATALOGUE_NAME),
+                GeneralTools.getStringElement(cursor, DictionaryContractBase.DictionaryBase.COLUMN_NAME_DICTIONARY_NAME),
+                GeneralTools.getStringElement(cursor, DictionaryContractBase.DictionaryBase.COLUMN_NAME_WORD),
+                GeneralTools.getStringElement(cursor, DictionaryContractBase.DictionaryBase.COLUMN_NAME_DEFINITION));
     }
 
 

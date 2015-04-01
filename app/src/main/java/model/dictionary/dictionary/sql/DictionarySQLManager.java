@@ -7,6 +7,8 @@ import android.database.Cursor;
 import java.util.Calendar;
 import java.util.Date;
 
+import model.dictionary.dictionary.DictionaryObject;
+import model.dictionary.memoryManager.sql.MemoryManagerContract;
 import model.dictionary.memoryManager.sql.MemoryManagerSQLManager;
 import model.dictionary.tools.BaseSQLManager;
 import model.dictionary.tools.GeneralTools;
@@ -57,7 +59,7 @@ public class DictionarySQLManager extends BaseSQLManager{
                 + " WHERE " + DictionaryContractBase.DictionaryBase.COLUMN_NAME_CATALOGUE_NAME + " = '" + catalogueName
                 + "' and " + DictionaryContractBase.DictionaryBase.COLUMN_NAME_DICTIONARY_NAME + " = '" + dictionaryName +"'";
 
-        return rawQuery(sql);
+        return rawQuery(sql, null);
     }
 
     /**
@@ -68,7 +70,7 @@ public class DictionarySQLManager extends BaseSQLManager{
      * @param definition word definition
      * @return id of the inserted object if successful, -1 otherwise
      */
-    public long add(String catalogueName, String dictionaryName, String word, String definition){
+    public long addNewWord(String catalogueName, String dictionaryName, String word, String definition){
 
         ContentValues val = new ContentValues();
         val.put(DictionaryContractBase.DictionaryBase.COLUMN_NAME_CATALOGUE_NAME, catalogueName);
@@ -88,31 +90,43 @@ public class DictionarySQLManager extends BaseSQLManager{
     }
 
     /**
-     * Update the next alert date for the word identified by id
-     * @param id id of the word to update
-     * @param nextDate next date for word alert
-     * @return row affected
+     * Get the full dictionary object from sql given an id
+     * Full object means object built from dictionary and memory manager tables
+     * If the object was created just before, the constructor of DictionaryObject will initialize the memory monitoring part
+     * @param objectid object id to get
+     * @return dictionary object if successful, null otherwise
      */
-    public int updateNextDateForWord(long id, Date nextDate){
-        Cursor cursor = rawQuery(DictionaryOfWordContract.getWordSQL(id));
+    public DictionaryObject getFullObjectFromID(long objectid){
+        //get the full object cursor (object from dictionary + memory monitoring + memory phase)
+        String fullObjectSQL =
+                "SELECT * from " + DictionaryContractBase.DictionaryBase.TABLE_NAME + ", "+ MemoryManagerContract.MemoryMonitoring.TABLE_NAME
+                        + " WHERE " + DictionaryContractBase.DictionaryBase._ID + " = ? AND "
+                        + MemoryManagerContract.MemoryMonitoring._ID + " = " + DictionaryContractBase.DictionaryBase.MEMORY_MONITORING_ID
+                ;
+        Cursor cursor = rawQuery(fullObjectSQL, new String[] {String.valueOf(objectid)});
 
-        if (!cursor.moveToFirst()){
-            Logger.w("DictionarySQLManager::updateNextDateForWord", " no word to update for this id "+id);
-            return -1;
-        }
+        if (!cursor.moveToFirst())
+            return null;
 
-        //replace the last by the today s date, and next by the new one
-        String newNext = GeneralTools.getSQLDate(nextDate);
-        String oldNext = GeneralTools.getStringElement(cursor, DictionaryContractBase.DictionaryBase.COLUMN_NAME_DATE_NEXT_LEARNING);
-        //if new next and old next are different, we remove id from the oldNext date list
-        if (newNext.compareTo(oldNext) != 0)
-            MemoryManagerSQLManager.getInstance().removeIDsFromList(id, oldNext);
+        //construct the memory monitoring object
+        DictionaryObject.MemoryMonitoringObject monitor = new DictionaryObject.MemoryMonitoringObject();
+        monitor.mLastLearnt = GeneralTools.getDateFromSQLDate(GeneralTools.getStringElement(cursor, MemoryManagerContract.MemoryMonitoring.LAST_LEARNT));
+        monitor.mNextLearnt = GeneralTools.getDateFromSQLDate(GeneralTools.getStringElement(cursor, MemoryManagerContract.MemoryMonitoring.NEXT_LEARNT));
+        monitor.mDateAdded = GeneralTools.getDateFromSQLDate(GeneralTools.getStringElement(cursor, MemoryManagerContract.MemoryMonitoring.DATE_ADDED));
+        monitor.mBeginningOfMP = GeneralTools.getDateFromSQLDate(GeneralTools.getStringElement(cursor, MemoryManagerContract.MemoryMonitoring.BEGINING_OF_MP));
+        monitor.mDaysBetween = (int)GeneralTools.getLongElement(cursor, MemoryManagerContract.MemoryMonitoring.DAYS_BETWEEN);
+        monitor.mMemoryPhaseID = GeneralTools.getLongElement(cursor, MemoryManagerContract.MemoryMonitoring.MEMORY_PHASE_ID);
 
-        String today = GeneralTools.getSQLDate(Calendar.getInstance().getTime());
+        DictionaryObject object = new DictionaryObject(
+                GeneralTools.getLongElement(cursor, DictionaryContractBase.DictionaryBase._ID),
+                GeneralTools.getStringElement(cursor, DictionaryContractBase.DictionaryBase.COLUMN_NAME_CATALOGUE_NAME),
+                GeneralTools.getStringElement(cursor, DictionaryContractBase.DictionaryBase.COLUMN_NAME_DICTIONARY_NAME),
+                GeneralTools.getLongElement(cursor, DictionaryContractBase.DictionaryBase.MEMORY_MONITORING_ID),
+                monitor.mMemoryPhaseID == -1 ? null : monitor);
 
-        ContentValues value = new ContentValues();
-        value.put(DictionaryOfWordContract.DictionaryOfWord.COLUMN_NAME_DATE_NEXT_LEARNING, newNext);
-        value.put(DictionaryOfWordContract.DictionaryOfWord.COLUMN_NAME_DATE_LAST_LEARNING, today);
-        return update(value, DictionaryOfWordContract.DictionaryOfWord.TABLE_NAME, DictionaryOfWordContract.getWhereWordSQL(id));
+        Logger.i("DictionarySQLManager::DictionaryObject", " dictionary loaded: " + object);
+
+        return object;
     }
+
 }

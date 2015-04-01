@@ -6,6 +6,8 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.mnemo.pietro.mnemosyne.R;
@@ -19,18 +21,14 @@ import model.dictionary.tools.ViewTools;
  * Use the {@link WordFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class WordFragment extends Fragment {
+public class WordFragment extends Fragment implements View.OnClickListener{
     private static final String WORD = "WORD";
     private static final String DEFINITION = "DEFINITION";
-    private static final String LASTDATE = "LAST";
-    private static final String NEXTDATE = "NEXT";
     private static final String WORDID = "ID";
 
 
     private String mWord;
     private String mDefinition;
-    private String mlastDate;
-    private String mnextDate;
     private long mID;
 
 
@@ -39,9 +37,7 @@ public class WordFragment extends Fragment {
         Bundle args = new Bundle();
         args.putString(WORD, obj.getWord());
         args.putString(DEFINITION, obj.getDefinition());
-        args.putString(LASTDATE, GeneralTools.getSQLDate(obj.getLastTimeLearnt()));
-        args.putString(NEXTDATE, GeneralTools.getSQLDate(obj.getNextTimeToLearn()));
-        args.putLong(WORD, obj.getID());
+        args.putLong(WORDID, obj.getID());
         fragment.setArguments(args);
         return fragment;
     }
@@ -56,11 +52,10 @@ public class WordFragment extends Fragment {
         if (getArguments() != null) {
             mWord = getArguments().getString(WORD);
             mDefinition = getArguments().getString(DEFINITION);
-            mlastDate = getArguments().getString(LASTDATE);
-            mnextDate = getArguments().getString(NEXTDATE);
             mID = getArguments().getLong(WORDID);
         }
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -69,8 +64,11 @@ public class WordFragment extends Fragment {
         View mRootView = inflater.inflate(R.layout.word_fragment, container, false);
         ViewTools.setStringOfTextView((TextView)mRootView.findViewById(R.id.word_name), mWord);
         ViewTools.setStringOfTextView((TextView)mRootView.findViewById(R.id.word_definition), mDefinition);
-        ViewTools.setStringOfTextView((TextView)mRootView.findViewById(R.id.lastDate), mlastDate);
-        ViewTools.setStringOfTextView((TextView)mRootView.findViewById(R.id.nextDate), mnextDate);
+
+        //onclicklistener attached
+        ImageButton valid = (ImageButton)mRootView.findViewById(R.id.learnt);
+        valid.setOnClickListener(this);
+
         return mRootView;
     }
 
@@ -79,6 +77,15 @@ public class WordFragment extends Fragment {
         super.onResume();
         ViewTools.setTitle(getActivity(), R.string.hint_word);
         ViewTools.setSubtitle(getActivity(), mWord);
+    }
+
+    @Override
+    public void onClick(View v) {
+        onLearntWord();
+    }
+
+    private void onLearntWord(){
+
     }
 
 }

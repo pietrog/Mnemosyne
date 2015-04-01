@@ -8,12 +8,28 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 
 
+import com.mnemo.pietro.mnemosyne.fragments.dictionary.tools.DictionaryAdapter;
 import com.mnemo.pietro.mnemosyne.fragments.library.LibraryFragment;
 
+import model.dictionary.Global;
+import model.dictionary.dictionary.DictionaryObject;
+import model.dictionary.dictionary.sql.DictionarySQLManager;
+import model.dictionary.library.sql.LibrarySQLManager;
+import model.dictionary.memoryManager.sql.MemoryManagerSQLManager;
+
+//EN COURS
 //@TODO: refaire l'ecran de visionnage d'un mot
+//@TODO: introduire le bouton "GOT IT" qui valide l'apprehension d'un mot et gere la date ulterieur de rappel
+//@TODO: implementer les phases de memorisation
+
+//A FAIRE
 //@TODO: implementer un rappel basé sur l'alarme
 //@TODO: impémenter le report de jour pour les mots n'ayant pas été revisés le jour ou ils auraient du
 //@TODO: finir l'ecran d'affichage des mot a réviser, avec couleurs pour noter l'importance(jours de retard)
+//@TODO: introduire les foreign keys pour relier les tables et avoir un vrai schema
+//@TODO: manager l'initialisation/destruction de certaines ressources(dbhelpers, ...) dans MnemoCentral
+//@TODO: separer la table dictionary de la table word, qui doit etendre dictionary
+
 public class MnemoCentral
         extends ActionBarActivity {
 
@@ -40,6 +56,10 @@ public class MnemoCentral
             LibraryFragment fgt = LibraryFragment.newInstance();
             getFragmentManager().beginTransaction().add(R.id.main_subscreen, fgt).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
         }
+
+        // init the system, database helpers, ...
+        InitSystem();
+
     }
 
 
@@ -64,4 +84,25 @@ public class MnemoCentral
         return true;
     }
 
+
+    /**
+     * Init singletons, ...
+     * @return
+     */
+    private int InitSystem(){
+        MemoryManagerSQLManager.getInstance(getApplicationContext());
+        DictionarySQLManager.getInstance(getApplicationContext());
+        LibrarySQLManager.getInstance(getApplicationContext());
+        DictionaryObject.initMemoryPhaseMap();
+        return Global.SUCCESS;
+    }
+
+    /**
+     * Shutdown the system, called when activity is destroyed
+     * @return
+     */
+    private int ShutdownSystem(){
+
+        return Global.SUCCESS;
+    }
 }

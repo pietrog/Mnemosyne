@@ -89,7 +89,7 @@ public abstract class BaseDictionaryFragment extends ListFragment{
         DictionarySQLManager manager = DictionarySQLManager.getInstance(getActivity().getApplicationContext());
         int result = manager.remove(id);
 
-        Logger.i("DictionaryFragment::removeWord", " Word removed " + DictionaryOfWordContract.getWord((Cursor) mAdapter.getItem(position)) + ": res => " + result);
+        Logger.i("DictionaryFragment::removeWord", " Word removed " + GeneralTools.getStringElement((Cursor) mAdapter.getItem(position), DictionaryOfWordContract.DictionaryOfWord.COLUMN_NAME_WORD) + ": res => " + result);
 
         //@todo remove also from memory manager !!!
 

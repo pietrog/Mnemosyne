@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import model.dictionary.Global;
 
 import model.dictionary.dictionary.sql.DictionaryContractBase.DictionaryBase;
+import model.dictionary.memoryManager.sql.MemoryManagerContract;
 import model.dictionary.tools.Logger;
 
 /**
@@ -20,6 +21,7 @@ public class DictionaryDBHelper extends SQLiteOpenHelper {
 
 
     //sql request for dictionary table creation
+
     private static final String SQL_CREATE_TABLE =
             "CREATE TABLE " + DictionaryContractBase.DictionaryBase.TABLE_NAME + " ( "
                     + DictionaryBase._ID + " INTEGER PRIMARY KEY" + Global.COMMASEP
@@ -29,7 +31,9 @@ public class DictionaryDBHelper extends SQLiteOpenHelper {
                     + DictionaryBase.COLUMN_NAME_DEFINITION + Global.TEXT_TYPE + Global.COMMASEP
                     + DictionaryBase.COLUMN_NAME_DATE_LAST_LEARNING + Global.TEXT_TYPE + Global.DEFAULT_EMPTY_STRING + Global.COMMASEP
                     + DictionaryBase.COLUMN_NAME_DATE_NEXT_LEARNING + Global.TEXT_TYPE + Global.DEFAULT_EMPTY_STRING + Global.COMMASEP
-                    + " UNIQUE ( " + DictionaryBase.COLUMN_NAME_CATALOGUE_NAME + Global.COMMASEP + DictionaryBase.COLUMN_NAME_DICTIONARY_NAME + Global.COMMASEP + DictionaryBase.COLUMN_NAME_WORD +")"
+                    + DictionaryBase.MEMORY_MONITORING_ID + Global.INTEGER_TYPE + Global.COMMASEP
+                    + " UNIQUE ( " + DictionaryBase.COLUMN_NAME_CATALOGUE_NAME + Global.COMMASEP + DictionaryBase.COLUMN_NAME_DICTIONARY_NAME + Global.COMMASEP + DictionaryBase.COLUMN_NAME_WORD +")" + Global.COMMASEP
+                    + " FOREIGN KEY(" + DictionaryBase.MEMORY_MONITORING_ID + ") REFERENCES (" + MemoryManagerContract.MemoryManager._ID + ") ON DELETE CASCADE"
                     + " )";
 
     private static final String SQL_DROP_TABLE = "DROP TABLE " + DictionaryContractBase.DictionaryBase.TABLE_NAME;

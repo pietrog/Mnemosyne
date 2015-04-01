@@ -26,6 +26,10 @@ public class Global {
     public static final String DEFAULT_EMPTY_STRING = " DEFAULT '' ";
 
 
+    // this is the first phase, phase name should be a global constant variable because we use it for dictionary object creation
+    public static final String FIRST_PHASE_NAME = "ENCODING";
+
+
 
 
     public static String getLogFromResult(int result){

@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 
+import model.dictionary.Global;
+
 /**
  * Created by pietro on 23/03/15.
  * Base abstract class for a SQL manager.
@@ -17,6 +19,7 @@ public abstract class BaseSQLManager {
     private SQLiteOpenHelper mDBHelper;
     private SQLiteDatabase mDBWrite;
     private SQLiteDatabase mDBRead;
+    protected boolean mHasBeenInitialized = false;
 
     protected BaseSQLManager(SQLiteOpenHelper dbHelper){
         mDBHelper = dbHelper;
@@ -35,13 +38,19 @@ public abstract class BaseSQLManager {
     }
 
 
+    /**
+     * Add value in table tableName
+     * @param value ContentValues value to add
+     * @param tableName String table name
+     * @return id created if successful, {Global.FAILURE} otherwise
+     */
     protected final long add(ContentValues value, String tableName){
         long res ;
         try {
             res = getSQLDBWrite().insertOrThrow(tableName, null, value);
         } catch (SQLException e) {
             Logger.w("BaseSQLManager::add", " insertion failed in " + tableName + " value ( " + value.toString() + "). Already exists");
-            return -1;
+            return Global.FAILURE;
         }
         return res;
     }
@@ -65,8 +74,8 @@ public abstract class BaseSQLManager {
      * @param sqlClause sql request
      * @return cursor
      */
-    protected final Cursor rawQuery(String sqlClause){
-        return getSQLDBRead().rawQuery(sqlClause, null);
+    protected final Cursor rawQuery(String sqlClause, String[] selectionArgs){
+        return getSQLDBRead().rawQuery(sqlClause, selectionArgs);
     }
 
     protected final int update(ContentValues value, String tableName, String whereClause){

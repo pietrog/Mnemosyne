@@ -32,7 +32,7 @@ public class LibrarySQLManager extends BaseSQLManager{
 
     public Cursor getAll(){
         String sql = "SELECT * FROM " + LibraryContract.Library.TABLE_NAME;
-        return rawQuery(sql);
+        return rawQuery(sql, null);
     }
 
     /**

@@ -15,34 +15,58 @@
 
     <TextView
         android:id="@+id/word_definition"
+        android:text="definition"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/description"
         android:layout_below="@+id/word_name"/>
 
-    <TextView
-        android:id="@+id/hintNextDate"
-        android:text="@string/hint_last_date"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/word_definition" />
-    <TextView
-        android:id="@+id/lastDate"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/hintNextDate" />
+        android:layout_below="@+id/word_definition"
+        android:id="@+id/layTime"
+        >
+        <TextView
+            android:id="@+id/hintNextDate"
+            android:text="@string/hint_next_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true" />
+        <TextView
+            android:id="@+id/nextDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/hintNextDate"
+            android:layout_toEndOf="@id/hintNextDate"
+            android:layout_marginLeft="15dp"
+            />
+        <TextView
+            android:id="@+id/hintLastDate"
+            android:text="@string/hint_last_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/hintNextDate"
+            />
+        <TextView
+            android:id="@+id/lastDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/nextDate"
+            android:layout_toRightOf="@id/hintLastDate"
+            android:layout_toEndOf="@id/hintLastDate"
+            android:layout_marginLeft="15dp"
+            />
+    </RelativeLayout>
 
-    <TextView
-        android:id="@+id/hintLastDate"
-        android:text="@string/hint_next_date"
-        android:layout_width="match_parent"
+    <ImageButton
+        android:id="@+id/learnt"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/lastDate" />
-    <TextView
-        android:id="@+id/nextDate"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/hintLastDate"
+        android:src="@drawable/ic_action_good"
+        android:layout_below="@id/layTime"
+        android:layout_centerHorizontal="true"
         />
+
 
 </RelativeLayout>

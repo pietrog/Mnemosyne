@@ -10,6 +10,7 @@ import android.widget.Toast;
 import java.util.Vector;
 
 import model.dictionary.Global;
+import model.dictionary.dictionary.DictionaryObject;
 import model.dictionary.dictionary.sql.DictionarySQLManager;
 import model.dictionary.memoryManager.sql.MemoryManagerSQLManager;
 
@@ -46,7 +47,7 @@ public class MnemoMemoryManager extends IntentService {
         intent.putExtra(DICTNAME, dictionaryName);
         intent.putExtra(WORD, word);
         intent.putExtra(DEFINITION, definition);
-        intent.setAction(ACTION_RISE_TODAY_LIST);
+        intent.setAction(ACTION_ADD_WORD);
         context.startService(intent);
     }
 
@@ -62,7 +63,7 @@ public class MnemoMemoryManager extends IntentService {
                     riseTodayList();
                     break;
                 case ACTION_ADD_WORD:
-                    addWordToDictionary(intent.getStringExtra(CATNAME),
+                    addNewWordToDictionary(intent.getStringExtra(CATNAME),
                             intent.getStringExtra(DICTNAME),
                             intent.getStringExtra(WORD),
                             intent.getStringExtra(DEFINITION));
@@ -74,7 +75,7 @@ public class MnemoMemoryManager extends IntentService {
 
 
     private void riseTodayList() {
-        MemoryManagerSQLManager manager = MemoryManagerSQLManager.getInstance(getApplicationContext());
+        MemoryManagerSQLManager manager = MemoryManagerSQLManager.getInstance();
         Vector<Integer> list = manager.getTodayList();
         if (list == null)
             return;
@@ -89,21 +90,21 @@ public class MnemoMemoryManager extends IntentService {
     }
 
 
-    private void addWordToDictionary(String catalogueName, String dictionaryName, String word, String definition){
-        DictionarySQLManager manager = DictionarySQLManager.getInstance(getApplicationContext());
+    private void addNewWordToDictionary(String catalogueName, String dictionaryName, String word, String definition){
 
-        //add the word to dictionary
-        long id = manager.add(catalogueName, dictionaryName, word, definition);
+        //create the dictionary part
+        long id = DictionarySQLManager.getInstance(getApplicationContext()).addNewWord(catalogueName, dictionaryName, word, definition);
 
-        //alert if it failed
+        //create the memory monitoring part
         if (id == Global.FAILURE)
             Toast.makeText(getApplicationContext(), word + " already exists.", Toast.LENGTH_SHORT).show();
         //else add it in memoryManager
         else {
             Toast.makeText(getApplicationContext(), word + " added to " + dictionaryName, Toast.LENGTH_SHORT).show();
             //add word in memory manager via MemoryManager
-            MemoryManagerSQLManager managerMem = MemoryManagerSQLManager.getInstance(getApplicationContext());
-            managerMem.addNewWord(id);
+            DictionaryObject objectToUpdate = DictionarySQLManager.getInstance(getApplicationContext()).getFullObjectFromID(id);
+            //update object in db
+            MemoryManagerSQLManager.getInstance(getApplicationContext()).updateDictionaryObjectInDB(objectToUpdate);
         }
     }
 

@@ -152,9 +152,20 @@ public class GeneralTools {
      */
     public static String getStringElement(Cursor cursor, String column){
         Logger.i("GeneralTools::getStringElement", " get string from " + column + " ; cursor index : " + cursor.getColumnIndex(column)) ;
+        if (cursor.isNull(cursor.getColumnIndex(column)))
+            return "";
         return cursor.getString(cursor.getColumnIndex(column));
     }
+
+    /**
+     * Return long value exctracted from column of cursor
+     * @param cursor cursor containing the value
+     * @param column column targeted
+     * @return long if exists, -1 otherwise
+     */
     public static long getLongElement(Cursor cursor, String column){
+        if (cursor.isNull(cursor.getColumnIndex(column)))
+            return -1;
         return cursor.getLong(cursor.getColumnIndex(column));
     }
 }

@@ -14,23 +14,4 @@ public class DictionaryOfWordContract extends DictionaryContractBase{
     public static abstract class DictionaryOfWord extends DictionaryBase {
     }
 
-    /**
-     * CURSOR GETTER/SETTER FOR COLUMNS
-     */
-    public static String getWord (Cursor cursor){
-        return GeneralTools.getStringElement(cursor, DictionaryOfWord.COLUMN_NAME_WORD);
-    }
-    public static String getDefinition (Cursor cursor){
-        return GeneralTools.getStringElement(cursor, DictionaryOfWord.COLUMN_NAME_DEFINITION);
-    }
-
-
-    public static String getWordSQL(long id){
-        return "SELECT * FROM "+ DictionaryOfWord.TABLE_NAME + " WHERE " + DictionaryOfWord._ID + " = " + id;
-    }
-
-    public static String getWhereWordSQL(long  id){
-        return DictionaryOfWord._ID + " = " + id;
-    }
-
 }
