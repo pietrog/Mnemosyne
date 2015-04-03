@@ -28,13 +28,13 @@ public class CatalogueSQLManager extends BaseSQLManager{
      * IMPLEMENTATION
      */
     private CatalogueSQLManager (Context context){
-        super(new CatalogueDBHelper(context));
+        super(context);
     }
 
 
     public Cursor getAll(String catalogueName){
         String sql = "SELECT * FROM " + CatalogueContract.Catalogue.TABLE_NAME + " WHERE " + CatalogueContract.Catalogue.COLUMN_CATALOGUE_NAME + " = '" + catalogueName +"'";
-        return rawQuery(sql);
+        return rawQuery(sql, null);
     }
 
 

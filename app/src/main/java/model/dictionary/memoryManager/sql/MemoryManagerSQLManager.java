@@ -3,9 +3,11 @@ package model.dictionary.memoryManager.sql;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
@@ -55,7 +57,7 @@ public class MemoryManagerSQLManager extends BaseSQLManager{
      * @param context application context
      */
     private MemoryManagerSQLManager (Context context){
-        super(new MemoryManagerDBHelper(context));
+        super(context);
     }
 
 
@@ -65,6 +67,7 @@ public class MemoryManagerSQLManager extends BaseSQLManager{
      * @return {Global.SUCCESS} if successful {Global.FAILURE} otherwise
      */
     public int initMemoryPhaseMap(Map<Integer, DictionaryObject.MemoryPhaseObject> memoryPhaseMap){
+        memoryPhaseMap = new HashMap<>();
         String sql = "SELECT * FROM " + MemoryManagerContract.MemoryPhase.TABLE_NAME;
         Cursor cursor = rawQuery(sql, null);
         if (!cursor.moveToFirst())
@@ -191,8 +194,10 @@ public class MemoryManagerSQLManager extends BaseSQLManager{
     /**
      * Persist dictionary object in database
      * @param object object to persist
+     * @return {Global.SUCCESS} if successful, {Global.FAILURE} otherwise
      */
-    public void updateDictionaryObjectInDB(DictionaryObject object){
+    public int updateDictionaryObjectInDB(DictionaryObject object){
+        int res = Global.FAILURE;
         //if it is the first time we update this object
         if (object.getMemoryMonitoringID() == -1){
             //create the memory monitoring object
@@ -203,10 +208,16 @@ public class MemoryManagerSQLManager extends BaseSQLManager{
 
         //process for object in normal cycle
         //update dictionary object and memory monitoring object
-        update(object.toContentValues(), DictionaryContractBase.DictionaryBase.TABLE_NAME, " _ID = " + object.getID());
-        update(object.getMemoryMonitoring().toContentValues(), MemoryManagerContract.MemoryMonitoring.TABLE_NAME, "_ID = "+object.getMemoryMonitoringID());
-
+        if (update(object.toContentValues(), DictionaryContractBase.DictionaryBase.TABLE_NAME, " _ID = " + object.getID()) == 0)
+            res = Global.FAILURE;
+        if (update(object.getMemoryMonitoring().toContentValues(), MemoryManagerContract.MemoryMonitoring.TABLE_NAME, "_ID = "+object.getMemoryMonitoringID()) == 0)
+            res = Global.FAILURE;
         //if memory monitoring object changes next dates, keep it up to date
-        addWordToLearnSession(object.getID(), object.getMemoryMonitoring().mNextLearnt);
+        if (addWordToLearnSession(object.getID(), object.getMemoryMonitoring().mNextLearnt) == -1)
+            res = Global.FAILURE;
+
+        if (res == Global.FAILURE)
+            Logger.w("MemoryManagerSQLManager::updateDictionaryObjectInDB"," something wrong occured during update of object");
+        return res;
     }
 }

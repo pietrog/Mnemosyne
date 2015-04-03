@@ -45,7 +45,7 @@ public class DictionarySQLManager extends BaseSQLManager{
      * Private constructor, DictionarySQLManager is a singleton
      */
     private DictionarySQLManager (Context context){
-        super(new DictionaryDBHelper(context));
+        super(context);
     }
 
     /**

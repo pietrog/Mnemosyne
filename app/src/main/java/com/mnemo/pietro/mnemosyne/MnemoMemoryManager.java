@@ -17,15 +17,17 @@ import model.dictionary.memoryManager.sql.MemoryManagerSQLManager;
 public class MnemoMemoryManager extends IntentService {
 
     public static final String ACTION_RISE_TODAY_LIST = "RISETODAYLIST";
+    public static final String ACTION_ADD_WORD = "ADDWORD";
+    public static final String ACTION_UPDATE_MEMORY_PHASE_WORD = "UPDATEWORD";
 
     /**
      * ADD WORD ACTION
      */
-    public static final String ACTION_ADD_WORD = "ADDWORD";
     private static final String CATNAME = "CATALOGUE_NAME";
     private static final String DICTNAME = "DICTIONARY_NAME";
     private static final String WORD = "WORD";
     private static final String DEFINITION = "DEFINITION";
+    private static final String WORDID = "WORDID";
 
     public static void startActionRiseTodayList(Context context) {
         Intent intent = new Intent(context, MnemoMemoryManager.class);
@@ -51,6 +53,17 @@ public class MnemoMemoryManager extends IntentService {
         context.startService(intent);
     }
 
+    /**
+     * Update a word
+     * @param context application context
+     * @param id dictionary object id
+     */
+    public static void startActionUpdateWord(Context context, long id){
+        Intent intent = new Intent(context, MnemoMemoryManager.class);
+        intent.putExtra(WORDID, id);
+        context.startService(intent);
+    }
+
     public MnemoMemoryManager() {
         super("MnemoMemoryManager");
     }
@@ -67,6 +80,9 @@ public class MnemoMemoryManager extends IntentService {
                             intent.getStringExtra(DICTNAME),
                             intent.getStringExtra(WORD),
                             intent.getStringExtra(DEFINITION));
+                    break;
+                case ACTION_UPDATE_MEMORY_PHASE_WORD:
+                    updateMemoryPhaseOfDictionaryObject(intent.getLongExtra(WORDID,-1));
                     break;
                 default:
                     break;
@@ -90,6 +106,13 @@ public class MnemoMemoryManager extends IntentService {
     }
 
 
+    /**
+     * Add word in dictionary and memory monitoring system
+     * @param catalogueName catalogue name
+     * @param dictionaryName dictionary name
+     * @param word word
+     * @param definition definition
+     */
     private void addNewWordToDictionary(String catalogueName, String dictionaryName, String word, String definition){
 
         //create the dictionary part
@@ -108,4 +131,11 @@ public class MnemoMemoryManager extends IntentService {
         }
     }
 
+    private void updateMemoryPhaseOfDictionaryObject(long id){
+        if (id == -1)
+            return;
+        DictionaryObject object = DictionarySQLManager.getInstance(getApplicationContext()).getFullObjectFromID(id);
+        MemoryManagerSQLManager.getInstance(getApplicationContext()).updateDictionaryObjectInDB(object);
+        //Toast.makeText(getApplicationContext(), " ",Toast.LENGTH_SHORT).show();
+    }
 }

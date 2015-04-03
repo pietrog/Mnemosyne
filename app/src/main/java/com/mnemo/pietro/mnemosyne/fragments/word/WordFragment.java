@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.mnemo.pietro.mnemosyne.MnemoMemoryManager;
 import com.mnemo.pietro.mnemosyne.R;
 
 import model.dictionary.dictionary.WordDefinitionObj;
@@ -85,7 +86,7 @@ public class WordFragment extends Fragment implements View.OnClickListener{
     }
 
     private void onLearntWord(){
-
+        MnemoMemoryManager.startActionUpdateWord(getActivity().getApplicationContext(), mID);
+        getFragmentManager().popBackStack();
     }
-
 }

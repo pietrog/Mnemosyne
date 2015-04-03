@@ -1,6 +1,7 @@
 package model.dictionary.tools;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -17,26 +18,18 @@ import model.dictionary.Global;
 public abstract class BaseSQLManager {
 
     private SQLiteOpenHelper mDBHelper;
-    private SQLiteDatabase mDBWrite;
-    private SQLiteDatabase mDBRead;
-    protected boolean mHasBeenInitialized = false;
 
-    protected BaseSQLManager(SQLiteOpenHelper dbHelper){
-        mDBHelper = dbHelper;
+    protected BaseSQLManager(Context context){
+        mDBHelper = MnemoDBHelper.getInstance(context);
     }
 
     protected SQLiteDatabase getSQLDBWrite(){
-        if (mDBWrite == null || !mDBWrite.isOpen())
-            mDBWrite = mDBHelper.getWritableDatabase();
-        return mDBWrite;
+        return mDBHelper.getWritableDatabase();
     }
 
     protected SQLiteDatabase getSQLDBRead(){
-        if (mDBRead == null || !mDBRead.isOpen())
-            mDBRead = mDBHelper.getReadableDatabase();
-        return mDBRead;
+        return mDBHelper.getReadableDatabase();
     }
-
 
     /**
      * Add value in table tableName
@@ -81,5 +74,4 @@ public abstract class BaseSQLManager {
     protected final int update(ContentValues value, String tableName, String whereClause){
         return getSQLDBWrite().update(tableName, value, whereClause, null);
     }
-
 }

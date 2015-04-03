@@ -27,7 +27,7 @@ public class LibrarySQLManager extends BaseSQLManager{
      * IMPLEMENTATION
      */
     public LibrarySQLManager (Context context){
-        super(new LibraryDBHelper(context));
+        super(context);
     }
 
     public Cursor getAll(){
