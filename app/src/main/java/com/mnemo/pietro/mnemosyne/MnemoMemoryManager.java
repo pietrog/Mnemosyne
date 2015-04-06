@@ -61,6 +61,7 @@ public class MnemoMemoryManager extends IntentService {
     public static void startActionUpdateWord(Context context, long id){
         Intent intent = new Intent(context, MnemoMemoryManager.class);
         intent.putExtra(WORDID, id);
+        intent.setAction(ACTION_UPDATE_MEMORY_PHASE_WORD);
         context.startService(intent);
     }
 
@@ -135,7 +136,7 @@ public class MnemoMemoryManager extends IntentService {
         if (id == -1)
             return;
         DictionaryObject object = DictionarySQLManager.getInstance(getApplicationContext()).getFullObjectFromID(id);
-        MemoryManagerSQLManager.getInstance(getApplicationContext()).updateDictionaryObjectInDB(object);
-        //Toast.makeText(getApplicationContext(), " ",Toast.LENGTH_SHORT).show();
+        if (MemoryManagerSQLManager.getInstance(getApplicationContext()).updateDictionaryObjectInDB(object) == Global.SUCCESS)
+            Toast.makeText(getApplicationContext(), " ",Toast.LENGTH_SHORT).show();
     }
 }

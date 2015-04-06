@@ -17,6 +17,7 @@ public class DictionaryContractBase {
 
     public static abstract class DictionaryBase implements BaseColumns{
         public static final String TABLE_NAME = "dictionary";
+        public static final String CID = TABLE_NAME + "." + _ID;
         public static final String COLUMN_NAME_CATALOGUE_NAME = "catalogue";
         public static final String COLUMN_NAME_DICTIONARY_NAME = "dictionary";
         public static final String COLUMN_NAME_WORD = "word";

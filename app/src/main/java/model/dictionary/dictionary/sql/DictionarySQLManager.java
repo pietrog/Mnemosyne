@@ -99,9 +99,9 @@ public class DictionarySQLManager extends BaseSQLManager{
     public DictionaryObject getFullObjectFromID(long objectid){
         //get the full object cursor (object from dictionary + memory monitoring + memory phase)
         String fullObjectSQL =
-                "SELECT * from " + DictionaryContractBase.DictionaryBase.TABLE_NAME + ", "+ MemoryManagerContract.MemoryMonitoring.TABLE_NAME
-                        + " WHERE " + DictionaryContractBase.DictionaryBase._ID + " = ? AND "
-                        + MemoryManagerContract.MemoryMonitoring._ID + " = " + DictionaryContractBase.DictionaryBase.MEMORY_MONITORING_ID
+                "SELECT * from " + DictionaryContractBase.DictionaryBase.TABLE_NAME + " LEFT JOIN " + MemoryManagerContract.MemoryMonitoring.TABLE_NAME
+                        + " ON " + MemoryManagerContract.MemoryMonitoring.CID + " = " + DictionaryContractBase.DictionaryBase.MEMORY_MONITORING_ID
+                        + " WHERE " + DictionaryContractBase.DictionaryBase.CID + " = ? "
                 ;
         Cursor cursor = rawQuery(fullObjectSQL, new String[] {String.valueOf(objectid)});
 

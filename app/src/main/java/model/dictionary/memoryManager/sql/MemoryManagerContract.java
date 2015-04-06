@@ -18,6 +18,7 @@ public class MemoryManagerContract {
 
     public static abstract class MemoryManager implements BaseColumns{
         public static final String TABLE_NAME = "memorymanager";
+        public static final String CID = TABLE_NAME + "." + _ID;
         public static final String COLUMN_NAME_DATE = "date";
         public static final String COLUMN_NAME_IDLIST = "idlist";
     }
@@ -27,6 +28,7 @@ public class MemoryManagerContract {
      */
     public static abstract class MemoryMonitoring implements BaseColumns{
         public static final String TABLE_NAME = "memorymonitoring";
+        public static final String CID = TABLE_NAME + "." + _ID;
         public static final String LAST_LEARNT = "last_learnt"; // date of the last learning session of this object
         public static final String NEXT_LEARNT = "next_learnt"; // date of the next learning session on this object
         public static final String DATE_ADDED = "dateadded"; // date word was added for the first time
@@ -40,6 +42,7 @@ public class MemoryManagerContract {
      */
     public static abstract class MemoryPhase implements BaseColumns{
         public static final String TABLE_NAME = "memoryphase";
+        public static final String CID = TABLE_NAME + "." + _ID;
         public static final String PHASE_NAME = "phasename";
         public static final String DURATION_PHASE = "durationphase"; // total duration of the phase (in days)
         public static final String FIRST_PERIOD = "firstPeriod"; // first period for the rappel of the object (in days)
@@ -57,7 +60,7 @@ public class MemoryManagerContract {
 
     public static final String SQL_CREATE_MEMORY_PHASE_TABLE =
             "CREATE TABLE " + MemoryPhase.TABLE_NAME + "("
-                    + MemoryPhase._ID + Global.INTEGER_TYPE + Global.COMMASEP
+                    + MemoryPhase._ID + Global.INTEGER_TYPE + " PRIMARY KEY " + Global.COMMASEP
                     + MemoryManagerContract.MemoryPhase.PHASE_NAME + Global.TEXT_TYPE + Global.COMMASEP
                     + MemoryPhase.DURATION_PHASE + Global.INTEGER_TYPE + Global.COMMASEP
                     + MemoryPhase.FIRST_PERIOD + Global.INTEGER_TYPE + Global.COMMASEP
@@ -69,7 +72,7 @@ public class MemoryManagerContract {
 
     public static final String SQL_CREATE_MEMORY_MONITORING_TABLE =
             "CREATE TABLE " + MemoryMonitoring.TABLE_NAME + "("
-                    + MemoryMonitoring._ID + Global.INTEGER_TYPE + Global.COMMASEP
+                    + MemoryMonitoring._ID + Global.INTEGER_TYPE + " PRIMARY KEY" + Global.COMMASEP
                     + MemoryMonitoring.LAST_LEARNT + Global.TEXT_TYPE + Global.COMMASEP
                     + MemoryMonitoring.NEXT_LEARNT + Global.TEXT_TYPE + Global.COMMASEP
                     + MemoryMonitoring.DATE_ADDED + Global.TEXT_TYPE + Global.COMMASEP

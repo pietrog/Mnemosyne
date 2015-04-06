@@ -197,6 +197,11 @@ public class MemoryManagerSQLManager extends BaseSQLManager{
      * @return {Global.SUCCESS} if successful, {Global.FAILURE} otherwise
      */
     public int updateDictionaryObjectInDB(DictionaryObject object){
+        if (object == null) {
+            Logger.i("MemoryManagerSQLManager::updateDictionaryObjectInDB"," null object");
+            return Global.NOT_AVAILABLE;
+        }
+
         int res = Global.FAILURE;
         //if it is the first time we update this object
         if (object.getMemoryMonitoringID() == -1){
