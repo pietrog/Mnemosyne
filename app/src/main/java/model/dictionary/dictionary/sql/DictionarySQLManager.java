@@ -57,7 +57,8 @@ public class DictionarySQLManager extends BaseSQLManager{
     public Cursor getAllDictionaryObjectsCursor(String catalogueName, String dictionaryName){
         String sql =  "SELECT * FROM " + DictionaryContractBase.DictionaryBase.TABLE_NAME
                 + " WHERE " + DictionaryContractBase.DictionaryBase.COLUMN_NAME_CATALOGUE_NAME + " = '" + catalogueName
-                + "' and " + DictionaryContractBase.DictionaryBase.COLUMN_NAME_DICTIONARY_NAME + " = '" + dictionaryName +"'";
+                + "' and " + DictionaryContractBase.DictionaryBase.COLUMN_NAME_DICTIONARY_NAME + " = '" + dictionaryName +"'"
+                + " ORDER BY " + DictionaryContractBase.DictionaryBase.COLUMN_NAME_WORD;
 
         return rawQuery(sql, null);
     }

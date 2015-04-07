@@ -23,13 +23,18 @@ public class ViewTools {
         return editableObject == null ? null : editableObject.getText().toString();
     }
 
-    public static void setStringOfTextView(TextView view, String text){
-        view.setText(text);
+    public static void setStringOfTextView(View view, String text){
+        ((TextView)view).setText(text);
     }
 
     public static void hideKeyboard(View view, Activity activity){
         InputMethodManager imm = (InputMethodManager)activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+    }
+
+    public static void showKeyboard(View view, Activity activity){
+        InputMethodManager imm = (InputMethodManager)activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        imm.showSoftInputFromInputMethod(view.getWindowToken(), InputMethodManager.SHOW_FORCED);
     }
 
 

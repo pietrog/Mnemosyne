@@ -32,6 +32,10 @@
     <string name="hint_almost_remember">J\'ai de bons restes</string>
     <string name="hint_almost_forgotten">J\'ai du mal a me souvenir</string>
     <string name="hint_forgot">C\'est le neant</string>
+    <string name="hint_mem_add_date">Mot ajoute le </string>
+    <string name="hint_mem_memory_phase">Phase de memorisation </string>
+    <string name="hint_mem_beg_mp">Date de demarrage de la phase </string>
+    <string name="hint_mem_days_between">Nombre de jours entre 2 revisions </string>
     
 
 

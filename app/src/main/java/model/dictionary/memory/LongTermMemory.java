@@ -1,15 +1,11 @@
 package model.dictionary.memory;
 
 import android.content.Context;
-import android.database.Cursor;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
 import model.dictionary.dictionary.DictionaryObject;
-import model.dictionary.dictionary.sql.DictionaryContractBase;
-import model.dictionary.memoryManager.sql.MemoryManagerContract;
 import model.dictionary.memoryManager.sql.MemoryManagerSQLManager;
 
 /**

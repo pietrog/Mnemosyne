@@ -16,10 +16,8 @@ import model.dictionary.dictionary.DictionaryObject;
 import model.dictionary.dictionary.sql.DictionarySQLManager;
 import model.dictionary.library.sql.LibrarySQLManager;
 import model.dictionary.memoryManager.sql.MemoryManagerSQLManager;
-import model.dictionary.tools.MnemoDBHelper;
 
 //EN COURS
-//@TODO: refaire l'ecran de visionnage d'un mot
 
 //A FAIRE
 //@TODO: implementer la modification des entites
@@ -47,6 +45,7 @@ public class MnemoCentral
 
         Toolbar mToolbar = (Toolbar) findViewById(R.id.global_toolbar);
         if (mToolbar != null) {
+            mToolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
             setSupportActionBar(mToolbar);
         }
 
@@ -58,7 +57,13 @@ public class MnemoCentral
 
         // init the system, database helpers, ...
         InitSystem();
+    }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        ShutdownSystem();
     }
 
     /*******************/
@@ -84,7 +89,7 @@ public class MnemoCentral
 
     /**
      * Init singletons, ...
-     * @return
+     * @return {Global.SUCCESS} if successful
      */
     private int InitSystem(){
         CatalogueSQLManager.getInstance(getApplicationContext());
@@ -97,7 +102,7 @@ public class MnemoCentral
 
     /**
      * Shutdown the system, called when activity is destroyed
-     * @return
+     * @return {Global.SUCCESS} if successful
      */
     private int ShutdownSystem(){
 

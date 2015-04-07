@@ -59,6 +59,7 @@ public class CreateWordFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         mRootview = inflater.inflate(R.layout.word_create_fragment, container, false);
+        ViewTools.showKeyboard(mRootview.findViewById(R.id.name), getActivity());
         return mRootview;
     }
 

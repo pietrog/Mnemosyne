@@ -6,14 +6,14 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.TextView;
 
 import com.mnemo.pietro.mnemosyne.MnemoMemoryManager;
 import com.mnemo.pietro.mnemosyne.R;
 
+import model.dictionary.dictionary.DictionaryObject;
 import model.dictionary.dictionary.WordDefinitionObj;
+import model.dictionary.dictionary.sql.DictionarySQLManager;
 import model.dictionary.tools.GeneralTools;
 import model.dictionary.tools.ViewTools;
 
@@ -31,7 +31,7 @@ public class WordFragment extends Fragment implements View.OnClickListener{
     private String mWord;
     private String mDefinition;
     private long mID;
-
+    private View mRootView;
 
     public static WordFragment newInstance(WordDefinitionObj obj) {
         WordFragment fragment = new WordFragment();
@@ -62,13 +62,15 @@ public class WordFragment extends Fragment implements View.OnClickListener{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View mRootView = inflater.inflate(R.layout.word_fragment, container, false);
-        ViewTools.setStringOfTextView((TextView)mRootView.findViewById(R.id.word_name), mWord);
-        ViewTools.setStringOfTextView((TextView)mRootView.findViewById(R.id.word_definition), mDefinition);
+        mRootView = inflater.inflate(R.layout.word_fragment, container, false);
+        ViewTools.setStringOfTextView(mRootView.findViewById(R.id.word_name), mWord);
+        ViewTools.setStringOfTextView(mRootView.findViewById(R.id.word_definition), mDefinition);
 
         //onclicklistener attached
         ImageButton valid = (ImageButton)mRootView.findViewById(R.id.learnt);
         valid.setOnClickListener(this);
+        ImageButton show = (ImageButton)mRootView.findViewById(R.id.showStats);
+        show.setOnClickListener(this);
 
         return mRootView;
     }
@@ -82,11 +84,35 @@ public class WordFragment extends Fragment implements View.OnClickListener{
 
     @Override
     public void onClick(View v) {
-        onLearntWord();
+        switch (v.getId()){
+            case R.id.learnt:
+                onLearntWord();
+            break;
+            case R.id.showStats:
+                showStatistics();
+                break;
+        }
     }
 
     private void onLearntWord(){
         MnemoMemoryManager.startActionUpdateWord(getActivity().getApplicationContext(), mID);
         getFragmentManager().popBackStack();
+    }
+
+    private void showStatistics(){
+        DictionaryObject object = DictionarySQLManager.getInstance().getFullObjectFromID(mID);
+        ViewTools.setStringOfTextView(mRootView.findViewById(R.id.lastDate), GeneralTools.getSQLDate(object.getMemoryMonitoring().mLastLearnt));
+        ViewTools.setStringOfTextView(mRootView.findViewById(R.id.nextDate), GeneralTools.getSQLDate(object.getMemoryMonitoring().mNextLearnt));
+
+        ViewTools.setStringOfTextView(mRootView.findViewById(R.id.date_add), GeneralTools.getSQLDate(object.getMemoryMonitoring().mDateAdded));
+        ViewTools.setStringOfTextView(mRootView.findViewById(R.id.days_between), object.getMemoryMonitoring().mDaysBetween + "");
+        ViewTools.setStringOfTextView(mRootView.findViewById(R.id.mem_phase), object.getMemoryMonitoring().getMemoryPhaseName());
+        ViewTools.setStringOfTextView(mRootView.findViewById(R.id.beg_mem), GeneralTools.getSQLDate(object.getMemoryMonitoring().mBeginningOfMP));
+
+
+        ImageButton show = (ImageButton)mRootView.findViewById(R.id.showStats);
+        View stats = mRootView.findViewById(R.id.layStats);
+        stats.setVisibility(View.VISIBLE);
+        show.setVisibility(View.INVISIBLE);
     }
 }
