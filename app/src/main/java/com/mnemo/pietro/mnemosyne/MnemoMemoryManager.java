@@ -2,9 +2,11 @@ package com.mnemo.pietro.mnemosyne;
 
 import android.app.IntentService;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.Context;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.widget.Toast;
 
 import java.util.Vector;
@@ -14,6 +16,7 @@ import model.dictionary.dictionary.DictionaryObject;
 import model.dictionary.dictionary.sql.DictionarySQLManager;
 import model.dictionary.memory.LongTermMemory;
 import model.dictionary.memoryManager.sql.MemoryManagerSQLManager;
+import model.dictionary.tools.GeneralTools;
 
 public class MnemoMemoryManager extends IntentService {
 
@@ -103,6 +106,13 @@ public class MnemoMemoryManager extends IntentService {
          */
         int mID = 0;
         NotificationCompat.Builder mbuilder = new NotificationCompat.Builder(this).setSmallIcon(R.drawable.ic_action_new).setContentTitle("ID PRESENT").setContentText("" + list.toString());
+        Intent intent = new Intent(getApplicationContext(), MnemoCentral.class);
+        intent.putExtra(MnemoCentral.EXTRA_TODAY_LIST, GeneralTools.getStringFrom(list));
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(getApplicationContext());
+        stackBuilder.addParentStack(MnemoCentral.class);
+        stackBuilder.addNextIntent(intent);
+        PendingIntent pintent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+        mbuilder.setContentIntent(pintent);
         NotificationManager not = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         not.notify(mID, mbuilder.build());
     }

@@ -15,7 +15,11 @@
         android:icon="@drawable/ic_action_accept"
         android:orderInCategory="2"
         app:showAsAction="always"
-
          />
+
+    <item android:id="@+id/raiseAlert"
+        android:title="@string/action_raise_alert"
+        android:orderInCategory="3"
+        app:showAsAction="never" />
 
 </menu>

@@ -210,7 +210,7 @@ public class DictionaryObject {
                 mMemoryPhaseID = mIDFirstPhase;
                 mDateAdded = time.getTime();
                 mBeginningOfMP = mDateAdded;
-                mDaysBetween = mMemoryPhaseObjectMap.get((int)mIDFirstPhase).mFirstPeriod;
+                mDaysBetween = 0;//mMemoryPhaseObjectMap.get((int)mIDFirstPhase).mFirstPeriod;
                 mLastLearnt = mDateAdded;
                 time.add(Calendar.DAY_OF_YEAR, mDaysBetween);
                 mNextLearnt = time.getTime();

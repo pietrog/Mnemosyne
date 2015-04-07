@@ -6,6 +6,7 @@ import android.database.Cursor;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Vector;
 
 import model.dictionary.dictionary.DictionaryObject;
 import model.dictionary.memoryManager.sql.MemoryManagerContract;
@@ -59,6 +60,19 @@ public class DictionarySQLManager extends BaseSQLManager{
                 + " WHERE " + DictionaryContractBase.DictionaryBase.COLUMN_NAME_CATALOGUE_NAME + " = '" + catalogueName
                 + "' and " + DictionaryContractBase.DictionaryBase.COLUMN_NAME_DICTIONARY_NAME + " = '" + dictionaryName +"'"
                 + " ORDER BY " + DictionaryContractBase.DictionaryBase.COLUMN_NAME_WORD;
+
+        return rawQuery(sql, null);
+    }
+
+    public Cursor getDictionaryObjectsFromLearningList(Vector<Integer> list){
+        String sql = "SELECT * FROM " + DictionaryContractBase.DictionaryBase.TABLE_NAME
+                + " WHERE " + DictionaryContractBase.DictionaryBase._ID + " IN (" ;
+
+        for(Integer i : list)
+            sql += i + ", ";
+
+        sql = sql.substring(0, sql.length()-2);
+        sql += ")";
 
         return rawQuery(sql, null);
     }

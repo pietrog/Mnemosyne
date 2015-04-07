@@ -152,6 +152,15 @@ public class GeneralTools {
         return res.substring(0, res.length()-1);
     }
 
+    public static Vector<Integer> getVectorFromString(String str){
+        Vector<Integer> res = new Vector<>();
+        String[] tab = str.split(",");
+        for(String current: tab){
+            res.add(Integer.parseInt(current));
+        }
+        return res;
+    }
+
 
     /**
      * SQL

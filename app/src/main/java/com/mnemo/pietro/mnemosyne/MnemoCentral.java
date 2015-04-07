@@ -8,7 +8,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 
 
+import com.mnemo.pietro.mnemosyne.fragments.dictionary.TodayListFragment;
 import com.mnemo.pietro.mnemosyne.fragments.library.LibraryFragment;
+
+import java.util.Vector;
 
 import model.dictionary.Global;
 import model.dictionary.catalogue.sql.CatalogueSQLManager;
@@ -16,20 +19,24 @@ import model.dictionary.dictionary.DictionaryObject;
 import model.dictionary.dictionary.sql.DictionarySQLManager;
 import model.dictionary.library.sql.LibrarySQLManager;
 import model.dictionary.memoryManager.sql.MemoryManagerSQLManager;
+import model.dictionary.tools.GeneralTools;
 
 //EN COURS
 
 //A FAIRE
-//@TODO: implementer la modification des entites
-//@TODO: implementer un rappel basé sur l'alarme
-//@TODO: impémenter le report de jour pour les mots n'ayant pas été revisés le jour ou ils auraient du
-//@TODO: finir l'ecran d'affichage des mot a réviser, avec couleurs pour noter l'importance(jours de retard)
 //@TODO: introduire les foreign keys pour relier les tables et avoir un vrai schema
 //@TODO: manager l'initialisation/destruction de certaines ressources(dbhelpers, ...) dans MnemoCentral, rationaliser l'utilissation des dbhelpers
 //@TODO: separer la table dictionary de la table word, qui doit etendre dictionary
+//@TODO: implementer la modification des entites
+//@TODO: implementer un rappel basé sur l'alarme
+//@TODO: impémenter le report de jour pour les mots n'ayant pas été revisés le jour ou ils auraient du
+//@TODO: modifier l'ecran d'affichage des mot a réviser, avec couleurs pour noter l'importance(jours de retard)
+
 
 public class MnemoCentral
         extends ActionBarActivity {
+
+    public static final String EXTRA_TODAY_LIST = "TODAYLIST";
 
     public static final String FGT_CATALOGUE_TAG = "CATALOGUE";
     public static final String FGT_DICTIONARY_TAG = "DICTIONARY";
@@ -50,9 +57,16 @@ public class MnemoCentral
         }
 
         if (savedInstanceState == null){
-            //create the catalogue list fragment
-            LibraryFragment fgt = LibraryFragment.newInstance();
-            getFragmentManager().beginTransaction().add(R.id.main_subscreen, fgt).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
+            if (getIntent() != null && getIntent().getSerializableExtra(EXTRA_TODAY_LIST) != null ){
+                Vector<Integer> list = GeneralTools.getVectorFromString(getIntent().getStringExtra(EXTRA_TODAY_LIST));
+                TodayListFragment fgt = TodayListFragment.newInstance(list);
+                getFragmentManager().beginTransaction().add(R.id.main_subscreen, fgt).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
+            }
+            else {
+                //create the catalogue list fragment
+                LibraryFragment fgt = LibraryFragment.newInstance();
+                getFragmentManager().beginTransaction().add(R.id.main_subscreen, fgt).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
+            }
         }
 
         // init the system, database helpers, ...

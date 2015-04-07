@@ -11,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.mnemo.pietro.mnemosyne.MnemoCentral;
+import com.mnemo.pietro.mnemosyne.MnemoMemoryManager;
 import com.mnemo.pietro.mnemosyne.R;
 import com.mnemo.pietro.mnemosyne.fragments.catalogue.tools.CatalogueAdapter;
 import com.mnemo.pietro.mnemosyne.fragments.dictionary.CreateDictionaryFragment;
@@ -91,8 +92,15 @@ public class CatalogueFragment extends ListFragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        CreateDictionaryFragment fragment = CreateDictionaryFragment.newInstance(mCatalogueName);
-        getFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.main_subscreen, fragment).commit();
+        switch(item.getItemId()){
+            case R.id.add_item:
+                CreateDictionaryFragment fragment = CreateDictionaryFragment.newInstance(mCatalogueName);
+                getFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.main_subscreen, fragment).commit();
+                break;
+            case R.id.raiseAlert:
+                MnemoMemoryManager.startActionRiseTodayList(getActivity().getApplicationContext());
+                break;
+        }
         return true;
     }
 
