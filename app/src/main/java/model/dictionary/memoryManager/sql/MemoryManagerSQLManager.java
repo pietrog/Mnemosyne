@@ -67,7 +67,6 @@ public class MemoryManagerSQLManager extends BaseSQLManager{
      * @return {Global.SUCCESS} if successful {Global.FAILURE} otherwise
      */
     public int initMemoryPhaseMap(Map<Integer, DictionaryObject.MemoryPhaseObject> memoryPhaseMap){
-        memoryPhaseMap = new HashMap<>();
         String sql = "SELECT * FROM " + MemoryManagerContract.MemoryPhase.TABLE_NAME;
         Cursor cursor = rawQuery(sql, null);
         if (!cursor.moveToFirst())
@@ -82,12 +81,8 @@ public class MemoryManagerSQLManager extends BaseSQLManager{
                     (int)GeneralTools.getLongElement(cursor, MemoryManagerContract.MemoryPhase.NEXT_PHASE_ID));
 
             memoryPhaseMap.put((int)GeneralTools.getLongElement(cursor, MemoryManagerContract.MemoryPhase._ID), current);
-            if (!cursor.moveToNext()){
-                memoryPhaseMap.clear();
-                return Global.FAILURE;
-            }
         }
-        while (!cursor.isAfterLast());
+        while (cursor.moveToNext());
 
         return Global.SUCCESS;
     }
@@ -202,7 +197,7 @@ public class MemoryManagerSQLManager extends BaseSQLManager{
             return Global.NOT_AVAILABLE;
         }
 
-        int res = Global.FAILURE;
+        int res = Global.SUCCESS;
         //if it is the first time we update this object
         if (object.getMemoryMonitoringID() == -1){
             //create the memory monitoring object

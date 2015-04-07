@@ -4,6 +4,7 @@ import android.content.ContentValues;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 import model.dictionary.Global;
@@ -65,12 +66,16 @@ public class DictionaryObject {
          * after this, object is in the normal cycle
          */
         if (mMemoryMonitoring == null){
+            Calendar time = Calendar.getInstance();
             mMemoryMonitoring = new MemoryMonitoringObject();
             mMemoryMonitoring.mMemoryPhaseID = mIDFirstPhase;
-            mMemoryMonitoring.mDateAdded = Calendar.getInstance().getTime();
+            mMemoryMonitoring.mDateAdded = time.getTime();
             mMemoryMonitoring.mBeginningOfMP = mMemoryMonitoring.mDateAdded;
             mMemoryMonitoring.mDaysBetween = 0;
-            mMemoryMonitoring.updateToNextPhase();
+            mMemoryMonitoring.mLastLearnt = mMemoryMonitoring.mDateAdded;
+            time.add(Calendar.DAY_OF_YEAR, 1);
+            mMemoryMonitoring.mNextLearnt = time.getTime();
+
         }
     }
 
@@ -138,7 +143,7 @@ public class DictionaryObject {
     /**
      * STATIC SECTION
      */
-    public static Map<Integer, MemoryPhaseObject> mMemoryPhaseObjectMap;
+    public static Map<Integer, MemoryPhaseObject> mMemoryPhaseObjectMap = new HashMap<>();
     public static boolean mHasBeenInitialized = false;
     public static long mIDFirstPhase;
 
@@ -199,9 +204,21 @@ public class DictionaryObject {
             mLearningSessionsModified = true;
         }
 
+        /**
+         * Update the memory monitoring object to the next phase
+         */
         public void updateToNextPhase(){
-            long nextid = DictionaryObject.mMemoryPhaseObjectMap.get(mMemoryPhaseID).mNextPhaseID;
-            mMemoryPhaseID = nextid != -1 ? nextid : mMemoryPhaseID;
+            //get the next phase id (-1 if the phase is th elast one, upkeeping)
+            long nextid = DictionaryObject.mMemoryPhaseObjectMap.get((int)mMemoryPhaseID).mNextPhaseID;
+            if (nextid != -1){
+                mMemoryPhaseID = nextid;
+                mDaysBetween = DictionaryObject.mMemoryPhaseObjectMap.get((int)nextid).mFirstPeriod;
+                Calendar time = Calendar.getInstance();
+                mBeginningOfMP = time.getTime();
+                mLastLearnt = mBeginningOfMP;
+                time.add(Calendar.DAY_OF_YEAR, mDaysBetween);
+                mNextLearnt = time.getTime();
+            }
         }
 
         public int getDurationPhase(){

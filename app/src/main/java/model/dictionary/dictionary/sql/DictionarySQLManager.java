@@ -118,7 +118,7 @@ public class DictionarySQLManager extends BaseSQLManager{
         monitor.mMemoryPhaseID = GeneralTools.getLongElement(cursor, MemoryManagerContract.MemoryMonitoring.MEMORY_PHASE_ID);
 
         DictionaryObject object = new DictionaryObject(
-                GeneralTools.getLongElement(cursor, DictionaryContractBase.DictionaryBase._ID),
+                objectid,
                 GeneralTools.getStringElement(cursor, DictionaryContractBase.DictionaryBase.COLUMN_NAME_CATALOGUE_NAME),
                 GeneralTools.getStringElement(cursor, DictionaryContractBase.DictionaryBase.COLUMN_NAME_DICTIONARY_NAME),
                 GeneralTools.getLongElement(cursor, DictionaryContractBase.DictionaryBase.MEMORY_MONITORING_ID),

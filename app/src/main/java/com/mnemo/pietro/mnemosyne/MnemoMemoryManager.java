@@ -12,6 +12,7 @@ import java.util.Vector;
 import model.dictionary.Global;
 import model.dictionary.dictionary.DictionaryObject;
 import model.dictionary.dictionary.sql.DictionarySQLManager;
+import model.dictionary.memory.LongTermMemory;
 import model.dictionary.memoryManager.sql.MemoryManagerSQLManager;
 
 public class MnemoMemoryManager extends IntentService {
@@ -136,7 +137,8 @@ public class MnemoMemoryManager extends IntentService {
         if (id == -1)
             return;
         DictionaryObject object = DictionarySQLManager.getInstance(getApplicationContext()).getFullObjectFromID(id);
+        LongTermMemory.getInstance(getApplicationContext()).updateMemorisationPhase(object);
         if (MemoryManagerSQLManager.getInstance(getApplicationContext()).updateDictionaryObjectInDB(object) == Global.SUCCESS)
-            Toast.makeText(getApplicationContext(), " ",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), " Object updated",Toast.LENGTH_SHORT).show();
     }
 }

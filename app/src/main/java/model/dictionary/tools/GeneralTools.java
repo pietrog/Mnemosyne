@@ -110,6 +110,8 @@ public class GeneralTools {
      * @return string date
      */
     public static String getSQLDate(Date date){
+        if (date == null)
+            return "";
         SimpleDateFormat sdf = new SimpleDateFormat(Global.FORMAT_SQL_DATE, Locale.FRANCE);
         return sdf.format(date);
     }
@@ -120,6 +122,10 @@ public class GeneralTools {
      * @return date object, null if fails
      */
     public static Date getDateFromSQLDate(String sqlDate){
+
+        if (sqlDate.isEmpty())
+            return null;
+
         SimpleDateFormat sdf = new SimpleDateFormat(Global.FORMAT_SQL_DATE, Locale.FRANCE);
 
         Date date;
