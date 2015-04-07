@@ -9,6 +9,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.widget.Toast;
 
+import java.util.Calendar;
 import java.util.Vector;
 
 import model.dictionary.Global;
@@ -147,8 +148,13 @@ public class MnemoMemoryManager extends IntentService {
         if (id == -1)
             return;
         DictionaryObject object = DictionarySQLManager.getInstance(getApplicationContext()).getFullObjectFromID(id);
-        LongTermMemory.getInstance(getApplicationContext()).updateMemorisationPhase(object);
-        if (MemoryManagerSQLManager.getInstance(getApplicationContext()).updateDictionaryObjectInDB(object) == Global.SUCCESS)
-            Toast.makeText(getApplicationContext(), " Object updated",Toast.LENGTH_SHORT).show();
+        //check if object was already updated today
+        //if it was, do not update it again
+        String now = GeneralTools.getSQLDate(Calendar.getInstance().getTime());
+        if (now.compareTo(GeneralTools.getSQLDate(object.getMemoryMonitoring().mLastLearnt)) != 0){
+            LongTermMemory.getInstance(getApplicationContext()).updateMemorisationPhase(object);
+            if (MemoryManagerSQLManager.getInstance(getApplicationContext()).updateDictionaryObjectInDB(object) == Global.SUCCESS)
+                Toast.makeText(getApplicationContext(), " Object updated",Toast.LENGTH_SHORT).show();
+        }
     }
 }
