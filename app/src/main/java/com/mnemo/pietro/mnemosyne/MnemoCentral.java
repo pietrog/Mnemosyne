@@ -20,8 +20,6 @@ import model.dictionary.tools.MnemoDBHelper;
 
 //EN COURS
 //@TODO: refaire l'ecran de visionnage d'un mot
-//@TODO: introduire le bouton "GOT IT" qui valide l'apprehension d'un mot et gere la date ulterieur de rappel
-//@TODO: implementer les phases de memorisation
 
 //A FAIRE
 //@TODO: implementer la modification des entites

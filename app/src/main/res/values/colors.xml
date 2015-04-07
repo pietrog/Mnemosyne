@@ -6,7 +6,7 @@
     <color name="colorSecondary">#B8863F</color>
     <color name="colorSecondaryDark">#B8860B</color>
 
-    <color name="windowBackgroundColor">#FFFFBF</color>
+    <color name="windowBackgroundColor">#F0F0F0</color>
     <color name="black_translucent">#123456</color>
 
     <color name="editBackColor">#404040</color>
