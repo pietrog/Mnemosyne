@@ -36,7 +36,7 @@ import model.dictionary.tools.GeneralTools;
 public class MnemoCentral
         extends ActionBarActivity {
 
-    public static final String EXTRA_TODAY_LIST = "TODAYLIST";
+    public static final String EXTRA_ALERT_DATE = "com.mnemo.pietro.ALERT_DATE";
 
     public static final String FGT_CATALOGUE_TAG = "CATALOGUE";
     public static final String FGT_DICTIONARY_TAG = "DICTIONARY";
@@ -57,9 +57,8 @@ public class MnemoCentral
         }
 
         if (savedInstanceState == null){
-            if (getIntent() != null && getIntent().getSerializableExtra(EXTRA_TODAY_LIST) != null ){
-                Vector<Integer> list = GeneralTools.getVectorFromString(getIntent().getStringExtra(EXTRA_TODAY_LIST));
-                TodayListFragment fgt = TodayListFragment.newInstance(list);
+            if (getIntent() != null && getIntent().getStringExtra(EXTRA_ALERT_DATE) != null ){
+                TodayListFragment fgt = TodayListFragment.newInstance(getIntent().getStringExtra(EXTRA_ALERT_DATE));
                 getFragmentManager().beginTransaction().add(R.id.main_subscreen, fgt).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
             }
             else {

@@ -9,6 +9,7 @@ import com.mnemo.pietro.mnemosyne.fragments.dictionary.tools.DictionaryAdapter;
 import java.util.Vector;
 
 import model.dictionary.dictionary.sql.DictionarySQLManager;
+import model.dictionary.memoryManager.sql.MemoryManagerSQLManager;
 import model.dictionary.tools.ViewTools;
 
 /**
@@ -19,13 +20,13 @@ import model.dictionary.tools.ViewTools;
  */
 public class TodayListFragment extends BaseDictionaryFragment{
 
-    public static final String LISTOFID = "LISTOFID"; // contains a list of word id the user should learn today
-    private Vector<Integer> mListOfId;
+    public static final String ALERTDATE = "ALERTDATE"; // the date corresponding to the raise alert
+    private String mDate;
 
-    public static TodayListFragment newInstance(Vector<Integer> listOfid){
+    public static TodayListFragment newInstance(String date){
         TodayListFragment fragment = new TodayListFragment();
         Bundle args = new Bundle();
-        args.putSerializable(LISTOFID, listOfid);
+        args.putString(ALERTDATE, date);
 
         fragment.setArguments(args);
 
@@ -39,20 +40,12 @@ public class TodayListFragment extends BaseDictionaryFragment{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null)
-            mListOfId = (Vector<Integer>)getArguments().getSerializable(LISTOFID);
+            mDate = getArguments().getString(ALERTDATE);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        if (mListOfId == null)
-            return;
-
-        DictionarySQLManager sqlManager = DictionarySQLManager.getInstance(getActivity().getApplicationContext());
-        Cursor mRawCursor = sqlManager.getDictionaryObjectsFromLearningList(mListOfId);
-        mAdapter = new DictionaryAdapter(getActivity().getApplicationContext(), R.layout.std_list_fragment, mRawCursor, 0);
-        setListAdapter(mAdapter);
     }
 
     @Override
@@ -60,5 +53,9 @@ public class TodayListFragment extends BaseDictionaryFragment{
         super.onResume();
         ViewTools.setTitle(getActivity(), R.string.hint_todayslist);
         ViewTools.setSubtitle(getActivity(), "");
+
+        Cursor mRawCursor = DictionarySQLManager.getInstance().getDictionaryObjectsFromLearningList(MemoryManagerSQLManager.getInstance().getListOfObjectIDs(mDate));
+        mAdapter = new DictionaryAdapter(getActivity().getApplicationContext(), R.layout.std_list_fragment, mRawCursor, 0);
+        setListAdapter(mAdapter);
     }
 }

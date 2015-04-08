@@ -50,6 +50,9 @@ public class LongTermMemory implements IMemorisation{
 
     @Override
     public void updateMemorisationPhase(DictionaryObject object) {
+
+        //fix the lastlearnt date for removing id from list of id to raise
+        Date oldNext = object.getMemoryMonitoring().mNextLearnt;
         //we implement a strict update of the phase, will change later
         //we just check if the begin date of the phase + number of days of this phase is gt or equal to today's date
         Calendar cal = Calendar.getInstance();
@@ -63,6 +66,9 @@ public class LongTermMemory implements IMemorisation{
         //increment in this phase
         else
             object.getMemoryMonitoring().incrementDaysInPhaseAndUpdateLearningDates();
+
+        //remove id of this object from the old next learning session
+        MemoryManagerSQLManager.getInstance().removeIDsFromList(object.getID(), oldNext);
 
         //update object in database
         MemoryManagerSQLManager.getInstance().updateDictionaryObjectInDB(object);

@@ -108,7 +108,7 @@ public class MnemoMemoryManager extends IntentService {
         int mID = 0;
         NotificationCompat.Builder mbuilder = new NotificationCompat.Builder(this).setSmallIcon(R.drawable.ic_action_new).setContentTitle("ID PRESENT").setContentText("" + list.toString());
         Intent intent = new Intent(getApplicationContext(), MnemoCentral.class);
-        intent.putExtra(MnemoCentral.EXTRA_TODAY_LIST, GeneralTools.getStringFrom(list));
+        intent.putExtra(MnemoCentral.EXTRA_ALERT_DATE, GeneralTools.getSQLDate(Calendar.getInstance().getTime()));
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(getApplicationContext());
         stackBuilder.addParentStack(MnemoCentral.class);
         stackBuilder.addNextIntent(intent);
@@ -151,10 +151,7 @@ public class MnemoMemoryManager extends IntentService {
         //check if object was already updated today
         //if it was, do not update it again
         String now = GeneralTools.getSQLDate(Calendar.getInstance().getTime());
-        if (now.compareTo(GeneralTools.getSQLDate(object.getMemoryMonitoring().mLastLearnt)) != 0){
+        if (now.compareTo(GeneralTools.getSQLDate(object.getMemoryMonitoring().mLastLearnt)) != 0)
             LongTermMemory.getInstance(getApplicationContext()).updateMemorisationPhase(object);
-            if (MemoryManagerSQLManager.getInstance(getApplicationContext()).updateDictionaryObjectInDB(object) == Global.SUCCESS)
-                Toast.makeText(getApplicationContext(), " Object updated",Toast.LENGTH_SHORT).show();
-        }
     }
 }

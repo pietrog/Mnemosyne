@@ -80,7 +80,7 @@ public class MemoryManagerSQLManager extends BaseSQLManager{
                     (int)GeneralTools.getLongElement(cursor, MemoryManagerContract.MemoryPhase.PERIOD_INCREMENT),
                     (int)GeneralTools.getLongElement(cursor, MemoryManagerContract.MemoryPhase.NEXT_PHASE_ID));
 
-            memoryPhaseMap.put((int)GeneralTools.getLongElement(cursor, MemoryManagerContract.MemoryPhase._ID), current);
+            memoryPhaseMap.put((int) GeneralTools.getLongElement(cursor, MemoryManagerContract.MemoryPhase._ID), current);
         }
         while (cursor.moveToNext());
 
@@ -111,6 +111,8 @@ public class MemoryManagerSQLManager extends BaseSQLManager{
         else{
             ContentValues value = new ContentValues();
             //@todo: remove this int cast because we want a long
+            if (list.contains((int)id))
+                return 0;
             list.add((int)id);
             value.put(MemoryManagerContract.MemoryManager.COLUMN_NAME_IDLIST, GeneralTools.getStringFrom(list));
             return update(value, MemoryManagerContract.MemoryManager.TABLE_NAME, MemoryManagerContract.MemoryManager.COLUMN_NAME_DATE + " = '" + GeneralTools.getSQLDate(date) + "'");
@@ -151,6 +153,8 @@ public class MemoryManagerSQLManager extends BaseSQLManager{
             Logger.i("MemoryManagerSQL::getListOfObjectIDs", " cursor move to first failed");
 
         String listBrut = GeneralTools.getStringElement(cursor, MemoryManagerContract.MemoryManager.COLUMN_NAME_IDLIST);
+        long id = GeneralTools.getLongElement(cursor, MemoryManagerContract.MemoryManager._ID);
+
         String[] listSplited = listBrut.split(",");
         for (String curr : listSplited)
             res.add(Integer.parseInt(curr));
@@ -179,8 +183,16 @@ public class MemoryManagerSQLManager extends BaseSQLManager{
         Vector<Integer> list = getListOfObjectIDs(date);
         if (list == null)
             return -1;
-        list.remove((int)id);
-        //update the list
+        list.remove(new Integer((int)id));
+        //remove this entry if list is empty
+        if (list.size() == 0) {
+            String sql = "SELECT _id FROM "+MemoryManagerContract.MemoryManager.TABLE_NAME+ " WHERE " + MemoryManagerContract.MemoryManager.COLUMN_NAME_DATE + " = '" + date +"'";
+            Cursor c = rawQuery(sql, null);
+            c.moveToFirst();
+            long[] lids = {GeneralTools.getLongElement(c, MemoryManagerContract.MemoryManager._ID)};
+            return remove(lids, MemoryManagerContract.MemoryManager.TABLE_NAME);
+        }
+        //or update the list
         ContentValues value = new ContentValues();
         value.put(MemoryManagerContract.MemoryManager.COLUMN_NAME_IDLIST, GeneralTools.getStringFrom(list));
         return update(value, MemoryManagerContract.MemoryManager.TABLE_NAME, MemoryManagerContract.MemoryManager.COLUMN_NAME_DATE + " = '" + date + "'");

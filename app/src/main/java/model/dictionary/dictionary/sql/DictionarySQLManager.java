@@ -68,10 +68,12 @@ public class DictionarySQLManager extends BaseSQLManager{
         String sql = "SELECT * FROM " + DictionaryContractBase.DictionaryBase.TABLE_NAME
                 + " WHERE " + DictionaryContractBase.DictionaryBase._ID + " IN (" ;
 
-        for(Integer i : list)
-            sql += i + ", ";
 
-        sql = sql.substring(0, sql.length()-2);
+        if (list != null) {
+            for (Integer i : list)
+                sql += i + ", ";
+            sql = sql.substring(0, sql.length() - 2);
+        }
         sql += ")";
 
         return rawQuery(sql, null);

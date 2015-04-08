@@ -210,13 +210,13 @@ public class DictionaryObject {
                 mMemoryPhaseID = mIDFirstPhase;
                 mDateAdded = time.getTime();
                 mBeginningOfMP = mDateAdded;
-                mDaysBetween = 0;//mMemoryPhaseObjectMap.get((int)mIDFirstPhase).mFirstPeriod;
+                mDaysBetween = mMemoryPhaseObjectMap.get((int)mIDFirstPhase).mFirstPeriod;
                 mLastLearnt = mDateAdded;
                 time.add(Calendar.DAY_OF_YEAR, mDaysBetween);
                 mNextLearnt = time.getTime();
             }
             else {
-                //get the next phase id (-1 if the phase is th elast one, upkeeping)
+                //get the next phase id (-1 if the phase is the last one, upkeeping)
                 long nextid = DictionaryObject.mMemoryPhaseObjectMap.get((int) mMemoryPhaseID).mNextPhaseID;
 
                 //phase n to phase n+1
