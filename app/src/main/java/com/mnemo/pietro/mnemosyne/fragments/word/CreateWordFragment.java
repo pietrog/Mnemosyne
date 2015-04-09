@@ -23,19 +23,16 @@ import model.dictionary.tools.ViewTools;
  *
  */
 public class CreateWordFragment extends Fragment {
-    private static final String DICTIONARY_NAME = "DICT_NAME";
-    private static final String CATALOGUE_NAME = "CAT_NAME";
+    private static final String DICTIONARY_ID = "DICTIONARY_ID";
 
-    private String mDictionaryName;
-    private String mCatalogueName;
+    private long mDictionaryID;
 
     private View mRootview;
 
-    public static CreateWordFragment newInstance(String dict_name, String cat_name) {
+    public static CreateWordFragment newInstance(long dictonaryID) {
         CreateWordFragment fragment = new CreateWordFragment();
         Bundle args = new Bundle();
-        args.putString(DICTIONARY_NAME, dict_name);
-        args.putString(CATALOGUE_NAME, cat_name);
+        args.putLong(DICTIONARY_ID, dictonaryID);
         fragment.setArguments(args);
         return fragment;
     }
@@ -48,10 +45,8 @@ public class CreateWordFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        if (getArguments() != null) {
-            mDictionaryName = getArguments().getString(DICTIONARY_NAME);
-            mCatalogueName = getArguments().getString(CATALOGUE_NAME);
-        }
+        if (getArguments() != null)
+            mDictionaryID = getArguments().getLong(DICTIONARY_ID);
     }
 
     @Override
@@ -86,7 +81,7 @@ public class CreateWordFragment extends Fragment {
         String definition = ViewTools.getStringFromEditableText(mRootview.findViewById(R.id.description));
 
         //add word in dictionary via DictionarySQLManager
-        MnemoMemoryManager.startActionAddWord(getActivity().getApplicationContext(), mCatalogueName, mDictionaryName, word, definition);
+        MnemoMemoryManager.startActionAddWord(getActivity().getApplicationContext(), mDictionaryID, word, definition);
 
         //hide the keyboard and exit the create fragment
         ViewTools.hideKeyboard(mRootview, getActivity());

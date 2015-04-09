@@ -18,10 +18,10 @@ public class DictionaryFragment extends BaseDictionaryFragment {
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String DICTIONARY_NAME = "DICTIONARY_NAME";
-    private static final String PARENT_CATALOGUE_NAME = "PARENT_CATALOGUE_NAME";
+    private static final String DICTIONARY_ID = "DICTIONARY_ID";
 
     private String mDictionaryName;
-    private String mCatalogueName;
+    private long mID;
 
     /**
      * Use this factory method to create a new instance of
@@ -30,11 +30,11 @@ public class DictionaryFragment extends BaseDictionaryFragment {
      * @param dictionaryName name of the dictionary
      * @return A new instance of fragment DictionaryFragment.
      */
-    public static DictionaryFragment newInstance(String parentCatalogueName, String dictionaryName) {
+    public static DictionaryFragment newInstance(long dictonaryid, String dictionaryName) {
         DictionaryFragment fragment = new DictionaryFragment();
         Bundle args = new Bundle();
         args.putString(DICTIONARY_NAME, dictionaryName);
-        args.putString(PARENT_CATALOGUE_NAME, parentCatalogueName);
+        args.putLong(DICTIONARY_ID, dictonaryid);
 
         fragment.setArguments(args);
         return fragment;
@@ -49,8 +49,9 @@ public class DictionaryFragment extends BaseDictionaryFragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mDictionaryName = getArguments().getString(DICTIONARY_NAME);
-            mCatalogueName = getArguments().getString(PARENT_CATALOGUE_NAME);
+            mID = getArguments().getLong(DICTIONARY_ID);
         }
+
     }
 
     @Override
@@ -58,7 +59,7 @@ public class DictionaryFragment extends BaseDictionaryFragment {
         super.onActivityCreated(savedInstanceState);
 
         DictionarySQLManager sqlManager = DictionarySQLManager.getInstance(getActivity().getApplicationContext());
-        Cursor mRawCursor = sqlManager.getAllDictionaryObjectsCursor(mCatalogueName, mDictionaryName);
+        Cursor mRawCursor = sqlManager.getAllDictionaryObjectsCursor(mID);
         mAdapter = new DictionaryAdapter(getActivity().getApplicationContext(), R.layout.std_list_fragment, mRawCursor, 0);
         setListAdapter(mAdapter);
     }
@@ -74,7 +75,7 @@ public class DictionaryFragment extends BaseDictionaryFragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         //go to create wordFragment
-        CreateWordFragment fragment = CreateWordFragment.newInstance(mDictionaryName, mCatalogueName);
+        CreateWordFragment fragment = CreateWordFragment.newInstance(mID);
         getFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.main_subscreen, fragment).commit();
         return true;
     }

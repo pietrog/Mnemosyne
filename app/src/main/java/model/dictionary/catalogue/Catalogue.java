@@ -2,7 +2,7 @@ package model.dictionary.catalogue;
 
 import android.database.Cursor;
 
-import model.dictionary.library.sql.LibraryContract;
+import model.dictionary.catalogue.sql.CatalogueContract;
 import model.dictionary.tools.GeneralTools;
 
 /**
@@ -37,9 +37,9 @@ public class Catalogue {
 
 
     public static Catalogue LoadFromSQL(Cursor cursor){
-        return new Catalogue(GeneralTools.getLongElement(cursor, LibraryContract.Library._ID),
-                GeneralTools.getStringElement(cursor, LibraryContract.Library.COLUMN_CATALOGUE_NAME),
-                GeneralTools.getStringElement(cursor, LibraryContract.Library.COLUMN_CATALOGUE_DESCRIPTION));
+        return new Catalogue(GeneralTools.getLongElement(cursor, CatalogueContract.Catalogue._ID),
+                GeneralTools.getStringElement(cursor, CatalogueContract.Catalogue.CATALOGUE_NAME),
+                GeneralTools.getStringElement(cursor, CatalogueContract.Catalogue.CATALOGUE_DESC));
 
     }
 

@@ -15,11 +15,9 @@ import com.mnemo.pietro.mnemosyne.fragments.dictionary.tools.DictionaryAdapter;
 import com.mnemo.pietro.mnemosyne.fragments.word.WordFragment;
 
 import model.dictionary.dictionary.WordDefinitionObj;
-import model.dictionary.dictionary.sql.DictionaryContractBase;
-import model.dictionary.dictionary.sql.DictionaryOfWordContract;
+import model.dictionary.dictionary.sql.WordContract;
 import model.dictionary.dictionary.sql.DictionarySQLManager;
 import model.dictionary.tools.GeneralTools;
-import model.dictionary.tools.Logger;
 
 /**
  * Created by pietro on 25/03/15.
@@ -84,17 +82,15 @@ public abstract class BaseDictionaryFragment extends ListFragment{
 
     private void removeWord(int position){
         mAdapter.getCursor().moveToPosition(position);
-        long [] id = {GeneralTools.getLongElement(mAdapter.getCursor(), DictionaryContractBase.DictionaryBase._ID)};
+        long [] id = {GeneralTools.getLongElement(mAdapter.getCursor(), WordContract.Word._ID)};
 
         DictionarySQLManager manager = DictionarySQLManager.getInstance(getActivity().getApplicationContext());
         int result = manager.remove(id);
 
-        Logger.i("DictionaryFragment::removeWord", " Word removed " + GeneralTools.getStringElement((Cursor) mAdapter.getItem(position), DictionaryOfWordContract.DictionaryOfWord.COLUMN_NAME_WORD) + ": res => " + result);
-
         //@todo remove also from memory manager !!!
 
         /*DictionarySQLManager sqlManager = DictionarySQLManager.getInstance(getActivity().getApplicationContext());
-        Cursor mRawCursor = sqlManager.getAllDictionaryObjectsCursor(mCatalogueName, mDictionaryName);
+        Cursor mRawCursor = sqlManager.getAllDictionaryObjectsCursor();
         mAdapter.changeCursor(mRawCursor);*/
     }
 }

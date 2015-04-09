@@ -52,11 +52,11 @@ public class LongTermMemory implements IMemorisation{
     public void updateMemorisationPhase(DictionaryObject object) {
 
         //fix the lastlearnt date for removing id from list of id to raise
-        Date oldNext = object.getMemoryMonitoring().mNextLearnt;
+        Date oldNext = object.getMemoryMonitoring().getNextLearnt();
         //we implement a strict update of the phase, will change later
         //we just check if the begin date of the phase + number of days of this phase is gt or equal to today's date
         Calendar cal = Calendar.getInstance();
-        cal.setTime(object.getMemoryMonitoring().mBeginningOfMP);
+        cal.setTime(object.getMemoryMonitoring().getBeginningOfMP());
         cal.add(Calendar.DAY_OF_YEAR, object.getMemoryMonitoring().getDurationPhase());
 
         // compare with today's date, if we are not in last phase

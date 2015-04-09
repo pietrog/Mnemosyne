@@ -11,20 +11,15 @@ import android.view.Menu;
 import com.mnemo.pietro.mnemosyne.fragments.dictionary.TodayListFragment;
 import com.mnemo.pietro.mnemosyne.fragments.library.LibraryFragment;
 
-import java.util.Vector;
-
 import model.dictionary.Global;
 import model.dictionary.catalogue.sql.CatalogueSQLManager;
 import model.dictionary.dictionary.DictionaryObject;
 import model.dictionary.dictionary.sql.DictionarySQLManager;
-import model.dictionary.library.sql.LibrarySQLManager;
 import model.dictionary.memoryManager.sql.MemoryManagerSQLManager;
-import model.dictionary.tools.GeneralTools;
 
 //EN COURS
 
 //A FAIRE
-//@TODO: introduire les foreign keys pour relier les tables et avoir un vrai schema
 //@TODO: manager l'initialisation/destruction de certaines ressources(dbhelpers, ...) dans MnemoCentral, rationaliser l'utilissation des dbhelpers
 //@TODO: separer la table dictionary de la table word, qui doit etendre dictionary
 //@TODO: implementer la modification des entites
@@ -106,7 +101,6 @@ public class MnemoCentral
      */
     private int InitSystem(){
         CatalogueSQLManager.getInstance(getApplicationContext());
-        LibrarySQLManager.getInstance(getApplicationContext());
         DictionarySQLManager.getInstance(getApplicationContext());
         MemoryManagerSQLManager.getInstance(getApplicationContext());
         DictionaryObject.initMemoryPhaseMap();

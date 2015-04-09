@@ -17,8 +17,8 @@ import com.mnemo.pietro.mnemosyne.fragments.catalogue.CreateCatalogueFragment;
 import com.mnemo.pietro.mnemosyne.fragments.library.tools.LibraryAdapter;
 
 import model.dictionary.catalogue.Catalogue;
-import model.dictionary.library.sql.LibraryContract;
-import model.dictionary.library.sql.LibrarySQLManager;
+import model.dictionary.catalogue.sql.CatalogueContract;
+import model.dictionary.catalogue.sql.CatalogueSQLManager;
 import model.dictionary.tools.GeneralTools;
 import model.dictionary.tools.Logger;
 import model.dictionary.tools.ViewTools;
@@ -60,7 +60,7 @@ public class LibraryFragment extends ListFragment {
         super.onActivityCreated(savedInstanceState);
 
         //bind the adapter
-        LibrarySQLManager manager = LibrarySQLManager.getInstance(getActivity().getApplicationContext());
+        CatalogueSQLManager manager = CatalogueSQLManager.getInstance(getActivity().getApplicationContext());
         mAdapter = new LibraryAdapter(getActivity().getApplicationContext(), R.layout.library_view, manager.getAll(), 0);
         setListAdapter(mAdapter);
         registerForContextMenu(getListView());
@@ -71,7 +71,7 @@ public class LibraryFragment extends ListFragment {
         Cursor cursor = mAdapter.getCursor();
         cursor.moveToPosition(position);
         Catalogue catalogue = Catalogue.LoadFromSQL(cursor);
-        CatalogueFragment cfgt = CatalogueFragment.newInstance(catalogue.getID(), catalogue.getName(), catalogue.getDescription());
+        CatalogueFragment cfgt = CatalogueFragment.newInstance(catalogue.getID(), catalogue.getName());
         getFragmentManager().beginTransaction().replace(R.id.main_subscreen, cfgt).addToBackStack(MnemoCentral.FGT_CATALOGUE_TAG).commit();
     }
 
@@ -113,9 +113,9 @@ public class LibraryFragment extends ListFragment {
 
     private void removeCatalogue(int position){
         mAdapter.getCursor().moveToPosition(position);
-        long[] listIDs = {GeneralTools.getLongElement(mAdapter.getCursor(), LibraryContract.Library._ID)};
+        long[] listIDs = {GeneralTools.getLongElement(mAdapter.getCursor(), CatalogueContract.Catalogue._ID)};
 
-        LibrarySQLManager.getInstance(getActivity().getApplicationContext()).remove(listIDs);
+        CatalogueSQLManager.getInstance(getActivity().getApplicationContext()).remove(listIDs);
         Logger.i("LibraryFragment::removeCatalogue", " catalogue(s) " + listIDs[0] + " removed");
 
         mAdapter.notifyDataSetChanged();

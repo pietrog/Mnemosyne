@@ -25,17 +25,18 @@ import model.dictionary.tools.Logger;
 import model.dictionary.tools.ViewTools;
 
 
+/**
+ * Displays all the dictionaries related to given catalogue, identified by mCatalogueID
+ */
 public class CatalogueFragment extends ListFragment {
 
     //private static final String CREATE_DICT_FGT_TAG = "CREATE_DICT_FGT_TAG";
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String CATALOGUE_NAME = "catalogue_name";
-    private static final String CATALOGUE_DESC = "catalogue_desc";
     private static final String CATALOGUE_ID = "catalogue_id";
 
 
     private String mCatalogueName;
-    private String mCatalogueDescription;
     private long mCatalogueID;
     private CatalogueAdapter mAdapter;
 
@@ -47,11 +48,10 @@ public class CatalogueFragment extends ListFragment {
      * @param catalogueName Parameter 1.
      * @return A new instance of fragment CatalogueFragment.
      */
-    public static CatalogueFragment newInstance(long id, String catalogueName, String catalogueDescription) {
+    public static CatalogueFragment newInstance(long id, String catalogueName) {
         CatalogueFragment fragment = new CatalogueFragment();
         Bundle args = new Bundle();
         args.putString(CATALOGUE_NAME, catalogueName);
-        args.putString(CATALOGUE_DESC, catalogueDescription);
         args.putLong(CATALOGUE_ID, id);
         fragment.setArguments(args);
         return fragment;
@@ -67,7 +67,6 @@ public class CatalogueFragment extends ListFragment {
         setHasOptionsMenu(true);
         if (getArguments() != null) {
             mCatalogueName = getArguments().getString(CATALOGUE_NAME);
-            mCatalogueDescription = getArguments().getString(CATALOGUE_DESC);
             mCatalogueID = getArguments().getLong(CATALOGUE_ID);
         }
     }
@@ -78,7 +77,7 @@ public class CatalogueFragment extends ListFragment {
 
         //bind the adapter
         CatalogueSQLManager manager = CatalogueSQLManager.getInstance(getActivity().getApplicationContext());
-        mAdapter = new CatalogueAdapter(getActivity().getApplicationContext(),R.layout.std_list_fragment, manager.getAll(mCatalogueName), 0);
+        mAdapter = new CatalogueAdapter(getActivity().getApplicationContext(),R.layout.std_list_fragment, manager.getAllDictionaryOfCatalogue(mCatalogueID), 0);
         setListAdapter(mAdapter);
         registerForContextMenu(getListView());
     }
@@ -94,7 +93,7 @@ public class CatalogueFragment extends ListFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()){
             case R.id.add_item:
-                CreateDictionaryFragment fragment = CreateDictionaryFragment.newInstance(mCatalogueName);
+                CreateDictionaryFragment fragment = CreateDictionaryFragment.newInstance(mCatalogueID);
                 getFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.main_subscreen, fragment).commit();
                 break;
             case R.id.raiseAlert:
@@ -109,7 +108,7 @@ public class CatalogueFragment extends ListFragment {
         Cursor cursor = mAdapter.getCursor();
         cursor.moveToPosition(position);
         Dictionary dictionary = Dictionary.LoadFromCursor(cursor);
-        DictionaryFragment fragment = DictionaryFragment.newInstance(mCatalogueName, dictionary.getName());
+        DictionaryFragment fragment = DictionaryFragment.newInstance(dictionary.getID(), dictionary.getName());
         getActivity().getFragmentManager().beginTransaction().addToBackStack(MnemoCentral.FGT_DICTIONARY_TAG).replace(R.id.main_subscreen, fragment).commit();
     }
 

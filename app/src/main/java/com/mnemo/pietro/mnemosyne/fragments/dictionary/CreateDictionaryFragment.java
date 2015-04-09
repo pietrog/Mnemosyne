@@ -14,6 +14,7 @@ import com.mnemo.pietro.mnemosyne.R;
 
 import model.dictionary.Global;
 import model.dictionary.catalogue.sql.CatalogueSQLManager;
+import model.dictionary.dictionary.sql.DictionarySQLManager;
 import model.dictionary.tools.ViewTools;
 
 /**
@@ -23,11 +24,11 @@ import model.dictionary.tools.ViewTools;
  */
 public class CreateDictionaryFragment extends Fragment {
 
-    private static final String CATALOGUE_NAME = "DICT_NAME";
+    private static final String CATALOGUE_ID = "CATALOGUE_ID";
 
 
     //catalogue containing this dictionary
-    private String mCatalogueName;
+    private long mCatalogueID;
     private View rootView = null;
 
 
@@ -35,13 +36,13 @@ public class CreateDictionaryFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param catalogue_name Parameter 1.
+     * @param catalogueID long parent catalogue id
      * @return A new instance of fragment CreateDictionaryFragment.
      */
-    public static CreateDictionaryFragment newInstance(String catalogue_name) {
+    public static CreateDictionaryFragment newInstance(long catalogueID) {
         CreateDictionaryFragment fragment = new CreateDictionaryFragment();
         Bundle args = new Bundle();
-        args.putString(CATALOGUE_NAME, catalogue_name);
+        args.putLong(CATALOGUE_ID, catalogueID);
         fragment.setArguments(args);
         return fragment;
     }
@@ -55,7 +56,7 @@ public class CreateDictionaryFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         if (getArguments() != null) {
-            mCatalogueName = getArguments().getString(CATALOGUE_NAME);
+            mCatalogueID = getArguments().getLong(CATALOGUE_ID);
         }
     }
 
@@ -96,19 +97,18 @@ public class CreateDictionaryFragment extends Fragment {
         String dictName = ViewTools.getStringFromEditableText(rootView.findViewById(R.id.name));
         String dictDesc = ViewTools.getStringFromEditableText(rootView.findViewById(R.id.description));
 
-        CatalogueSQLManager manager = CatalogueSQLManager.getInstance(getActivity().getApplicationContext());
-        long id = manager.add(mCatalogueName, dictName, dictDesc);
+        DictionarySQLManager manager = DictionarySQLManager.getInstance(getActivity().getApplicationContext());
+        long id = manager.addDictionaryInCatalogue(mCatalogueID, dictName, dictDesc);
 
         if (id == Global.FAILURE)
             Toast.makeText(getActivity().getApplicationContext(), "Dictionary " + dictName + " already exists.", Toast.LENGTH_SHORT).show();
         else
-            Toast.makeText(getActivity().getApplicationContext(), "Dictionary " + dictName + " added to " + mCatalogueName, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), "Dictionary " + dictName + " added", Toast.LENGTH_SHORT).show();
 
         //hide keyboard
         ViewTools.hideKeyboard(rootView, getActivity());
         //pop the fragment
         getFragmentManager().popBackStack();
-
     }
 
 

@@ -1,6 +1,7 @@
 package model.dictionary.dictionary;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -8,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import model.dictionary.Global;
-import model.dictionary.dictionary.sql.DictionaryContractBase;
+import model.dictionary.dictionaryObject.sql.DictionaryObjectContract;
 import model.dictionary.memoryManager.sql.MemoryManagerContract;
 import model.dictionary.memoryManager.sql.MemoryManagerSQLManager;
 import model.dictionary.tools.GeneralTools;
@@ -23,11 +24,8 @@ import model.dictionary.tools.GeneralTools;
 public class DictionaryObject {
 
     //object content
-    private long mID; // Unique identifier of this object
-    private String mCatalogueName;
-    private String mDictionaryName;
-
-
+    private long mID; // DictionaryObject ID
+    private long mDictionaryID; // parent Dictionary ID
 
     private long mMemoryMonitoringID;
 
@@ -35,40 +33,35 @@ public class DictionaryObject {
     private MemoryMonitoringObject mMemoryMonitoring;
 
     /**
-     * Constructor for a dictionary, only used with extending classes
-     * @param id sql id id -1, we do not get this object from sql
-     * @param catalogueName catalogue name
-     * @param dictionaryName dictionary name
+     * Empty constructor used when we construct from descendant classes, no need to have all this part
      */
-    protected DictionaryObject(long id, String catalogueName, String dictionaryName){
-        mID = id;
-        mCatalogueName = catalogueName;
-        mDictionaryName = dictionaryName;
-    }
+    protected DictionaryObject(){}
 
     /**
      * Constructor used for Memory Management
      * @param id object id
-     * @param catalogueName catalogue name
-     * @param dictionaryName dictionary name
      * @param monitor memory monitoring object
      */
-    public DictionaryObject(long id, String catalogueName, String dictionaryName, long memoryMonitoringID, MemoryMonitoringObject monitor){
+    protected DictionaryObject(long id, long dictionaryId, long memMonitoringId, MemoryMonitoringObject monitor){
         mID = id;
-        mCatalogueName = catalogueName;
-        mDictionaryName = dictionaryName;
-        mMemoryMonitoringID = memoryMonitoringID;
+        mDictionaryID = dictionaryId;
+        mMemoryMonitoringID = memMonitoringId;
         mMemoryMonitoring = monitor;
+    }
 
-        /**
-         * CASE FOR A NEW WORD HERE
-         * if memory monitoring is still not built, we build it here
-         * after this, object is in the normal cycle
-         */
-        if (mMemoryMonitoring == null){
-            mMemoryMonitoring = new MemoryMonitoringObject();
-            mMemoryMonitoring.updateToNextPhase();
-        }
+
+    public static DictionaryObject LoadFromCursor(Cursor cursor){
+        MemoryMonitoringObject monitor = new MemoryMonitoringObject(GeneralTools.getDateFromSQLDate(GeneralTools.getStringElement(cursor, MemoryManagerContract.MemoryMonitoring.LAST_LEARNT)),
+                GeneralTools.getDateFromSQLDate(GeneralTools.getStringElement(cursor, MemoryManagerContract.MemoryMonitoring.NEXT_LEARNT)),
+                GeneralTools.getDateFromSQLDate(GeneralTools.getStringElement(cursor, MemoryManagerContract.MemoryMonitoring.DATE_ADDED)),
+                GeneralTools.getDateFromSQLDate(GeneralTools.getStringElement(cursor, MemoryManagerContract.MemoryMonitoring.BEGINING_OF_MP)),
+                GeneralTools.getLongElement(cursor, MemoryManagerContract.MemoryMonitoring.MEMORY_PHASE_ID),
+                (int)GeneralTools.getLongElement(cursor, MemoryManagerContract.MemoryMonitoring.DAYS_BETWEEN));
+
+        return new DictionaryObject(GeneralTools.getLongElement(cursor, DictionaryObjectContract.DictionaryObject._ID),
+                GeneralTools.getLongElement(cursor, DictionaryObjectContract.DictionaryObject.DICTIONARYID),
+                GeneralTools.getLongElement(cursor, DictionaryObjectContract.DictionaryObject.MEMORY_MONITORING_ID),
+                monitor);
     }
 
     /**
@@ -84,12 +77,7 @@ public class DictionaryObject {
      * @return ContentValues of this object
      */
     public ContentValues toContentValues(){
-        ContentValues value = new ContentValues();
-        value.put(DictionaryContractBase.DictionaryBase.COLUMN_NAME_CATALOGUE_NAME, mCatalogueName);
-        value.put(DictionaryContractBase.DictionaryBase.COLUMN_NAME_DICTIONARY_NAME, mDictionaryName);
-        if (mMemoryMonitoringID != -1)
-            value.put(DictionaryContractBase.DictionaryBase.MEMORY_MONITORING_ID, mMemoryMonitoringID);
-        return value;
+        return new ContentValues();
     }
 
     /**
@@ -97,7 +85,7 @@ public class DictionaryObject {
      * @return string representation of the object
      */
     public String toString(){
-        String res = "DictionaryObject : ID "+ mID + ", catalogue: " + mCatalogueName + ", dictionary: " + mDictionaryName ;
+        String res = "DictionaryObject : ID "+ mID ;
         if (mMemoryMonitoring != null)
             res += mMemoryMonitoring.toString();
         return res;
@@ -109,14 +97,6 @@ public class DictionaryObject {
      */
     public long getID() {
         return mID;
-    }
-
-    public String getCatalogueName() {
-        return mCatalogueName;
-    }
-
-    public String getDictionaryName() {
-        return mDictionaryName;
     }
 
     public MemoryMonitoringObject getMemoryMonitoring() {
@@ -135,14 +115,14 @@ public class DictionaryObject {
     /**
      * STATIC SECTION
      */
-    public static Map<Integer, MemoryPhaseObject> mMemoryPhaseObjectMap = new HashMap<>();
+    public static Map<Long, MemoryPhaseObject> mMemoryPhaseObjectMap = new HashMap<>();
     public static boolean mHasBeenInitialized = false;
     public static long mIDFirstPhase;
 
     public static boolean initMemoryPhaseMap(){
         mHasBeenInitialized = MemoryManagerSQLManager.getInstance().initMemoryPhaseMap(mMemoryPhaseObjectMap) == Global.SUCCESS;
         if (mHasBeenInitialized)
-            for(Integer current: mMemoryPhaseObjectMap.keySet())
+            for(Long current: mMemoryPhaseObjectMap.keySet())
                 if (mMemoryPhaseObjectMap.get(current).mPhaseName.compareTo(Global.FIRST_PHASE_NAME) == 0) {
                     mIDFirstPhase = current;
                     break;
@@ -159,9 +139,9 @@ public class DictionaryObject {
         public int mDurationPhase;
         public int mFirstPeriod;
         public int mPeriodIncrement;
-        public int mNextPhaseID = -1;
+        public long mNextPhaseID = -1;
 
-        public MemoryPhaseObject(String phaseName, int durationPhase, int firstPeriod, int periodIncrement, int nextPhaseID){
+        public MemoryPhaseObject(String phaseName, int durationPhase, int firstPeriod, int periodIncrement, long nextPhaseID){
             mPhaseName = phaseName;
             mDurationPhase = durationPhase;
             mFirstPeriod = firstPeriod;
@@ -174,24 +154,44 @@ public class DictionaryObject {
      * Memory Monitoring nested class
      */
     public static class MemoryMonitoringObject{
-        public Date mLastLearnt;
-        public Date mNextLearnt;
-        public Date mDateAdded;
-        public long mMemoryPhaseID;
-        public Date mBeginningOfMP;
-        public int  mDaysBetween;
+        private long mID;
+        protected Date mLastLearnt;
+        protected Date mNextLearnt;
+        protected Date mDateAdded;
+        protected long mMemoryPhaseID;
+        protected Date mBeginningOfMP;
+        protected int  mDaysBetween;
 
         public boolean mLearningSessionsModified = false;
 
+        /**
+         * Constructor for a defaulted memory monitoring object
+         */
         public MemoryMonitoringObject(){
-            mMemoryPhaseID = -1;
+            Calendar now = Calendar.getInstance();
+            mMemoryPhaseID = mIDFirstPhase;
+            mLastLearnt = now.getTime();
+            mDateAdded = mLastLearnt;
+            mBeginningOfMP = mLastLearnt;
+            now.add(Calendar.DAY_OF_YEAR,mMemoryPhaseObjectMap.get(mIDFirstPhase).mFirstPeriod);
+            mNextLearnt = now.getTime();
+            mDaysBetween = mMemoryPhaseObjectMap.get(mIDFirstPhase).mFirstPeriod;
+        }
+
+        protected MemoryMonitoringObject(Date lastLearnt, Date nextLearning, Date added, Date beginning, long memPhaseID, int daysBetween){
+            mLastLearnt = lastLearnt;
+            mNextLearnt = nextLearning;
+            mDateAdded = added;
+            mBeginningOfMP = beginning;
+            mMemoryPhaseID = memPhaseID;
+            mDaysBetween = daysBetween;
         }
 
         /**
          * Increment days between sessions and update learning dates
          */
         public void incrementDaysInPhaseAndUpdateLearningDates(){
-            mDaysBetween += DictionaryObject.mMemoryPhaseObjectMap.get((int)mMemoryPhaseID).mPeriodIncrement;
+            mDaysBetween += DictionaryObject.mMemoryPhaseObjectMap.get(mMemoryPhaseID).mPeriodIncrement;
             Calendar next = Calendar.getInstance();
             next.add(Calendar.DAY_OF_YEAR, mDaysBetween);
 
@@ -210,19 +210,19 @@ public class DictionaryObject {
                 mMemoryPhaseID = mIDFirstPhase;
                 mDateAdded = time.getTime();
                 mBeginningOfMP = mDateAdded;
-                mDaysBetween = mMemoryPhaseObjectMap.get((int)mIDFirstPhase).mFirstPeriod;
+                mDaysBetween = mMemoryPhaseObjectMap.get(mIDFirstPhase).mFirstPeriod;
                 mLastLearnt = mDateAdded;
                 time.add(Calendar.DAY_OF_YEAR, mDaysBetween);
                 mNextLearnt = time.getTime();
             }
             else {
                 //get the next phase id (-1 if the phase is the last one, upkeeping)
-                long nextid = DictionaryObject.mMemoryPhaseObjectMap.get((int) mMemoryPhaseID).mNextPhaseID;
+                long nextid = DictionaryObject.mMemoryPhaseObjectMap.get(mMemoryPhaseID).mNextPhaseID;
 
                 //phase n to phase n+1
                 if (nextid != -1) {
                     mMemoryPhaseID = nextid;
-                    mDaysBetween = DictionaryObject.mMemoryPhaseObjectMap.get((int) nextid).mFirstPeriod;
+                    mDaysBetween = DictionaryObject.mMemoryPhaseObjectMap.get(nextid).mFirstPeriod;
                     mBeginningOfMP = time.getTime();
                     mLastLearnt = mBeginningOfMP;
                     time.add(Calendar.DAY_OF_YEAR, mDaysBetween);
@@ -232,11 +232,39 @@ public class DictionaryObject {
         }
 
         public int getDurationPhase(){
-            return DictionaryObject.mMemoryPhaseObjectMap.get((int)mMemoryPhaseID).mDurationPhase;
+            return DictionaryObject.mMemoryPhaseObjectMap.get(mMemoryPhaseID).mDurationPhase;
         }
 
         public String getMemoryPhaseName(){
-            return DictionaryObject.mMemoryPhaseObjectMap.get((int)mMemoryPhaseID).mPhaseName;
+            return DictionaryObject.mMemoryPhaseObjectMap.get(mMemoryPhaseID).mPhaseName;
+        }
+
+        public Date getLastLearnt(){
+            return mLastLearnt;
+        }
+
+        public Date getNextLearnt(){
+            return mNextLearnt;
+        }
+
+        public Date getBeginningOfMP(){
+            return mBeginningOfMP;
+        }
+
+        public Date getDateAdded(){
+            return mDateAdded;
+        }
+
+        public int getDaysBetween(){
+            return mDaysBetween;
+        }
+
+
+        public long getID(){
+            return mID;
+        }
+        public void setID(long id){
+            mID = id;
         }
 
         public ContentValues toContentValues(){

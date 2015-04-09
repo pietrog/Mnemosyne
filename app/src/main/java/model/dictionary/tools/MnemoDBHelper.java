@@ -6,7 +6,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import model.dictionary.catalogue.sql.CatalogueContract;
 import model.dictionary.dictionary.sql.DictionaryContractBase;
-import model.dictionary.library.sql.LibraryContract;
+import model.dictionary.dictionary.sql.WordContract;
+import model.dictionary.dictionaryObject.sql.DictionaryObjectContract;
 import model.dictionary.memoryManager.sql.MemoryManagerContract;
 
 
@@ -41,8 +42,9 @@ public class MnemoDBHelper extends SQLiteOpenHelper {
         db.execSQL(MemoryManagerContract.SQL_CREATE_MEMORY_MONITORING_TABLE);
         //dictionary
         db.execSQL(CatalogueContract.SQL_CREATE_TABLE);
-        db.execSQL(LibraryContract.SQL_CREATE_TABLE);
         db.execSQL(DictionaryContractBase.SQL_CREATE_TABLE);
+        db.execSQL(DictionaryObjectContract.SQL_CREATE_TABLE);
+        db.execSQL(WordContract.SQL_CREATE_TABLE);
     }
 
     @Override
@@ -50,9 +52,10 @@ public class MnemoDBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE " + MemoryManagerContract.MemoryManager.TABLE_NAME);
         db.execSQL("DROP TABLE " + MemoryManagerContract.MemoryMonitoring.TABLE_NAME);
         db.execSQL("DROP TABLE " + MemoryManagerContract.MemoryPhase.TABLE_NAME);
+        db.execSQL(WordContract.SQL_DROP_TABLE);
         db.execSQL(CatalogueContract.SQL_DROP_TABLE);
-        db.execSQL(LibraryContract.SQL_DROP_TABLE);
         db.execSQL(DictionaryContractBase.SQL_DROP_TABLE);
+        db.execSQL(DictionaryObjectContract.SQL_DROP_TABLE);
         onCreate(db);
     }
 

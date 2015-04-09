@@ -4,16 +4,12 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 
-import java.util.Calendar;
-import java.util.Date;
 import java.util.Vector;
 
 import model.dictionary.dictionary.DictionaryObject;
+import model.dictionary.dictionaryObject.sql.DictionaryObjectContract;
 import model.dictionary.memoryManager.sql.MemoryManagerContract;
-import model.dictionary.memoryManager.sql.MemoryManagerSQLManager;
 import model.dictionary.tools.BaseSQLManager;
-import model.dictionary.tools.GeneralTools;
-import model.dictionary.tools.Logger;
 
 /**
  * Created by pietro on 23/03/15.
@@ -50,22 +46,21 @@ public class DictionarySQLManager extends BaseSQLManager{
     }
 
     /**
-     * Get a list of all dictionary items in dictionary dictionaryName of catalogueName
-     * @param catalogueName name of the catalogue
-     * @param dictionaryName dictionary name
+     * Get a list of all word of the dictionary
+     * @param dictionaryID id of the dictionary
      * @return cursor
      */
-    public Cursor getAllDictionaryObjectsCursor(String catalogueName, String dictionaryName){
-        String sql =  "SELECT * FROM " + DictionaryContractBase.DictionaryBase.TABLE_NAME
-                + " WHERE " + DictionaryContractBase.DictionaryBase.COLUMN_NAME_CATALOGUE_NAME + " = '" + catalogueName
-                + "' and " + DictionaryContractBase.DictionaryBase.COLUMN_NAME_DICTIONARY_NAME + " = '" + dictionaryName +"'"
-                + " ORDER BY " + DictionaryContractBase.DictionaryBase.COLUMN_NAME_WORD;
+    public Cursor getAllDictionaryObjectsCursor(long dictionaryID){
+        String sql =  "SELECT * FROM " + WordContract.Word.TABLE_NAME + ", " + DictionaryObjectContract.DictionaryObject.TABLE_NAME
+                + " WHERE " + DictionaryObjectContract.DictionaryObject.DICTIONARYID + " = " + dictionaryID
+                + " AND " + WordContract.Word.DICTIONARYOBJECTID + " = " + DictionaryObjectContract.DictionaryObject.CID
+                + " ORDER BY " + WordContract.Word.WORD;
 
         return rawQuery(sql, null);
     }
 
     public Cursor getDictionaryObjectsFromLearningList(Vector<Integer> list){
-        String sql = "SELECT * FROM " + DictionaryContractBase.DictionaryBase.TABLE_NAME
+        String sql = "SELECT * FROM " + WordContract.Word.TABLE_NAME
                 + " WHERE " + DictionaryContractBase.DictionaryBase._ID + " IN (" ;
 
 
@@ -80,21 +75,21 @@ public class DictionarySQLManager extends BaseSQLManager{
     }
 
     /**
-     * Insert new word in the dictionary
-     * @param catalogueName catalogue name
-     * @param dictionaryName dictionary name
+     * Insert new word in the dictionary, related to dictionary object
+     * @param dictionaryObjectID dictionary object id
      * @param word word to insert
      * @param definition word definition
      * @return id of the inserted object if successful, -1 otherwise
      */
-    public long addNewWord(String catalogueName, String dictionaryName, String word, String definition){
+    public long addNewWord(long dictionaryObjectID, String word, String definition){
 
+        if (dictionaryObjectID < 0)
+            return -1;
         ContentValues val = new ContentValues();
-        val.put(DictionaryContractBase.DictionaryBase.COLUMN_NAME_CATALOGUE_NAME, catalogueName);
-        val.put(DictionaryContractBase.DictionaryBase.COLUMN_NAME_DICTIONARY_NAME, dictionaryName);
-        val.put(DictionaryOfWordContract.DictionaryOfWord.COLUMN_NAME_WORD, word);
-        val.put(DictionaryOfWordContract.DictionaryOfWord.COLUMN_NAME_DEFINITION, definition);
-        return add(val, DictionaryContractBase.DictionaryBase.TABLE_NAME);
+        val.put(WordContract.Word.DICTIONARYOBJECTID, dictionaryObjectID);
+        val.put(WordContract.Word.WORD, word);
+        val.put(WordContract.Word.DEFINITION, definition);
+        return add(val, WordContract.Word.TABLE_NAME);
     }
 
     /**
@@ -103,47 +98,45 @@ public class DictionarySQLManager extends BaseSQLManager{
      * @return number of affected rows
      */
     public int remove(long[] listIDs){
-        return remove(listIDs, DictionaryOfWordContract.DictionaryBase.TABLE_NAME);
+        return remove(listIDs, DictionaryObjectContract.DictionaryObject.TABLE_NAME);
     }
 
     /**
-     * Get the full dictionary object from sql given an id
+     * Get the dictionary object with the memory monitoring part
      * Full object means object built from dictionary and memory manager tables
-     * If the object was created just before, the constructor of DictionaryObject will initialize the memory monitoring part
-     * @param objectid object id to get
-     * @return dictionary object if successful, null otherwise
+     * @param objectid long dictionary object id
+     * @return DictionaryObject dictionary object if successful, null otherwise
      */
     public DictionaryObject getFullObjectFromID(long objectid){
-        //get the full object cursor (object from dictionary + memory monitoring + memory phase)
+        //get the full object cursor (object from dictionaryObject + memory monitoring + memory phase)
         String fullObjectSQL =
-                "SELECT * from " + DictionaryContractBase.DictionaryBase.TABLE_NAME + " LEFT JOIN " + MemoryManagerContract.MemoryMonitoring.TABLE_NAME
-                        + " ON " + MemoryManagerContract.MemoryMonitoring.CID + " = " + DictionaryContractBase.DictionaryBase.MEMORY_MONITORING_ID
-                        + " WHERE " + DictionaryContractBase.DictionaryBase.CID + " = ? "
-                ;
-        Cursor cursor = rawQuery(fullObjectSQL, new String[] {String.valueOf(objectid)});
+                "SELECT * from " + DictionaryObjectContract.DictionaryObject.TABLE_NAME + ", " + MemoryManagerContract.MemoryMonitoring.TABLE_NAME
+                        + " ON " + MemoryManagerContract.MemoryMonitoring.CID + " = " + DictionaryObjectContract.DictionaryObject.CID
+                        + " WHERE " + DictionaryObjectContract.DictionaryObject.CID + " = " + objectid
+                        + " AND " + DictionaryObjectContract.DictionaryObject.MEMORY_MONITORING_ID + " = " + MemoryManagerContract.MemoryMonitoring.CID;
+
+        Cursor cursor = rawQuery(fullObjectSQL, null);
 
         if (!cursor.moveToFirst())
             return null;
 
-        //construct the memory monitoring object
-        DictionaryObject.MemoryMonitoringObject monitor = new DictionaryObject.MemoryMonitoringObject();
-        monitor.mLastLearnt = GeneralTools.getDateFromSQLDate(GeneralTools.getStringElement(cursor, MemoryManagerContract.MemoryMonitoring.LAST_LEARNT));
-        monitor.mNextLearnt = GeneralTools.getDateFromSQLDate(GeneralTools.getStringElement(cursor, MemoryManagerContract.MemoryMonitoring.NEXT_LEARNT));
-        monitor.mDateAdded = GeneralTools.getDateFromSQLDate(GeneralTools.getStringElement(cursor, MemoryManagerContract.MemoryMonitoring.DATE_ADDED));
-        monitor.mBeginningOfMP = GeneralTools.getDateFromSQLDate(GeneralTools.getStringElement(cursor, MemoryManagerContract.MemoryMonitoring.BEGINING_OF_MP));
-        monitor.mDaysBetween = (int)GeneralTools.getLongElement(cursor, MemoryManagerContract.MemoryMonitoring.DAYS_BETWEEN);
-        monitor.mMemoryPhaseID = GeneralTools.getLongElement(cursor, MemoryManagerContract.MemoryMonitoring.MEMORY_PHASE_ID);
-
-        DictionaryObject object = new DictionaryObject(
-                objectid,
-                GeneralTools.getStringElement(cursor, DictionaryContractBase.DictionaryBase.COLUMN_NAME_CATALOGUE_NAME),
-                GeneralTools.getStringElement(cursor, DictionaryContractBase.DictionaryBase.COLUMN_NAME_DICTIONARY_NAME),
-                GeneralTools.getLongElement(cursor, DictionaryContractBase.DictionaryBase.MEMORY_MONITORING_ID),
-                monitor.mMemoryPhaseID == -1 ? null : monitor);
-
-        Logger.i("DictionarySQLManager::DictionaryObject", " dictionary loaded: " + object);
-
-        return object;
+        return DictionaryObject.LoadFromCursor(cursor);
     }
 
+
+    /**
+     * Add a new dictionary in catalogue identified by catalogue id
+     * @param catalogueID long catalogue id
+     * @param name string name of the new dictionary
+     * @param description string dictionary description
+     * @return new row id
+     */
+    public long addDictionaryInCatalogue(long catalogueID, String name, String description){
+        ContentValues val = new ContentValues();
+        val.put(DictionaryContractBase.DictionaryBase.NAME, name);
+        val.put(DictionaryContractBase.DictionaryBase.DESCRIPTION, description);
+        val.put(DictionaryContractBase.DictionaryBase.CATALOGUEID, catalogueID);
+
+        return add(val, DictionaryContractBase.DictionaryBase.TABLE_NAME);
+    }
 }

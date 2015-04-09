@@ -6,8 +6,6 @@ import android.os.Bundle;
 import com.mnemo.pietro.mnemosyne.R;
 import com.mnemo.pietro.mnemosyne.fragments.dictionary.tools.DictionaryAdapter;
 
-import java.util.Vector;
-
 import model.dictionary.dictionary.sql.DictionarySQLManager;
 import model.dictionary.memoryManager.sql.MemoryManagerSQLManager;
 import model.dictionary.tools.ViewTools;

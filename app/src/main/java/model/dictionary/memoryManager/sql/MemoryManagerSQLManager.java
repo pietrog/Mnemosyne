@@ -3,18 +3,16 @@ package model.dictionary.memoryManager.sql;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.util.Log;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
 import model.dictionary.Global;
 import model.dictionary.dictionary.DictionaryObject;
 import model.dictionary.dictionary.sql.DictionaryContractBase;
-import model.dictionary.dictionary.sql.DictionarySQLManager;
+import model.dictionary.dictionaryObject.sql.DictionaryObjectContract;
 import model.dictionary.tools.BaseSQLManager;
 import model.dictionary.tools.GeneralTools;
 import model.dictionary.tools.Logger;
@@ -66,7 +64,7 @@ public class MemoryManagerSQLManager extends BaseSQLManager{
      * @param memoryPhaseMap map to fill
      * @return {Global.SUCCESS} if successful {Global.FAILURE} otherwise
      */
-    public int initMemoryPhaseMap(Map<Integer, DictionaryObject.MemoryPhaseObject> memoryPhaseMap){
+    public int initMemoryPhaseMap(Map<Long, DictionaryObject.MemoryPhaseObject> memoryPhaseMap){
         String sql = "SELECT * FROM " + MemoryManagerContract.MemoryPhase.TABLE_NAME;
         Cursor cursor = rawQuery(sql, null);
         if (!cursor.moveToFirst())
@@ -78,13 +76,40 @@ public class MemoryManagerSQLManager extends BaseSQLManager{
                     (int)GeneralTools.getLongElement(cursor, MemoryManagerContract.MemoryPhase.DURATION_PHASE),
                     (int)GeneralTools.getLongElement(cursor, MemoryManagerContract.MemoryPhase.FIRST_PERIOD),
                     (int)GeneralTools.getLongElement(cursor, MemoryManagerContract.MemoryPhase.PERIOD_INCREMENT),
-                    (int)GeneralTools.getLongElement(cursor, MemoryManagerContract.MemoryPhase.NEXT_PHASE_ID));
+                    GeneralTools.getLongElement(cursor, MemoryManagerContract.MemoryPhase.NEXT_PHASE_ID));
 
-            memoryPhaseMap.put((int) GeneralTools.getLongElement(cursor, MemoryManagerContract.MemoryPhase._ID), current);
+            memoryPhaseMap.put(GeneralTools.getLongElement(cursor, MemoryManagerContract.MemoryPhase._ID), current);
         }
         while (cursor.moveToNext());
 
         return Global.SUCCESS;
+    }
+
+
+    /**
+     * Create a new memory monitoring object. The init object points on the first memory phase and everything is set for the init process
+     * @return id of the new row
+     */
+    public DictionaryObject.MemoryMonitoringObject createNewMemoryMonitoringObject(){
+        DictionaryObject.MemoryMonitoringObject obj = new DictionaryObject.MemoryMonitoringObject();
+        long id = add(obj.toContentValues(), MemoryManagerContract.MemoryMonitoring.TABLE_NAME);
+        obj.setID(id);
+        return obj;
+    }
+
+    /**
+     * Create the base dictionary object from a dictionary id and memory monitoring id
+     * @param dictionaryID long dictionary id
+     * @param memoryMonitoringID long memory monitoring id
+     * @return id of the new row
+     */
+    public long createDictionaryObject(long dictionaryID, long memoryMonitoringID){
+        if (dictionaryID < 0 || memoryMonitoringID < 0)
+            return -1;
+        ContentValues value = new ContentValues();
+        value.put(DictionaryObjectContract.DictionaryObject.MEMORY_MONITORING_ID, memoryMonitoringID);
+        value.put(DictionaryObjectContract.DictionaryObject.DICTIONARYID, dictionaryID);
+        return add(value, DictionaryObjectContract.DictionaryObject.TABLE_NAME);
     }
 
 
@@ -123,8 +148,8 @@ public class MemoryManagerSQLManager extends BaseSQLManager{
      * Get the list of id for today
      * @return list of long ids
      */
-    public Vector<Integer> getTodayList(){
-        return getListOfObjectIDs(Calendar.getInstance().getTime());
+    public Vector<Integer> getListOfObjectsToLearn(Date date){
+        return getListOfObjectIDs(date);
     }
 
     /**
@@ -139,8 +164,8 @@ public class MemoryManagerSQLManager extends BaseSQLManager{
     public Vector<Integer> getListOfObjectIDs(String date){
         Vector<Integer> res = new Vector<>();
 
-        String SQL_TODAYLIST = "SELECT * FROM " + MemoryManagerContract.MemoryManager.TABLE_NAME + " WHERE "
-                + MemoryManagerContract.MemoryManager.COLUMN_NAME_DATE + " = '" + date + "'";
+        String SQL_TODAYLIST = "SELECT * FROM " + MemoryManagerContract.MemoryManager.TABLE_NAME
+                + " WHERE " + MemoryManagerContract.MemoryManager.COLUMN_NAME_DATE + " = '" + date + "'";
 
         Logger.i("MemoryManagerSQL::getListOfObjectIDs", " sql " + SQL_TODAYLIST);
         Cursor cursor = rawQuery(SQL_TODAYLIST, null);
@@ -153,8 +178,6 @@ public class MemoryManagerSQLManager extends BaseSQLManager{
             Logger.i("MemoryManagerSQL::getListOfObjectIDs", " cursor move to first failed");
 
         String listBrut = GeneralTools.getStringElement(cursor, MemoryManagerContract.MemoryManager.COLUMN_NAME_IDLIST);
-        long id = GeneralTools.getLongElement(cursor, MemoryManagerContract.MemoryManager._ID);
-
         String[] listSplited = listBrut.split(",");
         for (String curr : listSplited)
             res.add(Integer.parseInt(curr));
@@ -183,7 +206,7 @@ public class MemoryManagerSQLManager extends BaseSQLManager{
         Vector<Integer> list = getListOfObjectIDs(date);
         if (list == null)
             return -1;
-        list.remove(new Integer((int)id));
+        list.remove(Integer.valueOf((int)id));
         //remove this entry if list is empty
         if (list.size() == 0) {
             String sql = "SELECT _id FROM "+MemoryManagerContract.MemoryManager.TABLE_NAME+ " WHERE " + MemoryManagerContract.MemoryManager.COLUMN_NAME_DATE + " = '" + date +"'";
@@ -225,7 +248,7 @@ public class MemoryManagerSQLManager extends BaseSQLManager{
         if (update(object.getMemoryMonitoring().toContentValues(), MemoryManagerContract.MemoryMonitoring.TABLE_NAME, "_ID = "+object.getMemoryMonitoringID()) == 0)
             res = Global.FAILURE;
         //if memory monitoring object changes next dates, keep it up to date
-        if (addWordToLearnSession(object.getID(), object.getMemoryMonitoring().mNextLearnt) == -1)
+        if (addWordToLearnSession(object.getID(), object.getMemoryMonitoring().getNextLearnt()) == -1)
             res = Global.FAILURE;
 
         if (res == Global.FAILURE)

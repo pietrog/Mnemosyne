@@ -4,7 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 
 import model.dictionary.dictionary.sql.DictionaryContractBase;
-import model.dictionary.dictionary.sql.DictionaryOfWordContract;
+import model.dictionary.dictionary.sql.WordContract;
 import model.dictionary.tools.GeneralTools;
 
 /**
@@ -13,21 +13,20 @@ import model.dictionary.tools.GeneralTools;
  */
 public class WordDefinitionObj extends DictionaryObject{
 
+    private long mID;
     private String m_sWord; // word
     private String m_sDefinition; // definition of word
 
 
     /**
      * Complete constructor for WordDefinitionObj
-     * @param id sql id
-     * @param catalogueName catalogue narme
-     * @param dictionaryName dictionary name
+     * @param id sql Word object id
      * @param word word name
      * @param definition definition of the word
      */
-    public WordDefinitionObj(long id, String catalogueName, String dictionaryName, String word, String definition)
+    public WordDefinitionObj(long id, String word, String definition)
     {
-        super(id, catalogueName, dictionaryName);
+        mID = id;
         m_sWord = word;
         m_sDefinition = definition;
     }
@@ -40,6 +39,10 @@ public class WordDefinitionObj extends DictionaryObject{
 
     public String getDefinition() {
         return m_sDefinition;
+    }
+
+    public long getID() {
+        return mID;
     }
 
 
@@ -56,8 +59,8 @@ public class WordDefinitionObj extends DictionaryObject{
     @Override
     public ContentValues toContentValues(){
         ContentValues content = super.toContentValues();
-        content.put(DictionaryOfWordContract.DictionaryOfWord.COLUMN_NAME_WORD, m_sWord);
-        content.put(DictionaryOfWordContract.DictionaryOfWord.COLUMN_NAME_DEFINITION, m_sDefinition);
+        content.put(WordContract.Word.WORD, m_sWord);
+        content.put(WordContract.Word.DEFINITION, m_sDefinition);
         return content;
     }
 
@@ -73,10 +76,8 @@ public class WordDefinitionObj extends DictionaryObject{
      */
     public static WordDefinitionObj LoadFromCursor(Cursor cursor){
         return new WordDefinitionObj(GeneralTools.getLongElement(cursor, DictionaryContractBase.DictionaryBase._ID),
-                GeneralTools.getStringElement(cursor, DictionaryContractBase.DictionaryBase.COLUMN_NAME_CATALOGUE_NAME),
-                GeneralTools.getStringElement(cursor, DictionaryContractBase.DictionaryBase.COLUMN_NAME_DICTIONARY_NAME),
-                GeneralTools.getStringElement(cursor, DictionaryContractBase.DictionaryBase.COLUMN_NAME_WORD),
-                GeneralTools.getStringElement(cursor, DictionaryContractBase.DictionaryBase.COLUMN_NAME_DEFINITION));
+                GeneralTools.getStringElement(cursor, WordContract.Word.WORD),
+                GeneralTools.getStringElement(cursor, WordContract.Word.DEFINITION));
     }
 
 

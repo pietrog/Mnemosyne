@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.mnemo.pietro.mnemosyne.R;
 
 import model.dictionary.catalogue.sql.CatalogueContract;
+import model.dictionary.dictionary.sql.DictionaryContractBase;
 import model.dictionary.tools.GeneralTools;
 import model.dictionary.tools.ViewTools;
 
@@ -33,10 +34,10 @@ public class CatalogueAdapter extends ResourceCursorAdapter {
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
-        String name = GeneralTools.getStringElement(cursor, CatalogueContract.Catalogue.COLUMN_DICTIONARY_NAME);
-        String desc = GeneralTools.getStringElement(cursor, CatalogueContract.Catalogue.COLUMN_DICTIONARY_DESCRIPTION);
-        ViewTools.setStringOfTextView((TextView) view.findViewById(R.id.name), name);
-        ViewTools.setStringOfTextView((TextView)view.findViewById(R.id.description), desc);
+        String name = GeneralTools.getStringElement(cursor, DictionaryContractBase.DictionaryBase.NAME);
+        String desc = GeneralTools.getStringElement(cursor, DictionaryContractBase.DictionaryBase.DESCRIPTION);
+        ViewTools.setStringOfTextView(view.findViewById(R.id.name), name);
+        ViewTools.setStringOfTextView(view.findViewById(R.id.description), desc);
     }
 
 }

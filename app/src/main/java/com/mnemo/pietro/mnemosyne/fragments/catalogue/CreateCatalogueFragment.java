@@ -14,7 +14,7 @@ import android.widget.Toast;
 import com.mnemo.pietro.mnemosyne.R;
 
 import model.dictionary.Global;
-import model.dictionary.library.sql.LibrarySQLManager;
+import model.dictionary.catalogue.sql.CatalogueSQLManager;
 import model.dictionary.tools.ViewTools;
 
 /**
@@ -70,7 +70,7 @@ public class CreateCatalogueFragment extends Fragment {
     private void saveCatalogue(){
         String catalogue_name = ViewTools.getStringFromEditableText(rootview.findViewById(R.id.name));
         String catalogue_desc = ViewTools.getStringFromEditableText(rootview.findViewById(R.id.description));
-        LibrarySQLManager manager = LibrarySQLManager.getInstance(getActivity().getApplicationContext());
+        CatalogueSQLManager manager = CatalogueSQLManager.getInstance(getActivity().getApplicationContext());
         long id = manager.add(catalogue_name, catalogue_desc);
 
         if (id == Global.FAILURE)

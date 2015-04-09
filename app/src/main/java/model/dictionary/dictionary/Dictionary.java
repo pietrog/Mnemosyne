@@ -3,7 +3,7 @@ package model.dictionary.dictionary;
 
 import android.database.Cursor;
 
-import model.dictionary.catalogue.sql.CatalogueContract;
+import model.dictionary.dictionary.sql.DictionaryContractBase;
 import model.dictionary.tools.GeneralTools;
 
 /**
@@ -30,20 +30,14 @@ public class Dictionary {
         return mDescription;
     }
 
-    public String getCatalogueName() {
-        return mCatalogueName;
-    }
-
     /**
      * Constructor
      * @param id sql id
-     * @param catalogueName catalogue name
      * @param dictionaryName dictionary name
      * @param description description of the dictionary
      */
-    public Dictionary(long id, String catalogueName, String dictionaryName, String description){
+    public Dictionary(long id, String dictionaryName, String description){
         mID = id;
-        mCatalogueName = catalogueName;
         mDictionaryName = dictionaryName;
         mDescription = description;
     }
@@ -55,10 +49,9 @@ public class Dictionary {
      * @return Dictionary object
      */
     public static Dictionary LoadFromCursor(Cursor cursor){
-        return new Dictionary(GeneralTools.getLongElement(cursor, CatalogueContract.Catalogue._ID),
-                GeneralTools.getStringElement(cursor, CatalogueContract.Catalogue.COLUMN_CATALOGUE_NAME),
-                GeneralTools.getStringElement(cursor, CatalogueContract.Catalogue.COLUMN_DICTIONARY_NAME),
-                GeneralTools.getStringElement(cursor, CatalogueContract.Catalogue.COLUMN_DICTIONARY_DESCRIPTION));
+        return new Dictionary(GeneralTools.getLongElement(cursor, DictionaryContractBase.DictionaryBase._ID),
+                GeneralTools.getStringElement(cursor, DictionaryContractBase.DictionaryBase.NAME),
+                GeneralTools.getStringElement(cursor, DictionaryContractBase.DictionaryBase.DESCRIPTION));
     }
 
 }

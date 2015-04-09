@@ -101,13 +101,13 @@ public class WordFragment extends Fragment implements View.OnClickListener{
 
     private void showStatistics(){
         DictionaryObject object = DictionarySQLManager.getInstance().getFullObjectFromID(mID);
-        ViewTools.setStringOfTextView(mRootView.findViewById(R.id.lastDate), GeneralTools.getSQLDate(object.getMemoryMonitoring().mLastLearnt));
-        ViewTools.setStringOfTextView(mRootView.findViewById(R.id.nextDate), GeneralTools.getSQLDate(object.getMemoryMonitoring().mNextLearnt));
+        ViewTools.setStringOfTextView(mRootView.findViewById(R.id.lastDate), GeneralTools.getSQLDate(object.getMemoryMonitoring().getLastLearnt()));
+        ViewTools.setStringOfTextView(mRootView.findViewById(R.id.nextDate), GeneralTools.getSQLDate(object.getMemoryMonitoring().getNextLearnt()));
 
-        ViewTools.setStringOfTextView(mRootView.findViewById(R.id.date_add), GeneralTools.getSQLDate(object.getMemoryMonitoring().mDateAdded));
-        ViewTools.setStringOfTextView(mRootView.findViewById(R.id.days_between), object.getMemoryMonitoring().mDaysBetween + "");
+        ViewTools.setStringOfTextView(mRootView.findViewById(R.id.date_add), GeneralTools.getSQLDate(object.getMemoryMonitoring().getDateAdded()));
+        ViewTools.setStringOfTextView(mRootView.findViewById(R.id.days_between), object.getMemoryMonitoring().getDaysBetween() + "");
         ViewTools.setStringOfTextView(mRootView.findViewById(R.id.mem_phase), object.getMemoryMonitoring().getMemoryPhaseName());
-        ViewTools.setStringOfTextView(mRootView.findViewById(R.id.beg_mem), GeneralTools.getSQLDate(object.getMemoryMonitoring().mBeginningOfMP));
+        ViewTools.setStringOfTextView(mRootView.findViewById(R.id.beg_mem), GeneralTools.getSQLDate(object.getMemoryMonitoring().getBeginningOfMP()));
 
 
         ImageButton show = (ImageButton)mRootView.findViewById(R.id.showStats);
