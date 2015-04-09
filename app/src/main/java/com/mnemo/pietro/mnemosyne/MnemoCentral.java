@@ -21,7 +21,6 @@ import model.dictionary.memoryManager.sql.MemoryManagerSQLManager;
 
 //A FAIRE
 //@TODO: manager l'initialisation/destruction de certaines ressources(dbhelpers, ...) dans MnemoCentral, rationaliser l'utilissation des dbhelpers
-//@TODO: separer la table dictionary de la table word, qui doit etendre dictionary
 //@TODO: implementer la modification des entites
 //@TODO: implementer un rappel basé sur l'alarme
 //@TODO: impémenter le report de jour pour les mots n'ayant pas été revisés le jour ou ils auraient du
