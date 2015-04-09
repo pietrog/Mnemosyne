@@ -80,4 +80,10 @@ public class DictionaryFragment extends BaseDictionaryFragment {
         return true;
     }
 
+    @Override
+    protected void removeWord(int position){
+        super.removeWord(position);
+        mAdapter.changeCursor(DictionarySQLManager.getInstance().getAllDictionaryObjectsCursor(mID));
+    }
+
 }

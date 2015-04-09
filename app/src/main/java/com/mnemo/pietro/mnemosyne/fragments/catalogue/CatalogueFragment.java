@@ -76,8 +76,7 @@ public class CatalogueFragment extends ListFragment {
         super.onActivityCreated(savedInstanceState);
 
         //bind the adapter
-        CatalogueSQLManager manager = CatalogueSQLManager.getInstance(getActivity().getApplicationContext());
-        mAdapter = new CatalogueAdapter(getActivity().getApplicationContext(),R.layout.std_list_fragment, manager.getAllDictionaryOfCatalogue(mCatalogueID), 0);
+        mAdapter = new CatalogueAdapter(getActivity().getApplicationContext(),R.layout.std_list_fragment, CatalogueSQLManager.getInstance().getAllDictionaryOfCatalogue(mCatalogueID), 0);
         setListAdapter(mAdapter);
         registerForContextMenu(getListView());
     }
@@ -136,10 +135,10 @@ public class CatalogueFragment extends ListFragment {
         mAdapter.getCursor().moveToPosition(position);
         long[] listIDs = {GeneralTools.getLongElement(mAdapter.getCursor(), CatalogueContract.Catalogue._ID)};
 
-        CatalogueSQLManager.getInstance(getActivity().getApplicationContext()).remove(listIDs);
+        CatalogueSQLManager.getInstance().remove(listIDs);
         Logger.i("CatalogueFragment::removeCatalogue", " dictionaries(s) " + listIDs[0] + " removed");
 
-        mAdapter.notifyDataSetChanged();
-        //@todo remove also from memory manager !!!
+        //refresh the view
+        mAdapter.changeCursor(CatalogueSQLManager.getInstance().getAllDictionaryOfCatalogue(mCatalogueID));
     }
 }

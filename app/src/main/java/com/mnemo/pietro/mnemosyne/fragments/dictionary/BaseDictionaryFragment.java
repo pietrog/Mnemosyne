@@ -80,17 +80,10 @@ public abstract class BaseDictionaryFragment extends ListFragment{
     }
 
 
-    private void removeWord(int position){
+    protected void removeWord(int position){
         mAdapter.getCursor().moveToPosition(position);
         long [] id = {GeneralTools.getLongElement(mAdapter.getCursor(), WordContract.Word._ID)};
 
-        DictionarySQLManager manager = DictionarySQLManager.getInstance(getActivity().getApplicationContext());
-        int result = manager.remove(id);
-
-        //@todo remove also from memory manager !!!
-
-        /*DictionarySQLManager sqlManager = DictionarySQLManager.getInstance(getActivity().getApplicationContext());
-        Cursor mRawCursor = sqlManager.getAllDictionaryObjectsCursor();
-        mAdapter.changeCursor(mRawCursor);*/
+        DictionarySQLManager.getInstance().remove(id);
     }
 }

@@ -18,6 +18,7 @@ import model.dictionary.dictionary.sql.DictionarySQLManager;
 import model.dictionary.memory.LongTermMemory;
 import model.dictionary.memoryManager.sql.MemoryManagerSQLManager;
 import model.dictionary.tools.GeneralTools;
+import model.dictionary.tools.Logger;
 
 public class MnemoMemoryManager extends IntentService {
 
@@ -148,6 +149,10 @@ public class MnemoMemoryManager extends IntentService {
         if (dictionaryObjectID < 0)
             return;
         DictionaryObject object = DictionarySQLManager.getInstance(getApplicationContext()).getFullObjectFromID(dictionaryObjectID);
+        if (object == null) {
+            Logger.i("MnemoMemoryManager::updateMemoryPhaseOfDictionaryObject", " object whith id " + dictionaryObjectID + " is null");
+            return;
+        }
         //check if object was already updated today
         //if it was, do not update it again
         String now = GeneralTools.getSQLDate(Calendar.getInstance().getTime());

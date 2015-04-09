@@ -44,6 +44,10 @@ public class TodayListFragment extends BaseDictionaryFragment{
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        Cursor mRawCursor = DictionarySQLManager.getInstance().getDictionaryObjectsFromLearningList(MemoryManagerSQLManager.getInstance().getListOfObjectIDs(mDate));
+        mAdapter = new DictionaryAdapter(getActivity().getApplicationContext(), R.layout.std_list_fragment, mRawCursor, 0);
+        setListAdapter(mAdapter);
     }
 
     @Override
@@ -52,8 +56,12 @@ public class TodayListFragment extends BaseDictionaryFragment{
         ViewTools.setTitle(getActivity(), R.string.hint_todayslist);
         ViewTools.setSubtitle(getActivity(), "");
 
-        Cursor mRawCursor = DictionarySQLManager.getInstance().getDictionaryObjectsFromLearningList(MemoryManagerSQLManager.getInstance().getListOfObjectIDs(mDate));
-        mAdapter = new DictionaryAdapter(getActivity().getApplicationContext(), R.layout.std_list_fragment, mRawCursor, 0);
-        setListAdapter(mAdapter);
+
+    }
+
+    @Override
+    protected void removeWord(int position) {
+        super.removeWord(position);
+        mAdapter.changeCursor(DictionarySQLManager.getInstance().getDictionaryObjectsFromLearningList(MemoryManagerSQLManager.getInstance().getListOfObjectIDs(mDate)));
     }
 }

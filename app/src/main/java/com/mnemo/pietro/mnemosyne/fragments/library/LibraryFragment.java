@@ -118,10 +118,6 @@ public class LibraryFragment extends ListFragment {
         CatalogueSQLManager.getInstance(getActivity().getApplicationContext()).remove(listIDs);
         Logger.i("LibraryFragment::removeCatalogue", " catalogue(s) " + listIDs[0] + " removed");
 
-        mAdapter.notifyDataSetChanged();
-        //@todo remove also from memory manager !!!
+        mAdapter.changeCursor( CatalogueSQLManager.getInstance(getActivity().getApplicationContext()).getAll());
     }
-
-
-
 }
