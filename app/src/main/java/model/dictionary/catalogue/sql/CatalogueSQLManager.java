@@ -25,6 +25,10 @@ public class CatalogueSQLManager extends BaseSQLManager{
         return instance;
     }
 
+    public static CatalogueSQLManager getInstance(){
+        return instance;
+    }
+
     /**
      * IMPLEMENTATION
      */
@@ -49,7 +53,7 @@ public class CatalogueSQLManager extends BaseSQLManager{
      */
     public Cursor getAllDictionaryOfCatalogue(long id){
         String sql =  "SELECT * FROM " + DictionaryContractBase.DictionaryBase.TABLE_NAME
-                //+ " WHERE " + DictionaryContractBase.DictionaryBase.CATALOGUEID + " = " + id
+                + " WHERE " + DictionaryContractBase.DictionaryBase.CATALOGUEID + " = " + id
                 + " ORDER BY " + DictionaryContractBase.DictionaryBase.NAME;
 
         return rawQuery(sql, null);
