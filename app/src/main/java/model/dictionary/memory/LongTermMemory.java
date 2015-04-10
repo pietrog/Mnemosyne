@@ -67,9 +67,6 @@ public class LongTermMemory implements IMemorisation{
         else
             object.getMemoryMonitoring().incrementDaysInPhaseAndUpdateLearningDates();
 
-        //remove id of this object from the old next learning session
-        MemoryManagerSQLManager.getInstance().removeIDsFromList(object.getID(), oldNext);
-
         //update object in database
         MemoryManagerSQLManager.getInstance().updateDictionaryObjectInDB(object);
     }

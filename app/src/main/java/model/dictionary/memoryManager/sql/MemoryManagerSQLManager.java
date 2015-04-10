@@ -6,6 +6,7 @@ import android.database.Cursor;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Map;
 import java.util.Vector;
 
@@ -16,6 +17,7 @@ import model.dictionary.dictionaryObject.sql.DictionaryObjectContract;
 import model.dictionary.tools.BaseSQLManager;
 import model.dictionary.tools.GeneralTools;
 import model.dictionary.tools.Logger;
+import model.dictionary.Global.Couple;
 
 /**
  * Created by pietro on 24/03/15.
@@ -82,6 +84,8 @@ public class MemoryManagerSQLManager extends BaseSQLManager{
         }
         while (cursor.moveToNext());
 
+        cursor.close();
+
         return Global.SUCCESS;
     }
 
@@ -120,36 +124,11 @@ public class MemoryManagerSQLManager extends BaseSQLManager{
      * @return row id of the memory database row
      */
     public long addWordToLearnSession(long id, Date date){
-        //check if there is already a list at this date (CREATE or UPDATE the line)
-        Vector<Integer> list = getListOfObjectIDs(date);
-
-        //two possibilities: insert new one if nothing is scheduled to this date, or update it
-        //insert
-        if (list == null){
-            ContentValues value = new ContentValues();
-            String strdate = GeneralTools.getSQLDate(date);
-            value.put(MemoryManagerContract.MemoryManager.COLUMN_NAME_DATE, strdate);
-            value.put(MemoryManagerContract.MemoryManager.COLUMN_NAME_IDLIST, id);
-            return add(value, MemoryManagerContract.MemoryManager.TABLE_NAME);
-        }
-        //update
-        else{
-            ContentValues value = new ContentValues();
-            //@todo: remove this int cast because we want a long
-            if (list.contains((int)id))
-                return 0;
-            list.add((int)id);
-            value.put(MemoryManagerContract.MemoryManager.COLUMN_NAME_IDLIST, GeneralTools.getStringFrom(list));
-            return update(value, MemoryManagerContract.MemoryManager.TABLE_NAME, MemoryManagerContract.MemoryManager.COLUMN_NAME_DATE + " = '" + GeneralTools.getSQLDate(date) + "'");
-        }
-    }
-
-    /**
-     * Get the list of id for today
-     * @return list of long ids
-     */
-    public Vector<Integer> getListOfObjectsToLearn(Date date){
-        return getListOfObjectIDs(date);
+        ContentValues value = new ContentValues();
+        String strdate = GeneralTools.getSQLDate(date);
+        value.put(MemoryManagerContract.MemoryManager.DATE, strdate);
+        value.put(MemoryManagerContract.MemoryManager.DICTIONARYOBJECTID, id);
+        return add(value, MemoryManagerContract.MemoryManager.TABLE_NAME);
     }
 
     /**
@@ -157,15 +136,16 @@ public class MemoryManagerSQLManager extends BaseSQLManager{
      * @param date date
      * @return vector of longMemoryPhaseObject
      */
-    public Vector<Integer> getListOfObjectIDs(Date date){
-        return getListOfObjectIDs(GeneralTools.getSQLDate(date));
+    public Vector<Couple<Long, Integer>> getListOfObjectsToLearn(Date date){
+        return getListOfObjectsToLearn(GeneralTools.getSQLDate(date));
     }
 
-    public Vector<Integer> getListOfObjectIDs(String date){
-        Vector<Integer> res = new Vector<>();
+    public Vector<Couple<Long, Integer>> getListOfObjectsToLearn(String date){
+        Vector<Couple<Long, Integer>> res = new Vector<>();
+
 
         String SQL_TODAYLIST = "SELECT * FROM " + MemoryManagerContract.MemoryManager.TABLE_NAME
-                + " WHERE " + MemoryManagerContract.MemoryManager.COLUMN_NAME_DATE + " = '" + date + "'";
+                + " WHERE " + MemoryManagerContract.MemoryManager.DATE + " = '" + date + "'";
 
         Logger.i("MemoryManagerSQL::getListOfObjectIDs", " sql " + SQL_TODAYLIST);
         Cursor cursor = rawQuery(SQL_TODAYLIST, null);
@@ -174,51 +154,20 @@ public class MemoryManagerSQLManager extends BaseSQLManager{
         if (cursor.getCount() == 0)
             return null;
 
-        if (!cursor.moveToFirst())
+        if (!cursor.moveToFirst()) {
             Logger.i("MemoryManagerSQL::getListOfObjectIDs", " cursor move to first failed");
+            return null;
+        }
 
-        String listBrut = GeneralTools.getStringElement(cursor, MemoryManagerContract.MemoryManager.COLUMN_NAME_IDLIST);
-        String[] listSplited = listBrut.split(",");
-        for (String curr : listSplited)
-            res.add(Integer.parseInt(curr));
+        do {
+            Couple<Long, Integer> c = new Couple<>(GeneralTools.getLongElement(cursor, MemoryManagerContract.MemoryManager.DICTIONARYOBJECTID),
+                    (int)GeneralTools.getLongElement(cursor, MemoryManagerContract.MemoryManager.DAYS_OF_DELAY));
+            res.add(c);
+        }while(cursor.moveToNext());
+
+        cursor.close();
 
         return  res;
-    }
-
-    /**
-     * Remove an object id from a day alert list
-     * @param id dictionary object id
-     * @param date date alert of the list
-     * @return row impacted
-     */
-    public int removeIDsFromList(long id, Date date){
-        return removeIDsFromList(id, GeneralTools.getSQLDate(date));
-    }
-
-    /**
-     * Remove id from list given a date
-     * @param id id to remove
-     * @param date string storing the date
-     * @return number of impacted rows
-     */
-    public int removeIDsFromList(long id, String date) {
-        //get the list and remove given id
-        Vector<Integer> list = getListOfObjectIDs(date);
-        if (list == null)
-            return -1;
-        list.remove(Integer.valueOf((int)id));
-        //remove this entry if list is empty
-        if (list.size() == 0) {
-            String sql = "SELECT _id FROM "+MemoryManagerContract.MemoryManager.TABLE_NAME+ " WHERE " + MemoryManagerContract.MemoryManager.COLUMN_NAME_DATE + " = '" + date +"'";
-            Cursor c = rawQuery(sql, null);
-            c.moveToFirst();
-            long[] lids = {GeneralTools.getLongElement(c, MemoryManagerContract.MemoryManager._ID)};
-            return remove(lids, MemoryManagerContract.MemoryManager.TABLE_NAME);
-        }
-        //or update the list
-        ContentValues value = new ContentValues();
-        value.put(MemoryManagerContract.MemoryManager.COLUMN_NAME_IDLIST, GeneralTools.getStringFrom(list));
-        return update(value, MemoryManagerContract.MemoryManager.TABLE_NAME, MemoryManagerContract.MemoryManager.COLUMN_NAME_DATE + " = '" + date + "'");
     }
 
     /**
@@ -255,4 +204,79 @@ public class MemoryManagerSQLManager extends BaseSQLManager{
             Logger.w("MemoryManagerSQLManager::updateDictionaryObjectInDB"," something wrong occured during update of object");
         return res;
     }
+
+
+    /**
+     * Returne a list of Couple(long-id of dictionary object, int-delay) for a given date
+     * @param date date of learning session
+     * @return Vector of Couple<long, int>
+     */
+    public Vector<Couple> getListOfPastListToLearnFromDate(Date date){
+        if (date == null)
+            return null;
+
+        Vector<Couple> res = new Vector<>();
+        String sql = "SELECT * FROM " + MemoryManagerContract.MemoryManager.TABLE_NAME
+                + " WHERE " + MemoryManagerContract.MemoryManager.DATE + " = '" + GeneralTools.getSQLDate(date) + "'";
+
+        Cursor cursor = rawQuery(sql, null);
+
+        if (!cursor.moveToFirst())
+            return null;
+
+        do {
+            res.add(new Couple(GeneralTools.getLongElement(cursor, MemoryManagerContract.MemoryManager.DICTIONARYOBJECTID),
+                    GeneralTools.getLongElement(cursor, MemoryManagerContract.MemoryManager.DAYS_OF_DELAY)));
+        }
+        while(cursor.moveToNext());
+
+        cursor.close();
+
+        return res;
+    }
+
+    /**
+     * Delay the past list of learning session to today, updating delays, and next learning date of all impacted objects
+     * @param pastDate date in the past from wich we update entries delay
+     */
+    public int DelayLearningSessionFromDate(Date pastDate){
+        String pastDateStr = GeneralTools.getSQLDate(pastDate);
+        Calendar cal = Calendar.getInstance();
+        String today = GeneralTools.getSQLDate(Calendar.getInstance().getTime());
+
+        int delay = 1;
+        cal.add(Calendar.DAY_OF_YEAR, -1);
+
+        while (GeneralTools.getSQLDate(cal.getTime()).compareTo(pastDateStr) != 0){
+            //for each day before, increment the delay
+            Vector<Couple> list = getListOfPastListToLearnFromDate(cal.getTime());
+            // maybe there is nothing at this date
+            if (list == null) {
+                cal.add(Calendar.DAY_OF_YEAR, -1);
+                ++delay;
+                continue;
+            }
+            // update each entry in memory manager, update the delay and the new date
+            //couple contains val1 => dictionaryObjectID, val2 => delay
+            for (Couple c: list) {
+                ContentValues val = new ContentValues();
+                val.put(MemoryManagerContract.MemoryManager.DATE, today);
+                val.put(MemoryManagerContract.MemoryManager.DAYS_OF_DELAY, (int)c.val2 + delay);
+                update(val, MemoryManagerContract.MemoryManager.TABLE_NAME, MemoryManagerContract.MemoryManager._ID + " = " + (long)c.val1);
+            }
+
+            //finally, update all entries with this old next date to the new one
+            // update next learning date in memory nonitoring
+            String where = MemoryManagerContract.MemoryMonitoring.NEXT_LEARNT + " = '" + GeneralTools.getSQLDate(pastDate) + "'";
+            ContentValues val = new ContentValues();
+            val.put(MemoryManagerContract.MemoryMonitoring.NEXT_LEARNT, today);
+            update(val, MemoryManagerContract.MemoryMonitoring.TABLE_NAME, where);
+
+            // go 1 more day in the past, until pastDateStr
+            cal.add(Calendar.DAY_OF_YEAR, -1);
+            ++delay;
+        }
+        return 0;
+    }
+
 }

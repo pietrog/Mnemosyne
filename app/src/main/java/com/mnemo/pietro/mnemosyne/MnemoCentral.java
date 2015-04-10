@@ -18,12 +18,11 @@ import model.dictionary.dictionary.sql.DictionarySQLManager;
 import model.dictionary.memoryManager.sql.MemoryManagerSQLManager;
 
 //EN COURS
+//@TODO: implementer un rappel basé sur l'alarme
 
 //A FAIRE
 //@TODO: manager l'initialisation/destruction de certaines ressources(dbhelpers, ...) dans MnemoCentral, rationaliser l'utilissation des dbhelpers
 //@TODO: implementer la modification des entites
-//@TODO: implementer un rappel basé sur l'alarme
-//@TODO: impémenter le report de jour pour les mots n'ayant pas été revisés le jour ou ils auraient du
 //@TODO: modifier l'ecran d'affichage des mot a réviser, avec couleurs pour noter l'importance(jours de retard)
 
 

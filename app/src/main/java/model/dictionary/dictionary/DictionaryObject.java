@@ -259,7 +259,6 @@ public class DictionaryObject {
             return mDaysBetween;
         }
 
-
         public long getID(){
             return mID;
         }

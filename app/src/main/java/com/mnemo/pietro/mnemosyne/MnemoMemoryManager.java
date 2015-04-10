@@ -7,24 +7,24 @@ import android.content.Intent;
 import android.content.Context;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
-import android.widget.Toast;
 
 import java.util.Calendar;
 import java.util.Vector;
 
-import model.dictionary.Global;
 import model.dictionary.dictionary.DictionaryObject;
 import model.dictionary.dictionary.sql.DictionarySQLManager;
 import model.dictionary.memory.LongTermMemory;
 import model.dictionary.memoryManager.sql.MemoryManagerSQLManager;
 import model.dictionary.tools.GeneralTools;
 import model.dictionary.tools.Logger;
+import model.dictionary.Global.Couple;
 
 public class MnemoMemoryManager extends IntentService {
 
     public static final String ACTION_RISE_TODAY_LIST = "RISETODAYLIST";
     public static final String ACTION_ADD_WORD = "ADDWORD";
     public static final String ACTION_UPDATE_MEMORY_PHASE_WORD = "UPDATEWORD";
+    public static final String ACTION_POSTPONE_LEARNING_SESSION = "POSTPONE";
 
     /**
      * ADD WORD ACTION
@@ -33,6 +33,7 @@ public class MnemoMemoryManager extends IntentService {
     private static final String WORD = "WORD";
     private static final String DEFINITION = "DEFINITION";
     private static final String WORDID = "WORDID";
+
 
     public static void startActionRiseTodayList(Context context) {
         Intent intent = new Intent(context, MnemoMemoryManager.class);
@@ -68,6 +69,12 @@ public class MnemoMemoryManager extends IntentService {
         context.startService(intent);
     }
 
+    public static void startActionPostponeLearningSessions(Context context){
+        Intent intent = new Intent(context, MnemoMemoryManager.class);
+        intent.setAction(ACTION_POSTPONE_LEARNING_SESSION);
+        context.startService(intent);
+    }
+
     public MnemoMemoryManager() {
         super("MnemoMemoryManager");
     }
@@ -87,6 +94,9 @@ public class MnemoMemoryManager extends IntentService {
                 case ACTION_UPDATE_MEMORY_PHASE_WORD:
                     updateMemoryPhaseOfDictionaryObject(intent.getLongExtra(WORDID,-1));
                     break;
+                case ACTION_POSTPONE_LEARNING_SESSION:
+                    reportNonLearntObjects();
+                    break;
                 default:
                     break;
             }
@@ -99,7 +109,7 @@ public class MnemoMemoryManager extends IntentService {
         //now.add(Calendar.DAY_OF_YEAR, 1);
 
         MemoryManagerSQLManager manager = MemoryManagerSQLManager.getInstance();
-        Vector<Integer> list = manager.getListOfObjectsToLearn(now.getTime());
+        Vector<Couple<Long, Integer>> list = manager.getListOfObjectsToLearn(now.getTime());
         if (list == null)
             return;
 
@@ -158,5 +168,15 @@ public class MnemoMemoryManager extends IntentService {
         String now = GeneralTools.getSQLDate(Calendar.getInstance().getTime());
         if (now.compareTo(GeneralTools.getSQLDate(object.getMemoryMonitoring().getLastLearnt())) != 0)
             LongTermMemory.getInstance(getApplicationContext()).updateMemorisationPhase(object);
+    }
+
+
+    private void reportNonLearntObjects(){
+        //for each older date than today in memory manager table, update next learning date and delay of objects
+        //we take a depth of 7 days, will change it in the future
+        //@TODO: change the way we fix the depth in days, should be persisted in memory
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DAY_OF_YEAR, -7);
+        MemoryManagerSQLManager.getInstance().DelayLearningSessionFromDate(cal.getTime());
     }
 }

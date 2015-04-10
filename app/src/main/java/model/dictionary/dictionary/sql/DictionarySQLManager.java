@@ -11,6 +11,8 @@ import model.dictionary.dictionaryObject.sql.DictionaryObjectContract;
 import model.dictionary.memoryManager.sql.MemoryManagerContract;
 import model.dictionary.tools.BaseSQLManager;
 
+import model.dictionary.Global.Couple;
+
 /**
  * Created by pietro on 23/03/15.
  *
@@ -59,14 +61,14 @@ public class DictionarySQLManager extends BaseSQLManager{
         return rawQuery(sql, null);
     }
 
-    public Cursor getDictionaryObjectsFromLearningList(Vector<Integer> list){
+    public Cursor getDictionaryObjectsFromLearningList(Vector<Couple<Long, Integer>> list){
         String sql = "SELECT * FROM " + WordContract.Word.TABLE_NAME
                 + " WHERE " + DictionaryContractBase.DictionaryBase._ID + " IN (" ;
 
 
         if (list != null) {
-            for (Integer i : list)
-                sql += i + ", ";
+            for (Couple c : list)
+                sql += c.val1 + ", ";
             sql = sql.substring(0, sql.length() - 2);
         }
         sql += ")";

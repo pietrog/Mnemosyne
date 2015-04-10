@@ -16,6 +16,7 @@ public class MnemosyneBroadcastReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         switch (intent.getAction()){
             case Intent.ACTION_BOOT_COMPLETED:
+
                 startMnemoryManagerService(context);
                 break;
             default:
@@ -28,7 +29,9 @@ public class MnemosyneBroadcastReceiver extends BroadcastReceiver {
      * @param context context of the application
      */
     private void startMnemoryManagerService(Context context){
-
+        MnemoMemoryManager.startActionPostponeLearningSessions(context);
         MnemoMemoryManager.startActionRiseTodayList(context);
     }
+
+
 }

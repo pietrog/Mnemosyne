@@ -1,11 +1,11 @@
 package model.dictionary.memoryManager.sql;
 
 import android.content.ContentValues;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.provider.BaseColumns;
 
 import model.dictionary.Global;
+import model.dictionary.dictionary.sql.DictionaryContractBase;
 
 
 /**
@@ -19,8 +19,9 @@ public class MemoryManagerContract {
     public static abstract class MemoryManager implements BaseColumns{
         public static final String TABLE_NAME = "memorymanager";
         public static final String CID = TABLE_NAME + "." + _ID;
-        public static final String COLUMN_NAME_DATE = "date";
-        public static final String COLUMN_NAME_IDLIST = "idlist";
+        public static final String DATE = "date";
+        public static final String DICTIONARYOBJECTID = "dictionaryobjectid";
+        public static final String DAYS_OF_DELAY = "daysdelay"; // delay in number of days from the initially computed next learning date
     }
 
     /**
@@ -35,6 +36,7 @@ public class MemoryManagerContract {
         public static final String MEMORY_PHASE_ID = "memoryphase"; // the learning memory phase
         public static final String BEGINING_OF_MP = "endofmp"; // date of the beginning of the memory phase
         public static final String DAYS_BETWEEN = "daysbetween"; // current number of days between two learning sessions
+
     }
 
     /**
@@ -53,8 +55,9 @@ public class MemoryManagerContract {
     public static final String SQL_CREATE_MEMORY_MANAGER_TABLE =
             "CREATE TABLE " + MemoryManager.TABLE_NAME + "( "
                     + MemoryManager._ID + Global.INTEGER_TYPE + " PRIMARY KEY" + Global.COMMASEP
-                    + MemoryManager.COLUMN_NAME_DATE + Global.TEXT_TYPE + " UNIQUE " + Global.COMMASEP
-                    + MemoryManager.COLUMN_NAME_IDLIST + Global.TEXT_TYPE
+                    + MemoryManager.DATE + Global.TEXT_TYPE + " UNIQUE " + Global.COMMASEP
+                    + MemoryManager.DICTIONARYOBJECTID + Global.INTEGER_TYPE + " REFERENCES " + DictionaryContractBase.DictionaryBase.TABLE_NAME + " ON DELETE CASCADE " + Global.COMMASEP
+                    + MemoryManager.DAYS_OF_DELAY + Global.INTEGER_TYPE + " DEFAULT 0 "
                     + ")"
             ;
 

@@ -96,6 +96,7 @@ public class CatalogueFragment extends ListFragment {
                 getFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.main_subscreen, fragment).commit();
                 break;
             case R.id.raiseAlert:
+                MnemoMemoryManager.startActionPostponeLearningSessions(getActivity().getApplicationContext());
                 MnemoMemoryManager.startActionRiseTodayList(getActivity().getApplicationContext());
                 break;
         }

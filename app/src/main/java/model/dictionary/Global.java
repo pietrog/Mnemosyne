@@ -54,4 +54,14 @@ public class Global {
     }
 
 
+    public static class Couple<T,C>{
+        public T val1;
+        public C val2;
+
+        public Couple(T t, C c){
+            val1 = t;
+            val2 = c;
+        }
+    }
+
 }
