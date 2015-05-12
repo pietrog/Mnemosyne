@@ -60,7 +60,7 @@ public class LibraryFragment extends ListFragment {
         super.onActivityCreated(savedInstanceState);
 
         //bind the adapter
-        CatalogueSQLManager manager = CatalogueSQLManager.getInstance(getActivity().getApplicationContext());
+        CatalogueSQLManager manager = CatalogueSQLManager.getInstance();
         mAdapter = new LibraryAdapter(getActivity().getApplicationContext(), R.layout.library_view, manager.getAll(), 0);
         setListAdapter(mAdapter);
         registerForContextMenu(getListView());
@@ -115,9 +115,15 @@ public class LibraryFragment extends ListFragment {
         mAdapter.getCursor().moveToPosition(position);
         long[] listIDs = {GeneralTools.getLongElement(mAdapter.getCursor(), CatalogueContract.Catalogue._ID)};
 
-        CatalogueSQLManager.getInstance(getActivity().getApplicationContext()).remove(listIDs);
+        CatalogueSQLManager.getInstance().remove(listIDs);
         Logger.i("LibraryFragment::removeCatalogue", " catalogue(s) " + listIDs[0] + " removed");
 
-        mAdapter.changeCursor( CatalogueSQLManager.getInstance(getActivity().getApplicationContext()).getAll());
+        mAdapter.changeCursor(CatalogueSQLManager.getInstance().getAll());
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mAdapter.getCursor().close();
     }
 }

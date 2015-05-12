@@ -122,7 +122,10 @@ public class DictionarySQLManager extends BaseSQLManager{
         if (!cursor.moveToFirst())
             return null;
 
-        return DictionaryObject.LoadFromCursor(cursor);
+        DictionaryObject res = DictionaryObject.LoadFromCursor(cursor);
+        cursor.close();
+
+        return res;
     }
 
 

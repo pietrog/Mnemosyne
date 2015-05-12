@@ -142,4 +142,10 @@ public class CatalogueFragment extends ListFragment {
         //refresh the view
         mAdapter.changeCursor(CatalogueSQLManager.getInstance().getAllDictionaryOfCatalogue(mCatalogueID));
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mAdapter.getCursor().close();
+    }
 }

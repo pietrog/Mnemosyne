@@ -6,7 +6,6 @@ import android.database.Cursor;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.Map;
 import java.util.Vector;
 
@@ -262,7 +261,7 @@ public class MemoryManagerSQLManager extends BaseSQLManager{
                 ContentValues val = new ContentValues();
                 val.put(MemoryManagerContract.MemoryManager.DATE, today);
                 val.put(MemoryManagerContract.MemoryManager.DAYS_OF_DELAY, (int)c.val2 + delay);
-                update(val, MemoryManagerContract.MemoryManager.TABLE_NAME, MemoryManagerContract.MemoryManager._ID + " = " + (long)c.val1);
+                update(val, MemoryManagerContract.MemoryManager.TABLE_NAME, MemoryManagerContract.MemoryManager._ID + " = " + c.val1);
             }
 
             //finally, update all entries with this old next date to the new one

@@ -17,18 +17,19 @@ import model.dictionary.Global;
  */
 public abstract class BaseSQLManager {
 
-    private SQLiteOpenHelper mDBHelper;
+    private Context mContext;
+
 
     protected BaseSQLManager(Context context){
-        mDBHelper = MnemoDBHelper.getInstance(context);
+        mContext = context;
     }
 
     protected SQLiteDatabase getSQLDBWrite(){
-        return mDBHelper.getWritableDatabase();
+        return MnemoDBHelper.getInstance(mContext).getWritableDatabase();
     }
 
     protected SQLiteDatabase getSQLDBRead(){
-        return mDBHelper.getReadableDatabase();
+        return MnemoDBHelper.getInstance(mContext).getReadableDatabase();
     }
 
     /**

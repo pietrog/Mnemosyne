@@ -67,6 +67,7 @@ public class DictionaryFragment extends BaseDictionaryFragment {
     @Override
     public void onResume() {
         super.onResume();
+        mAdapter.notifyDataSetChanged();
         ViewTools.setTitle(getActivity(), R.string.hint_dictionary);
         ViewTools.setSubtitle(getActivity(), mDictionaryName);
 

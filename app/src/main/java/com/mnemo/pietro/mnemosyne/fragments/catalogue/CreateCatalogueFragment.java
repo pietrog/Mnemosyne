@@ -70,7 +70,7 @@ public class CreateCatalogueFragment extends Fragment {
     private void saveCatalogue(){
         String catalogue_name = ViewTools.getStringFromEditableText(rootview.findViewById(R.id.name));
         String catalogue_desc = ViewTools.getStringFromEditableText(rootview.findViewById(R.id.description));
-        CatalogueSQLManager manager = CatalogueSQLManager.getInstance(getActivity().getApplicationContext());
+        CatalogueSQLManager manager = CatalogueSQLManager.getInstance();
         long id = manager.add(catalogue_name, catalogue_desc);
 
         if (id == Global.FAILURE)

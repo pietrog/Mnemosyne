@@ -16,12 +16,13 @@ import model.dictionary.catalogue.sql.CatalogueSQLManager;
 import model.dictionary.dictionary.DictionaryObject;
 import model.dictionary.dictionary.sql.DictionarySQLManager;
 import model.dictionary.memoryManager.sql.MemoryManagerSQLManager;
+import model.dictionary.tools.MnemoDBHelper;
 
 //EN COURS
-//@TODO: implementer un rappel basé sur l'alarme
+//@TODO: manager l'initialisation/destruction de certaines ressources(dbhelpers, ...) dans MnemoCentral, rationaliser l'utilissation des dbhelpers
 
 //A FAIRE
-//@TODO: manager l'initialisation/destruction de certaines ressources(dbhelpers, ...) dans MnemoCentral, rationaliser l'utilissation des dbhelpers
+//@TODO: implementer un rappel basé sur l'alarme
 //@TODO: implementer la modification des entites
 //@TODO: modifier l'ecran d'affichage des mot a réviser, avec couleurs pour noter l'importance(jours de retard)
 
@@ -110,7 +111,7 @@ public class MnemoCentral
      * @return {Global.SUCCESS} if successful
      */
     private int ShutdownSystem(){
-
+        MnemoDBHelper.getInstance(getApplicationContext()).close();
         return Global.SUCCESS;
     }
 }
