@@ -29,6 +29,7 @@ import model.dictionary.Global;
  */
 public class GeneralTools {
 
+
     /**
      * Return a JSON object built from a json file
      * @param dir directory where the json file is

@@ -44,9 +44,9 @@ public class Global {
             case Global.FAILURE:
                 return " FAILURE ";
             case Global.OUT_OF_BOUNDS:
-                return "OUT OF BOUNDS";
+                return " OUT OF BOUNDS ";
             case Global.NOT_AVAILABLE:
-                return "NOT_AVAILABLE";
+                return " NOT AVAILABLE ";
             default:
                 return " CODE(" + result+") unknown ";
 

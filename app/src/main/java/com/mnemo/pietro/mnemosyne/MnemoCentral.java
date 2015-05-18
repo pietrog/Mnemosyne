@@ -1,12 +1,10 @@
 package com.mnemo.pietro.mnemosyne;
 
 import android.app.FragmentTransaction;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
-
 
 import com.mnemo.pietro.mnemosyne.fragments.dictionary.TodayListFragment;
 import com.mnemo.pietro.mnemosyne.fragments.library.LibraryFragment;
@@ -27,7 +25,7 @@ import model.dictionary.memoryManager.sql.MemoryManagerSQLManager;
 
 
 public class MnemoCentral
-        extends ActionBarActivity {
+        extends AppCompatActivity {
 
     public static final String EXTRA_ALERT_DATE = "com.mnemo.pietro.ALERT_DATE";
 
