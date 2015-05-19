@@ -31,6 +31,8 @@ public class Global {
      */
     // this is the first phase, phase name should be a global constant variable because we use it for dictionary object creation
     public static final String FIRST_PHASE_NAME = "ENCODING";
+    public static final String SECOND_PHASE_NAME = "STORING";
+    public static final String THIRD_PHASE_NAME = "UPKEEPING";
 
 
     public static String getLogFromResult(int result){

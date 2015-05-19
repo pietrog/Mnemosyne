@@ -6,12 +6,12 @@ import android.database.Cursor;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.Map;
 import java.util.Vector;
 
 import model.dictionary.Global;
 import model.dictionary.dictionary.DictionaryObject;
+import model.dictionary.dictionary.DictionaryObject.MemoryMonitoringObject;
 import model.dictionary.dictionary.sql.DictionaryContractBase;
 import model.dictionary.dictionaryObject.sql.DictionaryObjectContract;
 import model.dictionary.tools.BaseSQLManager;
@@ -94,8 +94,8 @@ public class MemoryManagerSQLManager extends BaseSQLManager{
      * Create a new memory monitoring object. The init object points on the first memory phase and everything is set for the init process
      * @return id of the new row
      */
-    public DictionaryObject.MemoryMonitoringObject createNewMemoryMonitoringObject(){
-        DictionaryObject.MemoryMonitoringObject obj = new DictionaryObject.MemoryMonitoringObject();
+    public MemoryMonitoringObject createNewMemoryMonitoringObject(){
+        MemoryMonitoringObject obj = new MemoryMonitoringObject();
         long id = add(obj.toContentValues(), MemoryManagerContract.MemoryMonitoring.TABLE_NAME);
         obj.setID(id);
         return obj;
@@ -109,7 +109,7 @@ public class MemoryManagerSQLManager extends BaseSQLManager{
      */
     public long createDictionaryObject(long dictionaryID, long memoryMonitoringID){
         if (dictionaryID < 0 || memoryMonitoringID < 0)
-            return -1;
+            return Global.FAILURE;
         ContentValues value = new ContentValues();
         value.put(DictionaryObjectContract.DictionaryObject.MEMORY_MONITORING_ID, memoryMonitoringID);
         value.put(DictionaryObjectContract.DictionaryObject.DICTIONARYID, dictionaryID);
@@ -121,7 +121,7 @@ public class MemoryManagerSQLManager extends BaseSQLManager{
      * Add the word to the learn session given by date parameter
      * @param id id of the word
      * @param date alert date
-     * @return row id of the memory database row
+     * @return the id of the memory monitoring database object
      */
     public long addWordToLearnSession(long id, Date date){
         ContentValues value = new ContentValues();

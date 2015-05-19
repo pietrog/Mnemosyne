@@ -88,13 +88,13 @@ public class MemoryManagerContract {
 
     public static void populateDefaultMemoryPhase(SQLiteDatabase db){
         ContentValues value = new ContentValues();
-        value.put(MemoryPhase.PHASE_NAME, "UPKEEPING");
+        value.put(MemoryPhase.PHASE_NAME, Global.THIRD_PHASE_NAME);
         value.put(MemoryPhase.DURATION_PHASE, 0);
         value.put(MemoryPhase.FIRST_PERIOD, 62);
         value.put(MemoryPhase.PERIOD_INCREMENT, 0);
         long id = db.insert(MemoryPhase.TABLE_NAME, null, value);
         value = new ContentValues();
-        value.put(MemoryPhase.PHASE_NAME, "STORING");
+        value.put(MemoryPhase.PHASE_NAME, Global.SECOND_PHASE_NAME);
         value.put(MemoryPhase.DURATION_PHASE, 95);
         value.put(MemoryPhase.FIRST_PERIOD, 5);
         value.put(MemoryPhase.PERIOD_INCREMENT, 1);

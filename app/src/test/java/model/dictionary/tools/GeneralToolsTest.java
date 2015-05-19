@@ -2,6 +2,7 @@ package model.dictionary.tools;
 
 import android.app.Application;
 import android.content.Context;
+import android.os.Environment;
 import android.test.ApplicationTestCase;
 
 import org.json.JSONException;
@@ -14,10 +15,11 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import java.io.File;
+import java.util.Calendar;
+import java.util.Date;
 
 import model.dictionary.Global;
 
-import static org.junit.Assert.*;
 
 /**
  * Created by pietro on 14/05/15.
@@ -32,26 +34,52 @@ public class GeneralToolsTest extends ApplicationTestCase<Application>{
     @Test
     public void writeFileTest() throws JSONException {
 
+        JSONObject obj = generateJSONObjectFile();
+
+        String filename = "test.json";
+        Context context = Robolectric.getShadowApplication().getApplicationContext();
+        String fullPath = context.getFilesDir().getPath()+"/"+filename;
+
+        //should return success
+        File file = new File(fullPath);
+        Assert.assertFalse("File should not exist ("+fullPath+")", file.exists());
+        int result = GeneralTools.writeFile(obj, filename, context);
+        Assert.assertEquals("Should return Success", Global.SUCCESS, result);
+        //should exist
+        file = new File(fullPath);
+        Assert.assertTrue("File should exist("+fullPath+")", file.exists());
+    }
+
+    @Test
+    public void getJSONObjectFromFileTest() throws JSONException {
+
+        JSONObject obj = generateJSONObjectFile();
+        String filename = "test.json";
+        Context context = Robolectric.getShadowApplication().getApplicationContext();
+        String fullPath = context.getFilesDir().getPath()+"/"+filename;
+
+        Assert.assertNull("Should return null when file does not exists", GeneralTools.getJSONObjectFromFile(".", "test.json"));
+        GeneralTools.writeFile(obj, filename, context);
+        JSONObject objRetrived = GeneralTools.getJSONObjectFromFile(context.getFilesDir().getPath(), filename);
+        Assert.assertNotNull("Should return JSONObject, not null", objRetrived);
+        //for json object equality we just compare toString of both objects
+        String expected = obj.toString();
+        String actual = objRetrived.toString();
+        Assert.assertTrue("JSONObject should be equal", actual.compareTo(expected) == 0);
+
+    }
+
+
+
+
+    /**
+     *
+     */
+    private JSONObject generateJSONObjectFile() throws JSONException{
         JSONObject obj = new JSONObject();
         obj.put("Test1", "value1");
         obj.put("Test2", true);
 
-        String filename = "test.json";
-        Context context = Robolectric.getShadowApplication().getApplicationContext();
-
-        //should return success
-        File file = new File(context.getFilesDir().getPath()+filename);
-        Assert.assertFalse("File should not exist", file.exists());
-        int result = GeneralTools.writeFile(obj, filename, context);
-        Assert.assertEquals("Should return Success", Global.SUCCESS, result);
-        //should exist
-        file = new File(context.getFilesDir().getPath()+filename);
-        Assert.assertTrue("File should exist", file.exists());
-    }
-
-    @Test
-    public void getJSONObjectFromFileTest(){
-        Assert.assertNull("Should return null when file does not exists", GeneralTools.getJSONObjectFromFile(".", "test.json"));
-
+        return obj;
     }
 }
