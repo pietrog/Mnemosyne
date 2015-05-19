@@ -26,6 +26,13 @@ public class MnemoDBHelper extends SQLiteOpenHelper {
         return instance;
     }
 
+    public static synchronized void release(){
+        if (instance != null){
+            instance.close();
+            instance = null;
+        }
+    }
+
     private static final String DATABASE_NAME = "mnemosyneDATABASE";
     private static final int DATABASE_VERSION = 1;
 

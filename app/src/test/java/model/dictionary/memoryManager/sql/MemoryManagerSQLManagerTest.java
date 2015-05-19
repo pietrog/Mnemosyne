@@ -22,6 +22,7 @@ import model.dictionary.catalogue.sql.CatalogueSQLManager;
 import model.dictionary.dictionary.DictionaryObject;
 import model.dictionary.dictionary.sql.DictionarySQLManager;
 import model.dictionary.tools.GeneralTools;
+import model.dictionary.tools.MnemoDBHelper;
 
 
 /**
@@ -32,6 +33,7 @@ import model.dictionary.tools.GeneralTools;
 public class MemoryManagerSQLManagerTest {
 
     private MemoryManagerSQLManager singleton ;
+    private long idCatalogue, idDictionary;
 
     @Before
     public void setUp() throws Exception {
@@ -39,11 +41,19 @@ public class MemoryManagerSQLManagerTest {
         singleton = MemoryManagerSQLManager.getInstance(context);
         CatalogueSQLManager.getInstance(context);
         DictionarySQLManager.getInstance(context);
+        DictionaryObject.initMemoryPhaseMap();
+
+        //create the catalogue
+        idCatalogue = CatalogueSQLManager.getInstance().add("CatalogueTest", "DescTest");
+        //create the dictionary
+        idDictionary = DictionarySQLManager.getInstance().addDictionaryInCatalogue(idCatalogue, "DictTest", "DictDescTest");
+
     }
 
     @After
     public void tearDown() throws Exception {
         //TODO test ressource closing
+        MnemoDBHelper.release();
     }
 
     @Test
@@ -89,7 +99,6 @@ public class MemoryManagerSQLManagerTest {
 
     @Test
     public void testCreateNewMemoryMonitoringObject() throws Exception {
-        DictionaryObject.initMemoryPhaseMap();
         DictionaryObject.MemoryMonitoringObject newOne = singleton.createNewMemoryMonitoringObject();
         DictionaryObject.MemoryPhaseObject firstPhase = DictionaryObject.mMemoryPhaseObjectMap.get(newOne.getMemoryPhaseID());
 
@@ -119,10 +128,7 @@ public class MemoryManagerSQLManagerTest {
 
     @Test
     public void testCreateDictionaryObject() throws Exception {
-        //create the catalogue
-        long idCatalogue = CatalogueSQLManager.getInstance().add("CatalogueTest", "DescTest");
-        //create the dictionary
-        long idDictionary = DictionarySQLManager.getInstance().addDictionaryInCatalogue(idCatalogue, "DictTest", "DictDescTest");
+
         //add the word
         DictionaryObject.initMemoryPhaseMap();
         DictionaryObject.MemoryMonitoringObject newOne = singleton.createNewMemoryMonitoringObject();
@@ -144,9 +150,6 @@ public class MemoryManagerSQLManagerTest {
     public void testAddWordToLearnSession() throws Exception {
 
         //create the catalogue
-        /*DictionaryObject.initMemoryPhaseMap();
-        long idCatalogue = CatalogueSQLManager.getInstance().add("CatalogueTest2", "DescTest2");
-        long idDictionary = DictionarySQLManager.getInstance().addDictionaryInCatalogue(idCatalogue, "DictTest2", "DictDescTest2");
         DictionaryObject.MemoryMonitoringObject newOne = singleton.createNewMemoryMonitoringObject();
         long idWord = singleton.createDictionaryObject(idDictionary, newOne.getID());
         Date dnow = GeneralTools.getNowDate();
@@ -154,7 +157,7 @@ public class MemoryManagerSQLManagerTest {
         long idMemoryManagerObj = singleton.addWordToLearnSession(999, dnow);
         Assert.assertTrue("ID should be smaller than 0", idMemoryManagerObj == Global.FAILURE);
         idMemoryManagerObj = singleton.addWordToLearnSession(idWord, dnow);
-        Assert.assertTrue("ID should be greater than 0", idMemoryManagerObj > 0);*/
+        Assert.assertTrue("ID should be greater than 0", idMemoryManagerObj > 0);
 
     }
 

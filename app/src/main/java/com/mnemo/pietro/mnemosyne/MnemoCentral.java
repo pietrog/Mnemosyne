@@ -14,6 +14,7 @@ import model.dictionary.catalogue.sql.CatalogueSQLManager;
 import model.dictionary.dictionary.DictionaryObject;
 import model.dictionary.dictionary.sql.DictionarySQLManager;
 import model.dictionary.memoryManager.sql.MemoryManagerSQLManager;
+import model.dictionary.tools.MnemoDBHelper;
 
 //EN COURS
 //@TODO: implementer un rappel basé sur l'alarme
@@ -109,6 +110,7 @@ public class MnemoCentral
      */
     private int ShutdownSystem(){
 
+        MnemoDBHelper.release();
         return Global.SUCCESS;
     }
 }
