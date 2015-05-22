@@ -21,7 +21,7 @@ public class CatalogueContract {
 
     public static final String SQL_CREATE_TABLE = "CREATE TABLE " + Catalogue.TABLE_NAME + "( "
             + Catalogue._ID + Global.INTEGER_TYPE + " PRIMARY KEY" + Global.COMMASEP
-            + Catalogue.CATALOGUE_NAME + Global.TEXT_TYPE + Global.COMMASEP
+            + Catalogue.CATALOGUE_NAME + Global.TEXT_TYPE + "  " + Global.COMMASEP
             + Catalogue.CATALOGUE_DESC + Global.TEXT_TYPE + Global.COMMASEP
             + "UNIQUE (" + Catalogue.CATALOGUE_NAME + ") ON CONFLICT ABORT )";
 

@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 
+import model.dictionary.Global;
 import model.dictionary.dictionary.sql.DictionaryContractBase;
 import model.dictionary.tools.BaseSQLManager;
 
@@ -67,6 +68,8 @@ public class CatalogueSQLManager extends BaseSQLManager{
      * @return sql row id of the new catalogue
      */
     public long add(String name, String description){
+        if (name == null || name.length() < 3 )
+            return Global.BAD_PARAMETER;
         ContentValues val = new ContentValues();
         val.put(CatalogueContract.Catalogue.CATALOGUE_NAME, name);
         val.put(CatalogueContract.Catalogue.CATALOGUE_DESC, description);

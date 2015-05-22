@@ -28,13 +28,14 @@ import model.dictionary.tools.MnemoDBHelper;
 
 /**
  * Created by pietro on 18/05/15.
+ *
  */
 @Config(emulateSdk = 18)
 @RunWith(RobolectricTestRunner.class)
 public class MemoryManagerSQLManagerTest {
 
     private MemoryManagerSQLManager singleton ;
-    private long midCatalogue, midDictionary, midWord1, midWord2;
+    private long midCatalogue, midDictionary, midWord1, midDictObj1, midWord2, midDictObj2, midWord3, midDictObj3;
 
     @Before
     public void setUp() throws Exception {
@@ -48,8 +49,16 @@ public class MemoryManagerSQLManagerTest {
         midCatalogue = CatalogueSQLManager.getInstance().add("CatalogueTest", "DescTest");
         //create the dictionary
         midDictionary = DictionarySQLManager.getInstance().addDictionaryInCatalogue(midCatalogue, "DictTest", "DictDescTest");
-        midWord1 = DictionarySQLManager.getInstance().addNewWord(midDictionary, "wordTest", "defTest");
-        midWord2 = DictionarySQLManager.getInstance().addNewWord(midDictionary, "wordTest2", "defTest2");
+
+        DictionaryObject.MemoryMonitoringObject one = singleton.createNewMemoryMonitoringObject();
+        DictionaryObject.MemoryMonitoringObject two = singleton.createNewMemoryMonitoringObject();
+        midDictObj1 = singleton.createDictionaryObject(midDictionary, one.getID());
+        midDictObj2 = singleton.createDictionaryObject(midDictionary, two.getID());
+        midDictObj3 = singleton.createDictionaryObject(midDictionary, two.getID());
+        midWord1 = DictionarySQLManager.getInstance().addNewWord(midDictObj1, "wordTest", "defTest");
+        midWord2 = DictionarySQLManager.getInstance().addNewWord(midDictObj2, "wordTest2", "defTest2");
+        midWord3 = DictionarySQLManager.getInstance().addNewWord(midDictObj3, "wordTest2", "defTest2");
+
 
     }
 
@@ -65,7 +74,7 @@ public class MemoryManagerSQLManagerTest {
         singleton.initMemoryPhaseMap(phaseMap);
         Assert.assertTrue("Should contain 3 phases", phaseMap.size() == 3);
 
-        long idPhase1 = -999, idPhase2 = -999, idPhase3 = -999;
+        long idPhase2 = -999, idPhase3 = -999;
 
         for(Long key: phaseMap.keySet()){
             DictionaryObject.MemoryPhaseObject obj = phaseMap.get(key);
@@ -73,7 +82,6 @@ public class MemoryManagerSQLManagerTest {
                 Assert.assertTrue("Duration phase should be equal to", obj.mDurationPhase == 5);
                 Assert.assertTrue("Duration phase should be equal to", obj.mFirstPeriod == 1);
                 Assert.assertTrue("Duration phase should be equal to", obj.mPeriodIncrement == 0);
-                idPhase1 = key;
             }
             else if (obj.mPhaseName.compareTo(Global.SECOND_PHASE_NAME) == 0){
                 Assert.assertTrue("Duration phase should be equal to", obj.mDurationPhase == 95);
@@ -153,14 +161,24 @@ public class MemoryManagerSQLManagerTest {
     public void testAddWordToLearnSession() throws Exception {
 
         //create the catalogue
-        DictionaryObject.MemoryMonitoringObject newOne = singleton.createNewMemoryMonitoringObject();
-        long idWord = singleton.createDictionaryObject(midDictionary, newOne.getID());
         Date dnow = GeneralTools.getNowDate();
 
         long idMemoryManagerObj = singleton.addWordToLearnSession(999, dnow);
-        Assert.assertTrue("ID should be smaller than 0", idMemoryManagerObj == Global.FAILURE);
-        idMemoryManagerObj = singleton.addWordToLearnSession(idWord, dnow);
+        //Assert.assertTrue("ID should be smaller than 0", idMemoryManagerObj == Global.FAILURE);
+
+
+        idMemoryManagerObj = singleton.addWordToLearnSession(midWord2, GeneralTools.getTomDate());
         Assert.assertTrue("ID should be greater than 0", idMemoryManagerObj > 0);
+        //add a learning session
+        idMemoryManagerObj = singleton.addWordToLearnSession(midWord1, dnow);
+        Assert.assertTrue("ID should be greater than 0", idMemoryManagerObj > 0);
+        //add another learning session for the same word should fail
+        idMemoryManagerObj = singleton.addWordToLearnSession(midWord1, GeneralTools.getTomDate());
+        //Assert.assertTrue("ID should be greater than 0", idMemoryManagerObj == Global.FAILURE);
+        //add another learning session for another word
+        idMemoryManagerObj = singleton.addWordToLearnSession(midWord2, GeneralTools.getTomDate());
+        Assert.assertTrue("ID should be greater than 0", idMemoryManagerObj > 0);
+
     }
 
     @Test
@@ -177,6 +195,12 @@ public class MemoryManagerSQLManagerTest {
         Assert.assertTrue("Session id should be positive", idSession > 0);
         Assert.assertTrue("List should contain one id", list.size() == 1);
         Assert.assertTrue("Id in the list should be equal to the id of the original word", list.get(0).val1 == midWord1);
+
+        //add another word to learn session
+        idSession = singleton.addWordToLearnSession(midWord2, dnow);
+        //Assert.assertTrue("Session id should be positive", idSession > 0);
+        list = singleton.getListOfObjectsToLearn(dnow);
+        Assert.assertTrue("List should contain two ids", list.size() == 2);
 
     }
 

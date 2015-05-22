@@ -43,6 +43,7 @@ public class MnemoDBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         //memory monitoring
+        //System.out.println(MemoryManagerContract.SQL_CREATE_MEMORY_MANAGER_TABLE);
         db.execSQL(MemoryManagerContract.SQL_CREATE_MEMORY_MANAGER_TABLE);
         db.execSQL(MemoryManagerContract.SQL_CREATE_MEMORY_PHASE_TABLE);
         MemoryManagerContract.populateDefaultMemoryPhase(db); // populate the table

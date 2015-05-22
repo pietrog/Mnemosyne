@@ -54,10 +54,11 @@ public class MemoryManagerContract {
 
     public static final String SQL_CREATE_MEMORY_MANAGER_TABLE =
             "CREATE TABLE " + MemoryManager.TABLE_NAME + "( "
-                    + MemoryManager._ID + Global.INTEGER_TYPE + " PRIMARY KEY" + Global.COMMASEP
-                    + MemoryManager.DATE + Global.TEXT_TYPE + " UNIQUE " + Global.COMMASEP
-                    + MemoryManager.DICTIONARYOBJECTID + Global.INTEGER_TYPE + " REFERENCES " + DictionaryContractBase.DictionaryBase.TABLE_NAME + " ON DELETE CASCADE " + Global.COMMASEP
-                    + MemoryManager.DAYS_OF_DELAY + Global.INTEGER_TYPE + " DEFAULT 0 "
+                    + MemoryManager._ID + Global.INTEGER_TYPE + " PRIMARY KEY AUTOINCREMENT NOT NULL" + Global.COMMASEP
+                    + MemoryManager.DATE + Global.TEXT_TYPE + Global.COMMASEP
+                    + MemoryManager.DICTIONARYOBJECTID + Global.INTEGER_TYPE +" REFERENCES " + DictionaryContractBase.DictionaryBase.TABLE_NAME + "(" + DictionaryContractBase.DictionaryBase._ID + ")" + " ON DELETE CASCADE " + Global.COMMASEP
+                    + MemoryManager.DAYS_OF_DELAY + Global.INTEGER_TYPE + " DEFAULT 0 " //+ Global.COMMASEP
+                    + " UNIQUE (" + MemoryManager.DICTIONARYOBJECTID +") ON CONFLICT ABORT"
                     + ")"
             ;
 

@@ -6,6 +6,7 @@ import android.database.Cursor;
 
 import java.util.Vector;
 
+import model.dictionary.Global;
 import model.dictionary.dictionary.DictionaryObject;
 import model.dictionary.dictionaryObject.sql.DictionaryObjectContract;
 import model.dictionary.memoryManager.sql.MemoryManagerContract;
@@ -134,6 +135,10 @@ public class DictionarySQLManager extends BaseSQLManager{
      * @return new row id
      */
     public long addDictionaryInCatalogue(long catalogueID, String name, String description){
+        if (name == null || description == null)
+            return Global.BAD_PARAMETER;
+        if (name.length() < 3)
+            return Global.BAD_PARAMETER;
         ContentValues val = new ContentValues();
         val.put(DictionaryContractBase.DictionaryBase.NAME, name);
         val.put(DictionaryContractBase.DictionaryBase.DESCRIPTION, description);

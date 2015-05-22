@@ -18,6 +18,7 @@ public class Global {
     public static final int ALREADY_EXISTS = 4;
     public static final int NOT_FOUND = 5;
     public static final int OUT_OF_BOUNDS = 6;
+    public static final int BAD_PARAMETER = 7;
 
 
     public static final String TEXT_TYPE = " TEXT";
