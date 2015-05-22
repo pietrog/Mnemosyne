@@ -16,6 +16,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Vector;
 
 import model.dictionary.Global;
 import model.dictionary.catalogue.sql.CatalogueSQLManager;
@@ -33,7 +34,7 @@ import model.dictionary.tools.MnemoDBHelper;
 public class MemoryManagerSQLManagerTest {
 
     private MemoryManagerSQLManager singleton ;
-    private long idCatalogue, idDictionary;
+    private long midCatalogue, midDictionary, midWord1, midWord2;
 
     @Before
     public void setUp() throws Exception {
@@ -44,9 +45,11 @@ public class MemoryManagerSQLManagerTest {
         DictionaryObject.initMemoryPhaseMap();
 
         //create the catalogue
-        idCatalogue = CatalogueSQLManager.getInstance().add("CatalogueTest", "DescTest");
+        midCatalogue = CatalogueSQLManager.getInstance().add("CatalogueTest", "DescTest");
         //create the dictionary
-        idDictionary = DictionarySQLManager.getInstance().addDictionaryInCatalogue(idCatalogue, "DictTest", "DictDescTest");
+        midDictionary = DictionarySQLManager.getInstance().addDictionaryInCatalogue(midCatalogue, "DictTest", "DictDescTest");
+        midWord1 = DictionarySQLManager.getInstance().addNewWord(midDictionary, "wordTest", "defTest");
+        midWord2 = DictionarySQLManager.getInstance().addNewWord(midDictionary, "wordTest2", "defTest2");
 
     }
 
@@ -132,18 +135,18 @@ public class MemoryManagerSQLManagerTest {
         //add the word
         DictionaryObject.initMemoryPhaseMap();
         DictionaryObject.MemoryMonitoringObject newOne = singleton.createNewMemoryMonitoringObject();
-        long idWord = singleton.createDictionaryObject(idDictionary, newOne.getID());
-        Assert.assertTrue("Word id should be greater than 0", idWord > 0);
+        long idObj = singleton.createDictionaryObject(midDictionary, newOne.getID());
+        Assert.assertTrue("Word id should be greater than 0", idObj > 0);
 
         //failure on bad ids
         Assert.assertEquals(Global.FAILURE, singleton.createDictionaryObject(-1, 2));
         Assert.assertEquals(Global.FAILURE, singleton.createDictionaryObject(3, -1));
 
-        idWord = singleton.createDictionaryObject(idDictionary, 999);
-        Assert.assertTrue("Should return FAILURE if memory phase object does not exist", idWord == Global.FAILURE);
+        idObj = singleton.createDictionaryObject(midDictionary, 999);
+        Assert.assertTrue("Should return FAILURE if memory phase object does not exist", idObj == Global.FAILURE);
 
-        idWord = singleton.createDictionaryObject(999, newOne.getID());
-        Assert.assertTrue("Should return FAILURE if idDictionary does not exist", idWord == Global.FAILURE);
+        idObj = singleton.createDictionaryObject(999, newOne.getID());
+        Assert.assertTrue("Should return FAILURE if dictionary id does not exist", idObj == Global.FAILURE);
     }
 
     @Test
@@ -151,23 +154,29 @@ public class MemoryManagerSQLManagerTest {
 
         //create the catalogue
         DictionaryObject.MemoryMonitoringObject newOne = singleton.createNewMemoryMonitoringObject();
-        long idWord = singleton.createDictionaryObject(idDictionary, newOne.getID());
+        long idWord = singleton.createDictionaryObject(midDictionary, newOne.getID());
         Date dnow = GeneralTools.getNowDate();
 
         long idMemoryManagerObj = singleton.addWordToLearnSession(999, dnow);
         Assert.assertTrue("ID should be smaller than 0", idMemoryManagerObj == Global.FAILURE);
         idMemoryManagerObj = singleton.addWordToLearnSession(idWord, dnow);
         Assert.assertTrue("ID should be greater than 0", idMemoryManagerObj > 0);
-
     }
 
     @Test
     public void testGetListOfObjectsToLearn() throws Exception {
+        Vector<Global.Couple<Long, Integer>> list;
 
-    }
+        Date dnow = GeneralTools.getNowDate();
+        list = singleton.getListOfObjectsToLearn(dnow);
+        Assert.assertTrue("List should be empty", list.size() == 0);
 
-    @Test
-    public void testGetListOfObjectsToLearn1() throws Exception {
+        //add the word to learn session
+        long idSession = singleton.addWordToLearnSession(midWord1, dnow);
+        list = singleton.getListOfObjectsToLearn(dnow);
+        Assert.assertTrue("Session id should be positive", idSession > 0);
+        Assert.assertTrue("List should contain one id", list.size() == 1);
+        Assert.assertTrue("Id in the list should be equal to the id of the original word", list.get(0).val1 == midWord1);
 
     }
 

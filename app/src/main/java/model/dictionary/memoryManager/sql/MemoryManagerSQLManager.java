@@ -152,11 +152,11 @@ public class MemoryManagerSQLManager extends BaseSQLManager{
 
         //should have only one result
         if (cursor.getCount() == 0)
-            return null;
+            return res;
 
         if (!cursor.moveToFirst()) {
             Logger.i("MemoryManagerSQL::getListOfObjectIDs", " cursor move to first failed");
-            return null;
+            return res;
         }
 
         do {
