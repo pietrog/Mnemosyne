@@ -6,6 +6,7 @@ import android.provider.BaseColumns;
 
 import model.dictionary.Global;
 import model.dictionary.dictionary.sql.DictionaryContractBase;
+import model.dictionary.dictionaryObject.sql.DictionaryObjectContract;
 
 
 /**
@@ -54,11 +55,11 @@ public class MemoryManagerContract {
 
     public static final String SQL_CREATE_MEMORY_MANAGER_TABLE =
             "CREATE TABLE " + MemoryManager.TABLE_NAME + "( "
-                    + MemoryManager._ID + Global.INTEGER_TYPE + " PRIMARY KEY AUTOINCREMENT NOT NULL" + Global.COMMASEP
+                    + MemoryManager._ID + Global.INTEGER_TYPE + " PRIMARY KEY" + Global.COMMASEP
                     + MemoryManager.DATE + Global.TEXT_TYPE + Global.COMMASEP
-                    + MemoryManager.DICTIONARYOBJECTID + Global.INTEGER_TYPE +" REFERENCES " + DictionaryContractBase.DictionaryBase.TABLE_NAME + "(" + DictionaryContractBase.DictionaryBase._ID + ")" + " ON DELETE CASCADE " + Global.COMMASEP
-                    + MemoryManager.DAYS_OF_DELAY + Global.INTEGER_TYPE + " DEFAULT 0 " //+ Global.COMMASEP
-                    + " UNIQUE (" + MemoryManager.DICTIONARYOBJECTID +") ON CONFLICT ABORT"
+                    + MemoryManager.DICTIONARYOBJECTID + Global.INTEGER_TYPE + " REFERENCES " + DictionaryObjectContract.DictionaryObject.TABLE_NAME + "(" + DictionaryObjectContract.DictionaryObject._ID + ") ON DELETE CASCADE " + Global.COMMASEP
+                    + MemoryManager.DAYS_OF_DELAY + Global.INTEGER_TYPE + " DEFAULT 0 " + Global.COMMASEP
+                    + " UNIQUE (" + MemoryManager.DICTIONARYOBJECTID + "," + MemoryManager.DATE +") ON CONFLICT ABORT"
                     + ")"
             ;
 
@@ -70,7 +71,7 @@ public class MemoryManagerContract {
                     + MemoryPhase.FIRST_PERIOD + Global.INTEGER_TYPE + Global.COMMASEP
                     + MemoryPhase.PERIOD_INCREMENT + Global.INTEGER_TYPE + Global.COMMASEP
                     + MemoryPhase.NEXT_PHASE_ID +  Global.INTEGER_TYPE + Global.COMMASEP
-                    + " FOREIGN KEY(" + MemoryPhase.NEXT_PHASE_ID + ") REFERENCES " + MemoryPhase.TABLE_NAME //+ "(" + MemoryManagerContract.MemoryPhase._ID+ ")"
+                    + " FOREIGN KEY(" + MemoryPhase.NEXT_PHASE_ID + ") REFERENCES " + MemoryPhase.TABLE_NAME + "(" + MemoryManagerContract.MemoryPhase._ID+ ")"
                     + ")"
             ;
 
@@ -83,7 +84,7 @@ public class MemoryManagerContract {
                     + MemoryMonitoring.MEMORY_PHASE_ID + Global.INTEGER_TYPE + Global.COMMASEP
                     + MemoryMonitoring.BEGINING_OF_MP + Global.TEXT_TYPE + Global.COMMASEP
                     + MemoryMonitoring.DAYS_BETWEEN + Global.INTEGER_TYPE + Global.COMMASEP
-                    + " FOREIGN KEY(" + MemoryMonitoring.MEMORY_PHASE_ID + ") REFERENCES " + MemoryPhase.TABLE_NAME //+ "(" + MemoryManagerContract.MemoryPhase._ID+ ")"
+                    + " FOREIGN KEY(" + MemoryMonitoring.MEMORY_PHASE_ID + ") REFERENCES " + MemoryPhase.TABLE_NAME + "(" + MemoryManagerContract.MemoryPhase._ID+ ")"
                     + ")";
 
 

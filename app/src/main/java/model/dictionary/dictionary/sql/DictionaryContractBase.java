@@ -30,7 +30,8 @@ public class DictionaryContractBase {
                     + DictionaryBase._ID + " INTEGER PRIMARY KEY" + Global.COMMASEP
                     + DictionaryBase.NAME + Global.TEXT_TYPE + Global.COMMASEP
                     + DictionaryBase.DESCRIPTION + Global.TEXT_TYPE + Global.COMMASEP
-                    + DictionaryBase.CATALOGUEID + Global.INTEGER_TYPE + " REFERENCES "+ CatalogueContract.Catalogue.TABLE_NAME + "(" + CatalogueContract.Catalogue._ID + ") ON DELETE CASCADE"
+                    + DictionaryBase.CATALOGUEID + Global.INTEGER_TYPE + " REFERENCES "+ CatalogueContract.Catalogue.TABLE_NAME + "(" + CatalogueContract.Catalogue._ID + ") ON DELETE CASCADE" + Global.COMMASEP
+                    + " UNIQUE ( " + DictionaryBase.CATALOGUEID + "," + DictionaryBase.NAME + " ) ON CONFLICT ABORT "
                     + " )";
 
     public static final String SQL_DROP_TABLE = "DROP TABLE " + DictionaryBase.TABLE_NAME;

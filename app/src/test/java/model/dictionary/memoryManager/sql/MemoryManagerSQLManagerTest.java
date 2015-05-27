@@ -164,20 +164,21 @@ public class MemoryManagerSQLManagerTest {
         Date dnow = GeneralTools.getNowDate();
 
         long idMemoryManagerObj = singleton.addWordToLearnSession(999, dnow);
-        //Assert.assertTrue("ID should be smaller than 0", idMemoryManagerObj == Global.FAILURE);
+        Assert.assertTrue("ID should be smaller than 0", idMemoryManagerObj == Global.FAILURE);
 
-
-        idMemoryManagerObj = singleton.addWordToLearnSession(midWord2, GeneralTools.getTomDate());
+        idMemoryManagerObj = singleton.addWordToLearnSession(midDictObj1, dnow);
         Assert.assertTrue("ID should be greater than 0", idMemoryManagerObj > 0);
         //add a learning session
-        idMemoryManagerObj = singleton.addWordToLearnSession(midWord1, dnow);
+        idMemoryManagerObj = singleton.addWordToLearnSession(midDictObj2, dnow);
         Assert.assertTrue("ID should be greater than 0", idMemoryManagerObj > 0);
         //add another learning session for the same word should fail
-        idMemoryManagerObj = singleton.addWordToLearnSession(midWord1, GeneralTools.getTomDate());
-        //Assert.assertTrue("ID should be greater than 0", idMemoryManagerObj == Global.FAILURE);
+        idMemoryManagerObj = singleton.addWordToLearnSession(midDictObj2, dnow);
+        Assert.assertEquals("Should not be able to add the same word twice for the same date", Global.FAILURE, idMemoryManagerObj);
         //add another learning session for another word
-        idMemoryManagerObj = singleton.addWordToLearnSession(midWord2, GeneralTools.getTomDate());
-        Assert.assertTrue("ID should be greater than 0", idMemoryManagerObj > 0);
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DAY_OF_YEAR, 3);
+        idMemoryManagerObj = singleton.addWordToLearnSession(midDictObj3, cal.getTime());
+        Assert.assertTrue("Add a word session for a future date should success", idMemoryManagerObj > 0);
 
     }
 
@@ -190,17 +191,27 @@ public class MemoryManagerSQLManagerTest {
         Assert.assertTrue("List should be empty", list.size() == 0);
 
         //add the word to learn session
-        long idSession = singleton.addWordToLearnSession(midWord1, dnow);
+        singleton.addWordToLearnSession(midDictObj2, dnow);
         list = singleton.getListOfObjectsToLearn(dnow);
-        Assert.assertTrue("Session id should be positive", idSession > 0);
-        Assert.assertTrue("List should contain one id", list.size() == 1);
-        Assert.assertTrue("Id in the list should be equal to the id of the original word", list.get(0).val1 == midWord1);
+        Assert.assertEquals("List should contain one id", 1, list.size());
+        Assert.assertTrue("Id in the list should be equal to the id of the original word", list.get(0).val1 == midDictObj2);
 
         //add another word to learn session
-        idSession = singleton.addWordToLearnSession(midWord2, dnow);
-        //Assert.assertTrue("Session id should be positive", idSession > 0);
+        singleton.addWordToLearnSession(midWord3, dnow);
         list = singleton.getListOfObjectsToLearn(dnow);
-        Assert.assertTrue("List should contain two ids", list.size() == 2);
+        Assert.assertEquals("List should contain two ids", 2, list.size());
+
+        //add for date in one week
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DAY_OF_YEAR, 7);
+        singleton.addWordToLearnSession(midDictObj1, cal.getTime());
+        singleton.addWordToLearnSession(midDictObj2, cal.getTime());
+        singleton.addWordToLearnSession(midDictObj3, cal.getTime());
+        list = singleton.getListOfObjectsToLearn(cal.getTime());
+        Assert.assertEquals("List should contain 3 elements", 3, list.size());
+        for (Global.Couple<Long, Integer> c : list){
+            Assert.assertTrue("Should contain these ids", c.val1 == midDictObj1 || c.val1 == midDictObj2 || c.val1 == midDictObj3);
+        }
 
     }
 

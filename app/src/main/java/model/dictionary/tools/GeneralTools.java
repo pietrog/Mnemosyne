@@ -189,9 +189,4 @@ public class GeneralTools {
     public static Date getNowDate(){
         return Calendar.getInstance().getTime();
     }
-    public static Date getTomDate(){
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DAY_OF_YEAR, 1);
-        return cal.getTime();
-    }
 }

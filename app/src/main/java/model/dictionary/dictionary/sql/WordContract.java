@@ -24,9 +24,10 @@ public class WordContract {
     public static final String SQL_CREATE_TABLE =
             "CREATE TABLE " + Word.TABLE_NAME + " ( "
                     + Word._ID + " INTEGER PRIMARY KEY" + Global.COMMASEP
-                    + Word.WORD + Global.TEXT_TYPE + Global.COMMASEP
+                    + Word.WORD + Global.TEXT_TYPE + " NOT NULL " + Global.COMMASEP
                     + Word.DEFINITION + Global.TEXT_TYPE + Global.COMMASEP
-                    + Word.DICTIONARYOBJECTID + Global.INTEGER_TYPE + " REFERENCES "+ DictionaryObjectContract.DictionaryObject.TABLE_NAME + "(" + DictionaryObjectContract.DictionaryObject._ID + ") ON DELETE CASCADE"
+                    + Word.DICTIONARYOBJECTID + Global.INTEGER_TYPE + " REFERENCES "+ DictionaryObjectContract.DictionaryObject.TABLE_NAME + "(" + DictionaryObjectContract.DictionaryObject._ID + ") ON DELETE CASCADE" //+ Global.COMMASEP
+                    //+ " UNIQUE ( " + Word.WORD + ", " + Word.DICTIONARYOBJECTID + ") ON CONFLICT ABORT"
                     + " )";
 
 

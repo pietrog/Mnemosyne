@@ -23,6 +23,7 @@ import static org.junit.Assert.*;
 
 /**
  * Created by pietro on 22/05/15.
+ *
  */
 @Config(emulateSdk = 18)
 @RunWith(RobolectricTestRunner.class)
