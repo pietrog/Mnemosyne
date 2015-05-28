@@ -178,7 +178,7 @@ public class MemoryManagerSQLManager extends BaseSQLManager{
     public int updateDictionaryObjectInDB(DictionaryObject object){
         if (object == null) {
             Logger.i("MemoryManagerSQLManager::updateDictionaryObjectInDB"," null object");
-            return Global.NOT_AVAILABLE;
+            return Global.BAD_PARAMETER;
         }
 
         int res = Global.SUCCESS;

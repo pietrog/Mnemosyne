@@ -35,7 +35,7 @@ import model.dictionary.tools.MnemoDBHelper;
 public class MemoryManagerSQLManagerTest {
 
     private MemoryManagerSQLManager singleton ;
-    private long midCatalogue, midDictionary, midWord1, midDictObj1, midWord2, midDictObj2, midWord3, midDictObj3;
+    private long midCatalogue, midDictionary, midDictObj1, midDictObj2, midDictObj3;
 
     @Before
     public void setUp() throws Exception {
@@ -55,11 +55,6 @@ public class MemoryManagerSQLManagerTest {
         midDictObj1 = singleton.createDictionaryObject(midDictionary, one.getID());
         midDictObj2 = singleton.createDictionaryObject(midDictionary, two.getID());
         midDictObj3 = singleton.createDictionaryObject(midDictionary, two.getID());
-        midWord1 = DictionarySQLManager.getInstance().addNewWord(midDictObj1, "wordTest", "defTest");
-        midWord2 = DictionarySQLManager.getInstance().addNewWord(midDictObj2, "wordTest2", "defTest2");
-        midWord3 = DictionarySQLManager.getInstance().addNewWord(midDictObj3, "wordTest2", "defTest2");
-
-
     }
 
     @After
@@ -197,7 +192,7 @@ public class MemoryManagerSQLManagerTest {
         Assert.assertTrue("Id in the list should be equal to the id of the original word", list.get(0).val1 == midDictObj2);
 
         //add another word to learn session
-        singleton.addWordToLearnSession(midWord3, dnow);
+        singleton.addWordToLearnSession(midDictObj3, dnow);
         list = singleton.getListOfObjectsToLearn(dnow);
         Assert.assertEquals("List should contain two ids", 2, list.size());
 
@@ -218,11 +213,35 @@ public class MemoryManagerSQLManagerTest {
     @Test
     public void testUpdateDictionaryObjectInDB() throws Exception {
 
+        //test bad parameters
+        Assert.assertEquals("Null object should return bad parameter", Global.BAD_PARAMETER, singleton.updateDictionaryObjectInDB(null));
+
+
     }
 
     @Test
     public void testGetListOfPastListToLearnFromDate() throws Exception {
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DAY_OF_YEAR, 3);
 
+        //add 3 words
+        Vector<Global.Couple<Long,Integer>> list = singleton.getListOfObjectsToLearn(cal.getTime());
+        Assert.assertEquals("Should return an empty list", 0, list.size());
+
+        //add words
+        singleton.addWordToLearnSession(midDictObj1, cal.getTime());
+        singleton.addWordToLearnSession(midDictObj3, cal.getTime());
+        list = singleton.getListOfObjectsToLearn(cal.getTime());
+        Assert.assertEquals("Should return 2 elements", 2, list.size());
+        for (Global.Couple<Long, Integer> c : list)
+            Assert.assertTrue("Should contain these ids", c.val1 == midDictObj1 || c.val1 == midDictObj3);
+
+        //add word to another date
+        cal.add(Calendar.DAY_OF_YEAR, 1);
+        singleton.addWordToLearnSession(midDictObj2, cal.getTime());
+        list = singleton.getListOfObjectsToLearn(cal.getTime());
+        Assert.assertEquals("Should return 1 element", 1, list.size());
+        Assert.assertEquals("Should contain this id", midDictObj2, (long)list.get(0).val1);
     }
 
     @Test
