@@ -175,8 +175,6 @@ public class MnemoMemoryManager extends IntentService {
         //for each older date than today in memory manager table, update next learning date and delay of objects
         //we take a depth of 7 days, will change it in the future
         //@TODO: change the way we fix the depth in days, should be persisted in memory
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DAY_OF_YEAR, -7);
-        MemoryManagerSQLManager.getInstance().DelayLearningSessionFromDate(cal.getTime());
+        MemoryManagerSQLManager.getInstance().DelayLearningSessionFromDate(7);
     }
 }

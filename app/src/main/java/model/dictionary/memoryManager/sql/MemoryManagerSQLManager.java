@@ -137,12 +137,13 @@ public class MemoryManagerSQLManager extends BaseSQLManager{
      * @return vector of longMemoryPhaseObject
      */
     public Vector<Couple<Long, Integer>> getListOfObjectsToLearn(Date date){
+        if (date == null)
+            return null;
         return getListOfObjectsToLearn(GeneralTools.getSQLDate(date));
     }
 
     public Vector<Couple<Long, Integer>> getListOfObjectsToLearn(String date){
         Vector<Couple<Long, Integer>> res = new Vector<>();
-
 
         String SQL_TODAYLIST = "SELECT * FROM " + MemoryManagerContract.MemoryManager.TABLE_NAME
                 + " WHERE " + MemoryManagerContract.MemoryManager.DATE + " = '" + date + "'";
@@ -205,51 +206,31 @@ public class MemoryManagerSQLManager extends BaseSQLManager{
         return res;
     }
 
-
     /**
-     * Returne a list of Couple(long-id of dictionary object, int-delay) for a given date
-     * @param date date of learning session
-     * @return Vector of Couple<long, int>
+     * Retrieve all missed learning session(from today to pastDate), update dely and nextLearningSession to today
+     * @param daysInThePast Number of days in the past to check
+     * @return return the number of object updated
      */
-    public Vector<Couple> getListOfPastListToLearnFromDate(Date date){
-        if (date == null)
-            return null;
-
-        Vector<Couple> res = new Vector<>();
-        String sql = "SELECT * FROM " + MemoryManagerContract.MemoryManager.TABLE_NAME
-                + " WHERE " + MemoryManagerContract.MemoryManager.DATE + " = '" + GeneralTools.getSQLDate(date) + "'";
-
-        Cursor cursor = rawQuery(sql, null);
-
-        if (!cursor.moveToFirst())
-            return null;
-
-        do {
-            res.add(new Couple(GeneralTools.getLongElement(cursor, MemoryManagerContract.MemoryManager.DICTIONARYOBJECTID),
-                    GeneralTools.getLongElement(cursor, MemoryManagerContract.MemoryManager.DAYS_OF_DELAY)));
-        }
-        while(cursor.moveToNext());
-
-        cursor.close();
-
-        return res;
-    }
-
-    /**
-     * Delay the past list of learning session to today, updating delays, and next learning date of all impacted objects
-     * @param pastDate date in the past from wich we update entries delay
-     */
-    public int DelayLearningSessionFromDate(Date pastDate){
-        String pastDateStr = GeneralTools.getSQLDate(pastDate);
+    public int DelayLearningSessionFromDate(int daysInThePast){
         Calendar cal = Calendar.getInstance();
         String today = GeneralTools.getSQLDate(Calendar.getInstance().getTime());
+        int nbUpdated = 0;
+        int incr = 0;
+
+        if (daysInThePast < 0)
+            daysInThePast *= -1;
+        if (daysInThePast == 0)
+            return nbUpdated;
 
         int delay = 1;
         cal.add(Calendar.DAY_OF_YEAR, -1);
 
-        while (GeneralTools.getSQLDate(cal.getTime()).compareTo(pastDateStr) != 0){
+        while (incr++ < daysInThePast){
+            Calendar pastDate = Calendar.getInstance();
+            pastDate.add(Calendar.DAY_OF_YEAR, -1*incr);
+
             //for each day before, increment the delay
-            Vector<Couple> list = getListOfPastListToLearnFromDate(cal.getTime());
+            Vector<Couple<Long, Integer>> list = getListOfObjectsToLearn(pastDate.getTime());
             // maybe there is nothing at this date
             if (list == null) {
                 cal.add(Calendar.DAY_OF_YEAR, -1);
@@ -258,16 +239,16 @@ public class MemoryManagerSQLManager extends BaseSQLManager{
             }
             // update each entry in memory manager, update the delay and the new date
             //couple contains val1 => dictionaryObjectID, val2 => delay
-            for (Couple c: list) {
+            for (Couple <Long, Integer> c: list) {
                 ContentValues val = new ContentValues();
                 val.put(MemoryManagerContract.MemoryManager.DATE, today);
-                val.put(MemoryManagerContract.MemoryManager.DAYS_OF_DELAY, (int)c.val2 + delay);
-                update(val, MemoryManagerContract.MemoryManager.TABLE_NAME, MemoryManagerContract.MemoryManager._ID + " = " + (long)c.val1);
+                val.put(MemoryManagerContract.MemoryManager.DAYS_OF_DELAY, c.val2 + delay);
+                nbUpdated += update(val, MemoryManagerContract.MemoryManager.TABLE_NAME, MemoryManagerContract.MemoryManager.DICTIONARYOBJECTID + " = " + c.val1);
             }
 
             //finally, update all entries with this old next date to the new one
-            // update next learning date in memory nonitoring
-            String where = MemoryManagerContract.MemoryMonitoring.NEXT_LEARNT + " = '" + GeneralTools.getSQLDate(pastDate) + "'";
+            // update next learning date in memory monitoring
+            String where = MemoryManagerContract.MemoryMonitoring.NEXT_LEARNT + " = '" + GeneralTools.getSQLDate(pastDate.getTime()) + "'";
             ContentValues val = new ContentValues();
             val.put(MemoryManagerContract.MemoryMonitoring.NEXT_LEARNT, today);
             update(val, MemoryManagerContract.MemoryMonitoring.TABLE_NAME, where);
@@ -276,7 +257,7 @@ public class MemoryManagerSQLManager extends BaseSQLManager{
             cal.add(Calendar.DAY_OF_YEAR, -1);
             ++delay;
         }
-        return 0;
+        return nbUpdated;
     }
 
 }

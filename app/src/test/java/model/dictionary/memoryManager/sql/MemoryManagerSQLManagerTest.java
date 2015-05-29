@@ -1,5 +1,6 @@
 package model.dictionary.memoryManager.sql;
 
+import android.content.ContentValues;
 import android.content.Context;
 
 import org.junit.After;
@@ -11,6 +12,7 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import java.net.ContentHandler;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -52,9 +54,10 @@ public class MemoryManagerSQLManagerTest {
 
         DictionaryObject.MemoryMonitoringObject one = singleton.createNewMemoryMonitoringObject();
         DictionaryObject.MemoryMonitoringObject two = singleton.createNewMemoryMonitoringObject();
+        DictionaryObject.MemoryMonitoringObject three = singleton.createNewMemoryMonitoringObject();
         midDictObj1 = singleton.createDictionaryObject(midDictionary, one.getID());
         midDictObj2 = singleton.createDictionaryObject(midDictionary, two.getID());
-        midDictObj3 = singleton.createDictionaryObject(midDictionary, two.getID());
+        midDictObj3 = singleton.createDictionaryObject(midDictionary, three.getID());
     }
 
     @After
@@ -220,32 +223,70 @@ public class MemoryManagerSQLManagerTest {
     }
 
     @Test
-    public void testGetListOfPastListToLearnFromDate() throws Exception {
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DAY_OF_YEAR, 3);
-
-        //add 3 words
-        Vector<Global.Couple<Long,Integer>> list = singleton.getListOfObjectsToLearn(cal.getTime());
-        Assert.assertEquals("Should return an empty list", 0, list.size());
-
-        //add words
-        singleton.addWordToLearnSession(midDictObj1, cal.getTime());
-        singleton.addWordToLearnSession(midDictObj3, cal.getTime());
-        list = singleton.getListOfObjectsToLearn(cal.getTime());
-        Assert.assertEquals("Should return 2 elements", 2, list.size());
-        for (Global.Couple<Long, Integer> c : list)
-            Assert.assertTrue("Should contain these ids", c.val1 == midDictObj1 || c.val1 == midDictObj3);
-
-        //add word to another date
-        cal.add(Calendar.DAY_OF_YEAR, 1);
-        singleton.addWordToLearnSession(midDictObj2, cal.getTime());
-        list = singleton.getListOfObjectsToLearn(cal.getTime());
-        Assert.assertEquals("Should return 1 element", 1, list.size());
-        Assert.assertEquals("Should contain this id", midDictObj2, (long)list.get(0).val1);
-    }
-
-    @Test
     public void testDelayLearningSessionFromDate() throws Exception {
 
+        //initially
+        Calendar today = Calendar.getInstance();
+        Calendar todayMinusOne = Calendar.getInstance();
+        todayMinusOne.add(Calendar.DAY_OF_YEAR, -1);
+        Calendar todayMinusThree = Calendar.getInstance();
+        todayMinusThree.add(Calendar.DAY_OF_YEAR, -3);
+        Calendar todayMinusSeven = Calendar.getInstance();
+        todayMinusSeven.add(Calendar.DAY_OF_YEAR, -7);
+
+        int result = singleton.DelayLearningSessionFromDate(0);
+        Assert.assertEquals("We should not have any elements updated", 0, result);
+
+        //update some dates, in the past
+        //first object set to yesterday
+        DictionaryObject dictObj = DictionarySQLManager.getInstance().getFullObjectFromID(midDictObj1);
+        //update memory monitoring object
+        String where = MemoryManagerContract.MemoryMonitoring._ID + " = '" + dictObj.getMemoryMonitoringID() + "'";
+        ContentValues value = new ContentValues();
+        value.put(MemoryManagerContract.MemoryMonitoring.NEXT_LEARNT, GeneralTools.getSQLDate(todayMinusOne.getTime()));
+        long resUpd = MnemoDBHelper.getInstance(Robolectric.getShadowApplication().getApplicationContext()).getWritableDatabase().update(MemoryManagerContract.MemoryMonitoring.TABLE_NAME, value, where, null);
+        Assert.assertEquals("Just check that update is successfull", 1, resUpd);
+        //add word to past learn session
+        resUpd = singleton.addWordToLearnSession(midDictObj1, todayMinusOne.getTime());
+        Assert.assertTrue("Just check that update is successfull", resUpd > 0);
+
+        result = singleton.DelayLearningSessionFromDate(1);
+        Assert.assertEquals("We should update one element", 1, result);
+        //check that today, we now have the id back
+        Vector<Global.Couple<Long, Integer>> list = singleton.getListOfObjectsToLearn(today.getTime());
+        Assert.assertTrue("Check ids", list.size() == 1 && list.get(0).val1 == midDictObj1 && list.get(0).val2 == 1);
+        MnemoDBHelper.getInstance(Robolectric.getShadowApplication().getApplicationContext()).getWritableDatabase().delete(MemoryManagerContract.MemoryManager.TABLE_NAME, MemoryManagerContract.MemoryManager.DICTIONARYOBJECTID + " = " + midDictObj1, null);
+
+        //check with three words at different dates
+        //word 1
+        dictObj = DictionarySQLManager.getInstance().getFullObjectFromID(midDictObj1);
+        where = MemoryManagerContract.MemoryMonitoring._ID + " = '" + dictObj.getMemoryMonitoringID() + "'";
+        value = new ContentValues();
+        value.put(MemoryManagerContract.MemoryMonitoring.NEXT_LEARNT, GeneralTools.getSQLDate(todayMinusOne.getTime()));
+        MnemoDBHelper.getInstance(Robolectric.getShadowApplication().getApplicationContext()).getWritableDatabase().update(MemoryManagerContract.MemoryMonitoring.TABLE_NAME, value, where, null);
+        singleton.addWordToLearnSession(midDictObj1, todayMinusOne.getTime());
+        //word 2
+        dictObj = DictionarySQLManager.getInstance().getFullObjectFromID(midDictObj2);
+        where = MemoryManagerContract.MemoryMonitoring._ID + " = '" + dictObj.getMemoryMonitoringID() + "'";
+        value = new ContentValues();
+        value.put(MemoryManagerContract.MemoryMonitoring.NEXT_LEARNT, GeneralTools.getSQLDate(todayMinusThree.getTime()));
+        MnemoDBHelper.getInstance(Robolectric.getShadowApplication().getApplicationContext()).getWritableDatabase().update(MemoryManagerContract.MemoryMonitoring.TABLE_NAME, value, where, null);
+        singleton.addWordToLearnSession(midDictObj2, todayMinusThree.getTime());
+        //word 3
+        dictObj = DictionarySQLManager.getInstance().getFullObjectFromID(midDictObj3);
+        where = MemoryManagerContract.MemoryMonitoring._ID + " = '" + dictObj.getMemoryMonitoringID() + "'";
+        value = new ContentValues();
+        value.put(MemoryManagerContract.MemoryMonitoring.NEXT_LEARNT, GeneralTools.getSQLDate(todayMinusSeven.getTime()));
+        MnemoDBHelper.getInstance(Robolectric.getShadowApplication().getApplicationContext()).getWritableDatabase().update(MemoryManagerContract.MemoryMonitoring.TABLE_NAME, value, where, null);
+        singleton.addWordToLearnSession(midDictObj3, todayMinusSeven.getTime());
+
+
+        result = singleton.DelayLearningSessionFromDate(7);
+        Assert.assertEquals("We should update three elements", 3, result);
+        //check that today, we now have the id back
+        list = singleton.getListOfObjectsToLearn(today.getTime());
+        Assert.assertTrue("Check ids", list.size() == 3);
+
+        //@todo check ids and delay
     }
 }
