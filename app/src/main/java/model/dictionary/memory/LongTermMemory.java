@@ -5,7 +5,7 @@ import android.content.Context;
 import java.util.Calendar;
 import java.util.Date;
 
-import model.dictionary.dictionary.DictionaryObject;
+import model.dictionary.dictionaryObject.DictionaryObject;
 import model.dictionary.memoryManager.sql.MemoryManagerSQLManager;
 
 /**

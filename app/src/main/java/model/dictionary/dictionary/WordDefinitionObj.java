@@ -5,13 +5,15 @@ import android.database.Cursor;
 
 import model.dictionary.dictionary.sql.DictionaryContractBase;
 import model.dictionary.dictionary.sql.WordContract;
+import model.dictionary.dictionaryObject.DictionaryObject;
+import model.dictionary.dictionaryObject.DictionaryObjectType;
 import model.dictionary.tools.GeneralTools;
 
 /**
  * Created by pietro on 02/02/15.
  *
  */
-public class WordDefinitionObj extends DictionaryObject{
+public class WordDefinitionObj extends DictionaryObject {
 
     private long mID;
     private String m_sWord; // word

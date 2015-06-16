@@ -11,7 +11,7 @@ import android.support.v4.app.TaskStackBuilder;
 import java.util.Calendar;
 import java.util.Vector;
 
-import model.dictionary.dictionary.DictionaryObject;
+import model.dictionary.dictionaryObject.DictionaryObject;
 import model.dictionary.dictionary.sql.DictionarySQLManager;
 import model.dictionary.memory.LongTermMemory;
 import model.dictionary.memoryManager.sql.MemoryManagerSQLManager;

@@ -1,4 +1,4 @@
-package model.dictionary.dictionary;
+package model.dictionary.dictionaryObject;
 
 import android.content.ContentValues;
 import android.database.Cursor;

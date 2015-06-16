@@ -10,8 +10,8 @@ import java.util.Map;
 import java.util.Vector;
 
 import model.dictionary.Global;
-import model.dictionary.dictionary.DictionaryObject;
-import model.dictionary.dictionary.DictionaryObject.MemoryMonitoringObject;
+import model.dictionary.dictionaryObject.DictionaryObject;
+import model.dictionary.dictionaryObject.DictionaryObject.MemoryMonitoringObject;
 import model.dictionary.dictionary.sql.DictionaryContractBase;
 import model.dictionary.dictionaryObject.sql.DictionaryObjectContract;
 import model.dictionary.tools.BaseSQLManager;
