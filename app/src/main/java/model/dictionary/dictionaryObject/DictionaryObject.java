@@ -1,4 +1,4 @@
-package model.dictionary.dictionary;
+package model.dictionary.dictionaryObject;
 
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -140,6 +140,7 @@ public class DictionaryObject {
         public int mFirstPeriod;
         public int mPeriodIncrement;
         public long mNextPhaseID = -1;
+        public long mID;
 
         public MemoryPhaseObject(String phaseName, int durationPhase, int firstPeriod, int periodIncrement, long nextPhaseID){
             mPhaseName = phaseName;
@@ -170,11 +171,11 @@ public class DictionaryObject {
         public MemoryMonitoringObject(){
             Calendar now = Calendar.getInstance();
             mMemoryPhaseID = mIDFirstPhase;
-            mLastLearnt = now.getTime();
+            mLastLearnt = GeneralTools.getDateFromSQLDate(GeneralTools.getSQLDate(now.getTime()));
             mDateAdded = mLastLearnt;
             mBeginningOfMP = mLastLearnt;
             now.add(Calendar.DAY_OF_YEAR,mMemoryPhaseObjectMap.get(mIDFirstPhase).mFirstPeriod);
-            mNextLearnt = now.getTime();
+            mNextLearnt = GeneralTools.getDateFromSQLDate(GeneralTools.getSQLDate(now.getTime()));
             mDaysBetween = mMemoryPhaseObjectMap.get(mIDFirstPhase).mFirstPeriod;
         }
 
@@ -195,8 +196,8 @@ public class DictionaryObject {
             Calendar next = Calendar.getInstance();
             next.add(Calendar.DAY_OF_YEAR, mDaysBetween);
 
-            mLastLearnt = Calendar.getInstance().getTime();
-            mNextLearnt = next.getTime();
+            mLastLearnt = GeneralTools.getDateFromSQLDate(GeneralTools.getSQLDate(Calendar.getInstance().getTime()));
+            mNextLearnt = GeneralTools.getDateFromSQLDate(GeneralTools.getSQLDate(next.getTime()));
             mLearningSessionsModified = true;
         }
 
@@ -237,6 +238,10 @@ public class DictionaryObject {
 
         public String getMemoryPhaseName(){
             return DictionaryObject.mMemoryPhaseObjectMap.get(mMemoryPhaseID).mPhaseName;
+        }
+
+        public long getMemoryPhaseID(){
+            return mMemoryPhaseID;
         }
 
         public Date getLastLearnt(){

@@ -3,7 +3,7 @@ package com.mnemo.pietro.mnemosyne;
 import android.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 
@@ -13,22 +13,22 @@ import com.mnemo.pietro.mnemosyne.fragments.library.LibraryFragment;
 
 import model.dictionary.Global;
 import model.dictionary.catalogue.sql.CatalogueSQLManager;
-import model.dictionary.dictionary.DictionaryObject;
+import model.dictionary.dictionaryObject.DictionaryObject;
 import model.dictionary.dictionary.sql.DictionarySQLManager;
 import model.dictionary.memoryManager.sql.MemoryManagerSQLManager;
 import model.dictionary.tools.MnemoDBHelper;
 
 //EN COURS
-//@TODO: manager l'initialisation/destruction de certaines ressources(dbhelpers, ...) dans MnemoCentral, rationaliser l'utilissation des dbhelpers
+//@TODO: implementer un rappel basé sur l'alarme
 
 //A FAIRE
-//@TODO: implementer un rappel basé sur l'alarme
+//@TODO: manager l'initialisation/destruction de certaines ressources(dbhelpers, ...) dans MnemoCentral, rationaliser l'utilissation des dbhelpers
 //@TODO: implementer la modification des entites
 //@TODO: modifier l'ecran d'affichage des mot a réviser, avec couleurs pour noter l'importance(jours de retard)
 
 
 public class MnemoCentral
-        extends ActionBarActivity {
+        extends AppCompatActivity {
 
     public static final String EXTRA_ALERT_DATE = "com.mnemo.pietro.ALERT_DATE";
 
@@ -111,7 +111,8 @@ public class MnemoCentral
      * @return {Global.SUCCESS} if successful
      */
     private int ShutdownSystem(){
-        MnemoDBHelper.getInstance(getApplicationContext()).close();
+
+        MnemoDBHelper.release();
         return Global.SUCCESS;
     }
 }

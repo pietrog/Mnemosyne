@@ -6,6 +6,7 @@ import android.provider.BaseColumns;
 
 import model.dictionary.Global;
 import model.dictionary.dictionary.sql.DictionaryContractBase;
+import model.dictionary.dictionaryObject.sql.DictionaryObjectContract;
 
 
 /**
@@ -55,9 +56,10 @@ public class MemoryManagerContract {
     public static final String SQL_CREATE_MEMORY_MANAGER_TABLE =
             "CREATE TABLE " + MemoryManager.TABLE_NAME + "( "
                     + MemoryManager._ID + Global.INTEGER_TYPE + " PRIMARY KEY" + Global.COMMASEP
-                    + MemoryManager.DATE + Global.TEXT_TYPE + " UNIQUE " + Global.COMMASEP
-                    + MemoryManager.DICTIONARYOBJECTID + Global.INTEGER_TYPE + " REFERENCES " + DictionaryContractBase.DictionaryBase.TABLE_NAME + " ON DELETE CASCADE " + Global.COMMASEP
-                    + MemoryManager.DAYS_OF_DELAY + Global.INTEGER_TYPE + " DEFAULT 0 "
+                    + MemoryManager.DATE + Global.TEXT_TYPE + Global.COMMASEP
+                    + MemoryManager.DICTIONARYOBJECTID + Global.INTEGER_TYPE + " REFERENCES " + DictionaryObjectContract.DictionaryObject.TABLE_NAME + "(" + DictionaryObjectContract.DictionaryObject._ID + ") ON DELETE CASCADE " + Global.COMMASEP
+                    + MemoryManager.DAYS_OF_DELAY + Global.INTEGER_TYPE + " DEFAULT 0 " + Global.COMMASEP
+                    + " UNIQUE (" + MemoryManager.DICTIONARYOBJECTID + "," + MemoryManager.DATE +") ON CONFLICT ABORT"
                     + ")"
             ;
 
@@ -69,7 +71,7 @@ public class MemoryManagerContract {
                     + MemoryPhase.FIRST_PERIOD + Global.INTEGER_TYPE + Global.COMMASEP
                     + MemoryPhase.PERIOD_INCREMENT + Global.INTEGER_TYPE + Global.COMMASEP
                     + MemoryPhase.NEXT_PHASE_ID +  Global.INTEGER_TYPE + Global.COMMASEP
-                    + " FOREIGN KEY(" + MemoryPhase.NEXT_PHASE_ID + ") REFERENCES " + MemoryPhase.TABLE_NAME //+ "(" + MemoryManagerContract.MemoryPhase._ID+ ")"
+                    + " FOREIGN KEY(" + MemoryPhase.NEXT_PHASE_ID + ") REFERENCES " + MemoryPhase.TABLE_NAME + "(" + MemoryManagerContract.MemoryPhase._ID+ ")"
                     + ")"
             ;
 
@@ -82,19 +84,19 @@ public class MemoryManagerContract {
                     + MemoryMonitoring.MEMORY_PHASE_ID + Global.INTEGER_TYPE + Global.COMMASEP
                     + MemoryMonitoring.BEGINING_OF_MP + Global.TEXT_TYPE + Global.COMMASEP
                     + MemoryMonitoring.DAYS_BETWEEN + Global.INTEGER_TYPE + Global.COMMASEP
-                    + " FOREIGN KEY(" + MemoryMonitoring.MEMORY_PHASE_ID + ") REFERENCES " + MemoryPhase.TABLE_NAME //+ "(" + MemoryManagerContract.MemoryPhase._ID+ ")"
+                    + " FOREIGN KEY(" + MemoryMonitoring.MEMORY_PHASE_ID + ") REFERENCES " + MemoryPhase.TABLE_NAME + "(" + MemoryManagerContract.MemoryPhase._ID+ ")"
                     + ")";
 
 
     public static void populateDefaultMemoryPhase(SQLiteDatabase db){
         ContentValues value = new ContentValues();
-        value.put(MemoryPhase.PHASE_NAME, "UPKEEPING");
+        value.put(MemoryPhase.PHASE_NAME, Global.THIRD_PHASE_NAME);
         value.put(MemoryPhase.DURATION_PHASE, 0);
         value.put(MemoryPhase.FIRST_PERIOD, 62);
         value.put(MemoryPhase.PERIOD_INCREMENT, 0);
         long id = db.insert(MemoryPhase.TABLE_NAME, null, value);
         value = new ContentValues();
-        value.put(MemoryPhase.PHASE_NAME, "STORING");
+        value.put(MemoryPhase.PHASE_NAME, Global.SECOND_PHASE_NAME);
         value.put(MemoryPhase.DURATION_PHASE, 95);
         value.put(MemoryPhase.FIRST_PERIOD, 5);
         value.put(MemoryPhase.PERIOD_INCREMENT, 1);

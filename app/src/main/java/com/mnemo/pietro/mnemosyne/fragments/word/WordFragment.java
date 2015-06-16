@@ -11,7 +11,7 @@ import android.widget.ImageButton;
 import com.mnemo.pietro.mnemosyne.MnemoMemoryManager;
 import com.mnemo.pietro.mnemosyne.R;
 
-import model.dictionary.dictionary.DictionaryObject;
+import model.dictionary.dictionaryObject.DictionaryObject;
 import model.dictionary.dictionary.WordDefinitionObj;
 import model.dictionary.dictionary.sql.DictionarySQLManager;
 import model.dictionary.tools.GeneralTools;

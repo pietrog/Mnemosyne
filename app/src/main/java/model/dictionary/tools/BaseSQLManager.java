@@ -17,10 +17,12 @@ import model.dictionary.Global;
  */
 public abstract class BaseSQLManager {
 
+    private SQLiteOpenHelper mDBHelper;
     private Context mContext;
 
 
     protected BaseSQLManager(Context context){
+        mDBHelper = MnemoDBHelper.getInstance(context);
         mContext = context;
     }
 
@@ -55,6 +57,10 @@ public abstract class BaseSQLManager {
      * @return row affected
      */
     protected final int remove(long[] listIDs, String tableName){
+        if (listIDs == null)
+            return Global.BAD_PARAMETER;
+        if (listIDs.length == 0)
+            return 0;
         String sqlclause = BaseColumns._ID + " in (" ;
         for (long id: listIDs )
             sqlclause += id + ",";

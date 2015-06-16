@@ -15,6 +15,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Vector;
@@ -28,6 +29,7 @@ import model.dictionary.Global;
  * Contains some general usefull fonctions
  */
 public class GeneralTools {
+
 
     /**
      * Return a JSON object built from a json file
@@ -99,10 +101,10 @@ public class GeneralTools {
      * @param filename file name to delete
      * @return {Global.SUCCESS} is successful, {Global.FAILURE} otherwise
      */
-    public static int deleteFile(String filename){
+    /*public static int deleteFile(String filename){
         File file = new File(filename);
         return file.delete() ? Global.SUCCESS : Global.FAILURE;
-    }
+    }*/
 
     /**
      * Return a string containing a formatted date (template is {Global.FORMAT_SQL_DATE})
@@ -182,5 +184,9 @@ public class GeneralTools {
         if (cursor.isNull(cursor.getColumnIndex(column)))
             return -1;
         return cursor.getLong(cursor.getColumnIndex(column));
+    }
+
+    public static Date getNowDate(){
+        return Calendar.getInstance().getTime();
     }
 }

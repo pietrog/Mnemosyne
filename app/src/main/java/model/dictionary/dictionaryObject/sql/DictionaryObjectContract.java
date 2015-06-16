@@ -23,7 +23,7 @@ public class DictionaryObjectContract {
             "CREATE TABLE " + DictionaryObject.TABLE_NAME + " ( "
                     + DictionaryObject._ID + " INTEGER PRIMARY KEY" + Global.COMMASEP
                     + DictionaryObject.DICTIONARYID + Global.INTEGER_TYPE + " REFERENCES "+ DictionaryContractBase.DictionaryBase.TABLE_NAME + "(" + DictionaryContractBase.DictionaryBase._ID + ") ON DELETE CASCADE " + Global.COMMASEP
-                    + DictionaryObject.MEMORY_MONITORING_ID + Global.INTEGER_TYPE + " REFERENCES "+ MemoryManagerContract.MemoryMonitoring.TABLE_NAME +" ON DELETE CASCADE"
+                    + DictionaryObject.MEMORY_MONITORING_ID + Global.INTEGER_TYPE + " REFERENCES "+ MemoryManagerContract.MemoryMonitoring.TABLE_NAME +"(" + MemoryManagerContract.MemoryMonitoring._ID + ") ON DELETE CASCADE"
                     + " )";
 
     public static final String SQL_DROP_TABLE = "DROP TABLE " + DictionaryObject.TABLE_NAME;

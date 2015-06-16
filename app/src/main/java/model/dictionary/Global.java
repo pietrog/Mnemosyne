@@ -18,6 +18,7 @@ public class Global {
     public static final int ALREADY_EXISTS = 4;
     public static final int NOT_FOUND = 5;
     public static final int OUT_OF_BOUNDS = 6;
+    public static final int BAD_PARAMETER = 7;
 
 
     public static final String TEXT_TYPE = " TEXT";
@@ -31,6 +32,8 @@ public class Global {
      */
     // this is the first phase, phase name should be a global constant variable because we use it for dictionary object creation
     public static final String FIRST_PHASE_NAME = "ENCODING";
+    public static final String SECOND_PHASE_NAME = "STORING";
+    public static final String THIRD_PHASE_NAME = "UPKEEPING";
 
 
     public static String getLogFromResult(int result){
@@ -44,9 +47,9 @@ public class Global {
             case Global.FAILURE:
                 return " FAILURE ";
             case Global.OUT_OF_BOUNDS:
-                return "OUT OF BOUNDS";
+                return " OUT OF BOUNDS ";
             case Global.NOT_AVAILABLE:
-                return "NOT_AVAILABLE";
+                return " NOT AVAILABLE ";
             default:
                 return " CODE(" + result+") unknown ";
 

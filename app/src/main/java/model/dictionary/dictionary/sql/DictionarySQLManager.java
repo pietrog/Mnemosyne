@@ -6,9 +6,11 @@ import android.database.Cursor;
 
 import java.util.Vector;
 
-import model.dictionary.dictionary.DictionaryObject;
+import model.dictionary.Global;
+import model.dictionary.dictionaryObject.DictionaryObject;
 import model.dictionary.dictionaryObject.sql.DictionaryObjectContract;
 import model.dictionary.memoryManager.sql.MemoryManagerContract;
+import model.dictionary.memoryManager.sql.MemoryManagerSQLManager;
 import model.dictionary.tools.BaseSQLManager;
 
 import model.dictionary.Global.Couple;
@@ -61,16 +63,21 @@ public class DictionarySQLManager extends BaseSQLManager{
         return rawQuery(sql, null);
     }
 
+    /**
+     * Get a cursor containing a list of DictionaryObject, built from a list of id given in parameter
+     * @param list list of dictionary object ids, as couple(long, integer), first is the id, second one represent a delay in number of days
+     * @return cursor containing all dictionariy objects from the list
+     */
     public Cursor getDictionaryObjectsFromLearningList(Vector<Couple<Long, Integer>> list){
+        if (list == null || list.size() == 0)
+            return null;
+
         String sql = "SELECT * FROM " + WordContract.Word.TABLE_NAME
                 + " WHERE " + DictionaryContractBase.DictionaryBase._ID + " IN (" ;
 
-
-        if (list != null) {
-            for (Couple c : list)
-                sql += c.val1 + ", ";
-            sql = sql.substring(0, sql.length() - 2);
-        }
+        for (Couple c : list)
+            sql += c.val1 + ", ";
+        sql = sql.substring(0, sql.length() - 2);
         sql += ")";
 
         return rawQuery(sql, null);
@@ -85,8 +92,15 @@ public class DictionarySQLManager extends BaseSQLManager{
      */
     public long addNewWord(long dictionaryObjectID, String word, String definition){
 
+        //create the memory monitoring object part
+        DictionaryObject.MemoryMonitoringObject monitor = MemoryManagerSQLManager.getInstance().createNewMemoryMonitoringObject();
+
         if (dictionaryObjectID < 0)
-            return -1;
+            return Global.BAD_PARAMETER;
+
+        if (word == null || word.length() == 0)
+            return  Global.BAD_PARAMETER;
+
         ContentValues val = new ContentValues();
         val.put(WordContract.Word.DICTIONARYOBJECTID, dictionaryObjectID);
         val.put(WordContract.Word.WORD, word);
@@ -100,7 +114,7 @@ public class DictionarySQLManager extends BaseSQLManager{
      * @return number of affected rows
      */
     public int remove(long[] listIDs){
-        return remove(listIDs, DictionaryObjectContract.DictionaryObject.TABLE_NAME);
+        return remove(listIDs, DictionaryContractBase.DictionaryBase.TABLE_NAME);
     }
 
     /**
@@ -137,6 +151,10 @@ public class DictionarySQLManager extends BaseSQLManager{
      * @return new row id
      */
     public long addDictionaryInCatalogue(long catalogueID, String name, String description){
+        if (name == null || description == null)
+            return Global.BAD_PARAMETER;
+        if (name.length() < 3)
+            return Global.BAD_PARAMETER;
         ContentValues val = new ContentValues();
         val.put(DictionaryContractBase.DictionaryBase.NAME, name);
         val.put(DictionaryContractBase.DictionaryBase.DESCRIPTION, description);

@@ -2,7 +2,7 @@ package model.dictionary.memory;
 
 import java.util.Date;
 
-import model.dictionary.dictionary.DictionaryObject;
+import model.dictionary.dictionaryObject.DictionaryObject;
 
 /**
  * Created by pietro on 30/03/15.
