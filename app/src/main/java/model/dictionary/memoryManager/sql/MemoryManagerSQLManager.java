@@ -6,7 +6,6 @@ import android.database.Cursor;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.Map;
 import java.util.Vector;
 
@@ -15,6 +14,7 @@ import model.dictionary.dictionaryObject.DictionaryObject;
 import model.dictionary.dictionaryObject.DictionaryObject.MemoryMonitoringObject;
 import model.dictionary.dictionary.sql.DictionaryContractBase;
 import model.dictionary.dictionaryObject.sql.DictionaryObjectContract;
+import model.dictionary.memoryManager.MemoryManager;
 import model.dictionary.tools.BaseSQLManager;
 import model.dictionary.tools.GeneralTools;
 import model.dictionary.tools.Logger;
@@ -67,14 +67,14 @@ public class MemoryManagerSQLManager extends BaseSQLManager{
      * @param memoryPhaseMap map to fill
      * @return {Global.SUCCESS} if successful {Global.FAILURE} otherwise
      */
-    public int initMemoryPhaseMap(Map<Long, DictionaryObject.MemoryPhaseObject> memoryPhaseMap){
+    public int initMemoryPhaseMap(Map<Long, MemoryManager.MemoryPhaseObject> memoryPhaseMap){
         String sql = "SELECT * FROM " + MemoryManagerContract.MemoryPhase.TABLE_NAME;
         Cursor cursor = rawQuery(sql, null);
         if (!cursor.moveToFirst())
             return Global.FAILURE;
 
         do {
-            DictionaryObject.MemoryPhaseObject current = new DictionaryObject.MemoryPhaseObject(
+            MemoryManager.MemoryPhaseObject current = new MemoryManager.MemoryPhaseObject(
                     GeneralTools.getStringElement(cursor, MemoryManagerContract.MemoryPhase.PHASE_NAME),
                     (int)GeneralTools.getLongElement(cursor, MemoryManagerContract.MemoryPhase.DURATION_PHASE),
                     (int)GeneralTools.getLongElement(cursor, MemoryManagerContract.MemoryPhase.FIRST_PERIOD),

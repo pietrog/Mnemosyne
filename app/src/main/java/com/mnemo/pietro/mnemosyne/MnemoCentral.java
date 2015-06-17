@@ -1,7 +1,6 @@
 package com.mnemo.pietro.mnemosyne;
 
 import android.app.FragmentTransaction;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -13,8 +12,8 @@ import com.mnemo.pietro.mnemosyne.fragments.library.LibraryFragment;
 
 import model.dictionary.Global;
 import model.dictionary.catalogue.sql.CatalogueSQLManager;
-import model.dictionary.dictionaryObject.DictionaryObject;
 import model.dictionary.dictionary.sql.DictionarySQLManager;
+import model.dictionary.memoryManager.MemoryManager;
 import model.dictionary.memoryManager.sql.MemoryManagerSQLManager;
 import model.dictionary.tools.MnemoDBHelper;
 
@@ -102,7 +101,7 @@ public class MnemoCentral
         CatalogueSQLManager.getInstance(getApplicationContext());
         DictionarySQLManager.getInstance(getApplicationContext());
         MemoryManagerSQLManager.getInstance(getApplicationContext());
-        DictionaryObject.initMemoryPhaseMap();
+        MemoryManager.initMemoryPhaseMap();
         return Global.SUCCESS;
     }
 

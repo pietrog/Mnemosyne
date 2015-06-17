@@ -23,6 +23,7 @@ import model.dictionary.Global;
 import model.dictionary.catalogue.sql.CatalogueSQLManager;
 import model.dictionary.dictionaryObject.DictionaryObject;
 import model.dictionary.dictionary.sql.DictionarySQLManager;
+import model.dictionary.memoryManager.MemoryManager;
 import model.dictionary.tools.GeneralTools;
 import model.dictionary.tools.MnemoDBHelper;
 
@@ -44,7 +45,7 @@ public class MemoryManagerSQLManagerTest {
         singleton = MemoryManagerSQLManager.getInstance(context);
         CatalogueSQLManager.getInstance(context);
         DictionarySQLManager.getInstance(context);
-        DictionaryObject.initMemoryPhaseMap();
+        MemoryManager.initMemoryPhaseMap();
 
         //create the catalogue
         midCatalogue = CatalogueSQLManager.getInstance().add("CatalogueTest", "DescTest");
@@ -67,14 +68,14 @@ public class MemoryManagerSQLManagerTest {
 
     @Test
     public void testInitMemoryPhaseMap() throws Exception {
-        Map<Long, DictionaryObject.MemoryPhaseObject> phaseMap = new HashMap<>();
+        Map<Long, MemoryManager.MemoryPhaseObject> phaseMap = new HashMap<>();
         singleton.initMemoryPhaseMap(phaseMap);
         Assert.assertTrue("Should contain 3 phases", phaseMap.size() == 3);
 
         long idPhase2 = -999, idPhase3 = -999;
 
         for(Long key: phaseMap.keySet()){
-            DictionaryObject.MemoryPhaseObject obj = phaseMap.get(key);
+            MemoryManager.MemoryPhaseObject obj = phaseMap.get(key);
             if (obj.mPhaseName.compareTo(Global.FIRST_PHASE_NAME) == 0){
                 Assert.assertTrue("Duration phase should be equal to", obj.mDurationPhase == 5);
                 Assert.assertTrue("Duration phase should be equal to", obj.mFirstPeriod == 1);
@@ -94,7 +95,7 @@ public class MemoryManagerSQLManagerTest {
             }
         }
 
-        for(DictionaryObject.MemoryPhaseObject obj: phaseMap.values()){
+        for(MemoryManager.MemoryPhaseObject obj: phaseMap.values()){
             if (obj.mPhaseName.compareTo(Global.FIRST_PHASE_NAME) == 0)
                 Assert.assertEquals("Phase 1 should point on phase 2", obj.mNextPhaseID, idPhase2);
             else if (obj.mPhaseName.compareTo(Global.SECOND_PHASE_NAME) == 0)
@@ -108,7 +109,7 @@ public class MemoryManagerSQLManagerTest {
     @Test
     public void testCreateNewMemoryMonitoringObject() throws Exception {
         DictionaryObject.MemoryMonitoringObject newOne = singleton.createNewMemoryMonitoringObject();
-        DictionaryObject.MemoryPhaseObject firstPhase = DictionaryObject.mMemoryPhaseObjectMap.get(newOne.getMemoryPhaseID());
+        MemoryManager.MemoryPhaseObject firstPhase = MemoryManager.mMemoryPhaseObjectMap.get(newOne.getMemoryPhaseID());
 
         //test object points really on the first phase
         Assert.assertTrue("New object should point on first phase", newOne.getMemoryPhaseName().compareTo(Global.FIRST_PHASE_NAME) == 0);
@@ -138,7 +139,7 @@ public class MemoryManagerSQLManagerTest {
     public void testCreateDictionaryObject() throws Exception {
 
         //add the word
-        DictionaryObject.initMemoryPhaseMap();
+        MemoryManager.initMemoryPhaseMap();
         DictionaryObject.MemoryMonitoringObject newOne = singleton.createNewMemoryMonitoringObject();
         long idObj = singleton.createDictionaryObject(midDictionary, newOne.getID());
         Assert.assertTrue("Word id should be greater than 0", idObj > 0);

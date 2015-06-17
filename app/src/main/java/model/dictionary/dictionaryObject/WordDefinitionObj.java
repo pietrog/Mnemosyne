@@ -1,12 +1,10 @@
-package model.dictionary.dictionary;
+package model.dictionary.dictionaryObject;
 
 import android.content.ContentValues;
 import android.database.Cursor;
 
 import model.dictionary.dictionary.sql.DictionaryContractBase;
 import model.dictionary.dictionary.sql.WordContract;
-import model.dictionary.dictionaryObject.DictionaryObject;
-import model.dictionary.dictionaryObject.DictionaryObjectType;
 import model.dictionary.tools.GeneralTools;
 
 /**

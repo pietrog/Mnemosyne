@@ -12,7 +12,7 @@ import com.mnemo.pietro.mnemosyne.MnemoMemoryManager;
 import com.mnemo.pietro.mnemosyne.R;
 
 import model.dictionary.dictionaryObject.DictionaryObject;
-import model.dictionary.dictionary.WordDefinitionObj;
+import model.dictionary.dictionaryObject.WordDefinitionObj;
 import model.dictionary.dictionary.sql.DictionarySQLManager;
 import model.dictionary.tools.GeneralTools;
 import model.dictionary.tools.ViewTools;

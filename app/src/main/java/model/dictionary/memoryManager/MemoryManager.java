@@ -1,6 +1,12 @@
 package model.dictionary.memoryManager;
 
 
+import java.util.HashMap;
+import java.util.Map;
+
+import model.dictionary.Global;
+import model.dictionary.memoryManager.sql.MemoryManagerSQLManager;
+
 /**
  * @author Pierre Gaulard
  * Class used to manage the memory cycle for all the dictionaries objects
@@ -10,6 +16,46 @@ public class MemoryManager {
 
 
     public MemoryManager (){    }
+
+
+    /**
+     * STATIC SECTION
+     */
+    public static Map<Long, MemoryPhaseObject> mMemoryPhaseObjectMap = new HashMap<>();
+    public static boolean mHasBeenInitialized = false;
+    public static long mIDFirstPhase;
+
+    public static boolean initMemoryPhaseMap(){
+        mHasBeenInitialized = MemoryManagerSQLManager.getInstance().initMemoryPhaseMap(mMemoryPhaseObjectMap) == Global.SUCCESS;
+        if (mHasBeenInitialized)
+            for(Long current: mMemoryPhaseObjectMap.keySet())
+                if (mMemoryPhaseObjectMap.get(current).mPhaseName.compareTo(Global.FIRST_PHASE_NAME) == 0) {
+                    mIDFirstPhase = current;
+                    break;
+                }
+        return mHasBeenInitialized;
+    }
+
+    /**
+     * Memory phase nested class
+     */
+    public static class MemoryPhaseObject{
+
+        public String mPhaseName;
+        public int mDurationPhase;
+        public int mFirstPeriod;
+        public int mPeriodIncrement;
+        public long mNextPhaseID = -1;
+        public long mID;
+
+        public MemoryPhaseObject(String phaseName, int durationPhase, int firstPeriod, int periodIncrement, long nextPhaseID){
+            mPhaseName = phaseName;
+            mDurationPhase = durationPhase;
+            mFirstPeriod = firstPeriod;
+            mPeriodIncrement = periodIncrement;
+            mNextPhaseID = nextPhaseID;
+        }
+    }
 
 
 

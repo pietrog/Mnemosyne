@@ -17,6 +17,7 @@ import java.util.Vector;
 import model.dictionary.Global;
 import model.dictionary.catalogue.sql.CatalogueSQLManager;
 import model.dictionary.dictionaryObject.DictionaryObject;
+import model.dictionary.memoryManager.MemoryManager;
 import model.dictionary.memoryManager.sql.MemoryManagerSQLManager;
 import model.dictionary.tools.GeneralTools;
 import model.dictionary.tools.MnemoDBHelper;
@@ -118,7 +119,7 @@ public class DictionarySQLManagerTest {
         //list of dictionary objects
         //set up
         long idDict = singleton.addDictionaryInCatalogue(midCatalogue1, "Dict", "");
-        DictionaryObject.initMemoryPhaseMap();
+        MemoryManager.initMemoryPhaseMap();
         DictionaryObject.MemoryMonitoringObject memObj = MemoryManagerSQLManager.getInstance().createNewMemoryMonitoringObject();
         long idDictObj1 = MemoryManagerSQLManager.getInstance().createDictionaryObject(idDict, memObj.getID());
         long idWord1 = singleton.addNewWord(idDictObj1, "Word1", "");
@@ -148,7 +149,7 @@ public class DictionarySQLManagerTest {
     public void testAddNewWord() throws Exception {
         //set up
         long idDict = singleton.addDictionaryInCatalogue(midCatalogue1, "Dict", "");
-        DictionaryObject.initMemoryPhaseMap();
+        MemoryManager.initMemoryPhaseMap();
 
         DictionaryObject.MemoryMonitoringObject memObj = MemoryManagerSQLManager.getInstance().createNewMemoryMonitoringObject();
         long idDictObj = MemoryManagerSQLManager.getInstance().createDictionaryObject(idDict, memObj.getID());
