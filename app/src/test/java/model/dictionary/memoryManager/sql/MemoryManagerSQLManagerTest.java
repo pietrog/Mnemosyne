@@ -24,6 +24,7 @@ import model.dictionary.Global;
 import model.dictionary.catalogue.sql.CatalogueSQLManager;
 import model.dictionary.dictionaryObject.DictionaryObject;
 import model.dictionary.dictionary.sql.DictionarySQLManager;
+import model.dictionary.dictionaryObject.MemoryObject;
 import model.dictionary.memoryManager.MemoryManager;
 import model.dictionary.tools.GeneralTools;
 import model.dictionary.tools.MnemoDBHelper;
@@ -145,32 +146,47 @@ public class MemoryManagerSQLManagerTest {
         Assert.assertEquals("Next learning date should be 1 day after last learnt", lastlearnt, formattedNext);
     }
 
+    /**
+     * method AddWordToLearnSession
+     */
     @Test
     public void testAddWordToLearnSession() throws Exception {
 
         //create the catalogue
         Date dnow = GeneralTools.getNowDate();
 
-        long idMemoryManagerObj = singleton.addWordToLearnSession(999, dnow);
-        Assert.assertTrue("ID should be smaller than 0", idMemoryManagerObj == Global.FAILURE);
-
-        idMemoryManagerObj = singleton.addWordToLearnSession(midDictObj1, dnow);
+        long idMemoryManagerObj = singleton.addWordToLearnSession(midDictObj1, dnow);
         Assert.assertTrue("ID should be greater than 0", idMemoryManagerObj > 0);
         //add a learning session
         idMemoryManagerObj = singleton.addWordToLearnSession(midDictObj2, dnow);
         Assert.assertTrue("ID should be greater than 0", idMemoryManagerObj > 0);
-        //add another learning session for the same word should fail
-        idMemoryManagerObj = singleton.addWordToLearnSession(midDictObj2, dnow);
-        Assert.assertEquals("Should not be able to add the same word twice for the same date", Global.FAILURE, idMemoryManagerObj);
         //add another learning session for another word
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DAY_OF_YEAR, 3);
         idMemoryManagerObj = singleton.addWordToLearnSession(midDictObj3, cal.getTime());
         Assert.assertTrue("Add a word session for a future date should success", idMemoryManagerObj > 0);
-
+    }
+    @Test
+    public void testAddWordToLearnSessionTwiceForTheSameWord() throws Exception {
+        //create the catalogue
+        Date dnow = GeneralTools.getNowDate();
+        //add another learning session for the same word should fail
+        singleton.addWordToLearnSession(midDictObj2, dnow);
+        long idMemoryManagerObj = singleton.addWordToLearnSession(midDictObj2, dnow);
+        Assert.assertEquals("Should not be able to add the same word twice for the same date", Global.FAILURE, idMemoryManagerObj);
+    }
+    @Test
+    public void testAddWordToLearnSessionWhenWordIDIsWrong() throws Exception {
+        Date dnow = GeneralTools.getNowDate();
+        long idMemoryManagerObj = singleton.addWordToLearnSession(999, dnow);
+        Assert.assertTrue("ID should be smaller than 0", idMemoryManagerObj == Global.FAILURE);
     }
 
-    @Test
+
+    /**
+     * method GetListOfObjectsToLearn
+     */
+        @Test
     public void testGetListOfObjectsToLearn() throws Exception {
         Vector<Global.Couple<Long, Integer>> list;
 
@@ -203,15 +219,28 @@ public class MemoryManagerSQLManagerTest {
 
     }
 
+    /**
+     * method updateMemoryObjectInDB
+     */
     @Test
-    public void testUpdateDictionaryObjectInDB() throws Exception {
-
-        //test bad parameters
-        //Assert.assertEquals("Null object should return bad parameter", Global.BAD_PARAMETER, singleton.updateDictionaryObjectInDB(null));
-
+    public void testUpdateMemoryObjectInDBWhenObjectIsNull() throws Exception {
+        Assert.assertEquals("Should return bad parameter", Global.BAD_PARAMETER, singleton.updateMemoryObjectInDB(null));
+    }
+    @Test
+    public void testUpdateMemoryObjectInDBWhenChangeToNextPhase() throws Exception {
+        MemoryObject memObject = DictionarySQLManager.getInstance().getMemoryObjectFromDictionaryObjectID(midDictObj1);
+        Assert.assertNotNull(memObject);
+        memObject.updateToNextPhase();
+        Assert.assertEquals("Should return success", Global.SUCCESS, singleton.updateMemoryObjectInDB(memObject));
+        MemoryObject memoryObjectBis = DictionarySQLManager.getInstance().getMemoryObjectFromDictionaryObjectID(midDictObj1);
+        Assert.assertEquals("Phase name should be now " + Global.SECOND_PHASE_NAME, Global.SECOND_PHASE_NAME, memoryObjectBis.getMemoryPhaseName());
 
     }
 
+
+    /**
+     * method DelayLearningSessionFromDate
+     */
     @Test
     public void testDelayLearningSessionFromDate() throws Exception {
 
@@ -229,7 +258,7 @@ public class MemoryManagerSQLManagerTest {
 
         //update some dates, in the past
         //first object set to yesterday
-        DictionaryObject dictObj = DictionarySQLManager.getInstance().getMemoryObjectFromID(midDictObj1);
+        DictionaryObject dictObj = DictionarySQLManager.getInstance().getMemoryObjectFromDictionaryObjectID(midDictObj1);
         //update memory monitoring object
         String where = MemoryManagerContract.MemoryMonitoring._ID + " = '" + dictObj.getMemoryMonitoringID() + "'";
         ContentValues value = new ContentValues();
@@ -249,21 +278,21 @@ public class MemoryManagerSQLManagerTest {
 
         //check with three words at different dates
         //word 1
-        dictObj = DictionarySQLManager.getInstance().getMemoryObjectFromID(midDictObj1);
+        dictObj = DictionarySQLManager.getInstance().getMemoryObjectFromDictionaryObjectID(midDictObj1);
         where = MemoryManagerContract.MemoryMonitoring._ID + " = '" + dictObj.getMemoryMonitoringID() + "'";
         value = new ContentValues();
         value.put(MemoryManagerContract.MemoryMonitoring.NEXT_LEARNT, GeneralTools.getSQLDate(todayMinusOne.getTime()));
         MnemoDBHelper.getInstance(Robolectric.getShadowApplication().getApplicationContext()).getWritableDatabase().update(MemoryManagerContract.MemoryMonitoring.TABLE_NAME, value, where, null);
         singleton.addWordToLearnSession(midDictObj1, todayMinusOne.getTime());
         //word 2
-        dictObj = DictionarySQLManager.getInstance().getMemoryObjectFromID(midDictObj2);
+        dictObj = DictionarySQLManager.getInstance().getMemoryObjectFromDictionaryObjectID(midDictObj2);
         where = MemoryManagerContract.MemoryMonitoring._ID + " = '" + dictObj.getMemoryMonitoringID() + "'";
         value = new ContentValues();
         value.put(MemoryManagerContract.MemoryMonitoring.NEXT_LEARNT, GeneralTools.getSQLDate(todayMinusThree.getTime()));
         MnemoDBHelper.getInstance(Robolectric.getShadowApplication().getApplicationContext()).getWritableDatabase().update(MemoryManagerContract.MemoryMonitoring.TABLE_NAME, value, where, null);
         singleton.addWordToLearnSession(midDictObj2, todayMinusThree.getTime());
         //word 3
-        dictObj = DictionarySQLManager.getInstance().getMemoryObjectFromID(midDictObj3);
+        dictObj = DictionarySQLManager.getInstance().getMemoryObjectFromDictionaryObjectID(midDictObj3);
         where = MemoryManagerContract.MemoryMonitoring._ID + " = '" + dictObj.getMemoryMonitoringID() + "'";
         value = new ContentValues();
         value.put(MemoryManagerContract.MemoryMonitoring.NEXT_LEARNT, GeneralTools.getSQLDate(todayMinusSeven.getTime()));

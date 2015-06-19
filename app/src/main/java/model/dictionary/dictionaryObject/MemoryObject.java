@@ -58,29 +58,17 @@ public class MemoryObject extends DictionaryObject {
      */
     public void updateToNextPhase(){
         Calendar time = Calendar.getInstance();
-        // new word, first phase
-        if (mMemoryPhaseID == -1){
-            mMemoryPhaseID = MemoryManager.mIDFirstPhase;
-            mDateAdded = time.getTime();
-            mBeginningOfMP = mDateAdded;
-            mDaysBetween = MemoryManager.mMemoryPhaseObjectMap.get(MemoryManager.mIDFirstPhase).mFirstPeriod;
-            mLastLearnt = mDateAdded;
+        //get the next phase id (-1 if the phase is the last one, upkeeping)
+        long nextid = MemoryManager.mMemoryPhaseObjectMap.get(mMemoryPhaseID).mNextPhaseID;
+
+        //phase n to phase n+1
+        if (nextid != -1) {
+            mMemoryPhaseID = nextid;
+            mDaysBetween = MemoryManager.mMemoryPhaseObjectMap.get(nextid).mFirstPeriod;
+            mBeginningOfMP = time.getTime();
+            mLastLearnt = mBeginningOfMP;
             time.add(Calendar.DAY_OF_YEAR, mDaysBetween);
             mNextLearnt = time.getTime();
-        }
-        else {
-            //get the next phase id (-1 if the phase is the last one, upkeeping)
-            long nextid = MemoryManager.mMemoryPhaseObjectMap.get(mMemoryPhaseID).mNextPhaseID;
-
-            //phase n to phase n+1
-            if (nextid != -1) {
-                mMemoryPhaseID = nextid;
-                mDaysBetween = MemoryManager.mMemoryPhaseObjectMap.get(nextid).mFirstPeriod;
-                mBeginningOfMP = time.getTime();
-                mLastLearnt = mBeginningOfMP;
-                time.add(Calendar.DAY_OF_YEAR, mDaysBetween);
-                mNextLearnt = time.getTime();
-            }
         }
     }
 

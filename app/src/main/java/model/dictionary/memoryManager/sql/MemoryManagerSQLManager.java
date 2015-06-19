@@ -173,18 +173,13 @@ public class MemoryManagerSQLManager extends BaseSQLManager{
             return Global.BAD_PARAMETER;
         }
 
-        int res = Global.SUCCESS;
         //process for object in normal cycle
-        //update dictionary object and memory monitoring object
-        if (update(object.toContentValues(), MemoryManagerContract.MemoryMonitoring.TABLE_NAME, MemoryManagerContract.MemoryMonitoring.CID + " = "+object.getMemoryMonitoringID()) == 0)
-            res = Global.FAILURE;
-        //if memory monitoring object changes next dates, keep it up to date
-        if (addWordToLearnSession(object.getDictionaryObjectID(), object.getNextLearnt()) == -1)
-            res = Global.FAILURE;
-
-        if (res == Global.FAILURE)
-            Logger.w("MemoryManagerSQLManager::updateDictionaryObjectInDB"," something wrong occured during update of object");
-        return res;
+        //update memory monitoring object
+        if (update(object.toContentValues(), MemoryManagerContract.MemoryMonitoring.TABLE_NAME, MemoryManagerContract.MemoryMonitoring.CID + " = "+object.getMemoryMonitoringID()) <= 0) {
+            Logger.w("MemoryManagerSQLManager::updateDictionaryObjectInDB", " something wrong occured during update of object");
+            return Global.FAILURE;
+        }
+        return Global.SUCCESS;
     }
 
 

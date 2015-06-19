@@ -5,6 +5,7 @@ import android.content.Context;
 import java.util.Calendar;
 import java.util.Date;
 
+import model.dictionary.Global;
 import model.dictionary.dictionaryObject.DictionaryObject;
 import model.dictionary.dictionaryObject.MemoryObject;
 import model.dictionary.memoryManager.sql.MemoryManagerSQLManager;
@@ -50,7 +51,7 @@ public class LongTermMemory implements IMemorisation{
     }
 
     @Override
-    public void updateMemorisationPhase(MemoryObject object) {
+    public int updateMemorisationPhase(MemoryObject object) {
 
         //fix the lastlearnt date for removing id from list of id to raise
         Date oldNext = object.getNextLearnt();
@@ -69,7 +70,15 @@ public class LongTermMemory implements IMemorisation{
             object.incrementDaysInPhaseAndUpdateLearningDates();
 
         //update object in database
-        MemoryManagerSQLManager.getInstance().updateMemoryObjectInDB(object);
+        int res = MemoryManagerSQLManager.getInstance().updateMemoryObjectInDB(object);
+
+        if (res != Global.SUCCESS)
+            return Global.FAILURE;
+
+        if (MemoryManagerSQLManager.getInstance().addWordToLearnSession(object.getDictionaryObjectID(), object.getNextLearnt()) > 0)
+            return Global.SUCCESS;
+
+        return Global.FAILURE;
     }
 
 

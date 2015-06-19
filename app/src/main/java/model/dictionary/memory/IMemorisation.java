@@ -29,6 +29,7 @@ public interface IMemorisation {
     /**
      * Check if the memorisation phase jumps to the next one or not (ENCODING => STORING => UPKEEPING)
      * @param object object to update
+     * @return {Global.SUCCESS} if successful, {Global.FAILURE} otherwise
      */
-    void updateMemorisationPhase(MemoryObject object);
+    int updateMemorisationPhase(MemoryObject object);
 }

@@ -11,7 +11,6 @@ import android.widget.ImageButton;
 import com.mnemo.pietro.mnemosyne.MnemoMemoryManager;
 import com.mnemo.pietro.mnemosyne.R;
 
-import model.dictionary.dictionaryObject.DictionaryObject;
 import model.dictionary.dictionaryObject.MemoryObject;
 import model.dictionary.dictionaryObject.WordDefinitionObj;
 import model.dictionary.dictionary.sql.DictionarySQLManager;
@@ -105,7 +104,7 @@ public class WordFragment extends Fragment implements View.OnClickListener{
     }
 
     private void showStatistics(){
-        MemoryObject object = DictionarySQLManager.getInstance().getMemoryObjectFromID(mID);
+        MemoryObject object = DictionarySQLManager.getInstance().getMemoryObjectFromDictionaryObjectID(mID);
         ViewTools.setStringOfTextView(mRootView.findViewById(R.id.lastDate), GeneralTools.getSQLDate(object.getLastLearnt()));
         ViewTools.setStringOfTextView(mRootView.findViewById(R.id.nextDate), GeneralTools.getSQLDate(object.getNextLearnt()));
 

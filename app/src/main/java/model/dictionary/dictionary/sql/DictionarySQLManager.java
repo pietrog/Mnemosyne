@@ -170,7 +170,7 @@ public class DictionarySQLManager extends BaseSQLManager{
      * @param dictionaryObjectID long sql dictionary object id
      * @return MemoryObject object if successful, null otherwise
      */
-    public MemoryObject getMemoryObjectFromID(long dictionaryObjectID){
+    public MemoryObject getMemoryObjectFromDictionaryObjectID(long dictionaryObjectID){
 
         if (dictionaryObjectID <= 0)
             return null;

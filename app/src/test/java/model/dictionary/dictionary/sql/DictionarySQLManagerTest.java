@@ -239,13 +239,13 @@ public class DictionarySQLManagerTest {
     }
 
     /**
-     * method getMemoryObjectFromID
+     * method getMemoryObjectFromDictionaryObjectID
      */
     @Test
     public void testGetMemoryObjectFromIDWhenDictionaryObjIDIsWrong() throws Exception {
-        MemoryObject obj1 = singleton.getMemoryObjectFromID(-1);
+        MemoryObject obj1 = singleton.getMemoryObjectFromDictionaryObjectID(-1);
         Assert.assertNull("Should return null pointer", obj1);
-        obj1 = singleton.getMemoryObjectFromID(3);
+        obj1 = singleton.getMemoryObjectFromDictionaryObjectID(3);
         Assert.assertNull("Should return null pointer", obj1);
     }
     @Test
@@ -254,7 +254,7 @@ public class DictionarySQLManagerTest {
         MemoryManagerSQLManager.getInstance().createNewMemoryMonitoringObject();
         long memObjID1 = MemoryManagerSQLManager.getInstance().createNewMemoryMonitoringObject();
         long dictObjID1 = singleton.createNewDictionaryObject(midDict1, memObjID1);
-        MemoryObject obj1 = singleton.getMemoryObjectFromID(dictObjID1);
+        MemoryObject obj1 = singleton.getMemoryObjectFromDictionaryObjectID(dictObjID1);
         Assert.assertNotNull("Should return memory object", obj1);
         Assert.assertEquals("Check object parameters", memObjID1, obj1.getMemoryObjectID());
         Assert.assertEquals("Check object parameters", dictObjID1, obj1.getDictionaryObjectID());

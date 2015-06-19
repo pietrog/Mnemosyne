@@ -11,7 +11,6 @@ import android.support.v4.app.TaskStackBuilder;
 import java.util.Calendar;
 import java.util.Vector;
 
-import model.dictionary.dictionaryObject.DictionaryObject;
 import model.dictionary.dictionary.sql.DictionarySQLManager;
 import model.dictionary.dictionaryObject.MemoryObject;
 import model.dictionary.dictionaryObject.WordDefinitionObj;
@@ -156,7 +155,7 @@ public class MnemoMemoryManager extends IntentService {
     private void updateMemoryPhaseOfDictionaryObject(long dictionaryObjectID){
         if (dictionaryObjectID < 0)
             return;
-        MemoryObject object = DictionarySQLManager.getInstance(getApplicationContext()).getMemoryObjectFromID(dictionaryObjectID);
+        MemoryObject object = DictionarySQLManager.getInstance(getApplicationContext()).getMemoryObjectFromDictionaryObjectID(dictionaryObjectID);
         if (object == null) {
             Logger.i("MnemoMemoryManager::updateMemoryPhaseOfDictionaryObject", " object whith id " + dictionaryObjectID + " is null");
             return;
