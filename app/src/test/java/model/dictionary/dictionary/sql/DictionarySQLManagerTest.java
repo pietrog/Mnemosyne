@@ -16,9 +16,8 @@ import java.util.Vector;
 
 import model.dictionary.Global;
 import model.dictionary.catalogue.sql.CatalogueSQLManager;
-import model.dictionary.dictionaryObject.DictionaryObject;
 import model.dictionary.dictionaryObject.MemoryObject;
-import model.dictionary.dictionaryObject.sql.DictionaryObjectContract;
+import model.dictionary.dictionaryObject.WordDefinitionObj;
 import model.dictionary.dictionaryObject.sql.WordContract;
 import model.dictionary.memoryManager.MemoryManager;
 import model.dictionary.memoryManager.sql.MemoryManagerSQLManager;
@@ -36,7 +35,7 @@ public class DictionarySQLManagerTest {
     private DictionarySQLManager singleton;
 
     private long midCatalogue1, midCatalogue2;
-    private long midDict1, midDict2, midDict3;
+    private long midDict1, midDict2;
 
     @Before
     public void setUp() throws Exception {
@@ -52,7 +51,7 @@ public class DictionarySQLManagerTest {
 
         //init dictionary
         midDict1 = singleton.addDictionaryInCatalogue(midCatalogue1, "DictTest1", "def");
-        midDict3 = singleton.addDictionaryInCatalogue(midCatalogue1, "DictTest3", "def");
+        singleton.addDictionaryInCatalogue(midCatalogue1, "DictTest3", "def");
         midDict2 = singleton.addDictionaryInCatalogue(midCatalogue2, "DictTest2", "def");
     }
 
@@ -67,7 +66,7 @@ public class DictionarySQLManagerTest {
         long dictID1 = singleton.addDictionaryInCatalogue(midCatalogue1, "Dict1", "desc");
         long dictID2 = singleton.addDictionaryInCatalogue(midCatalogue1, "Dict2", "desc");
 
-        long wordID1 = DictionarySQLManager.getInstance().addNewWord(dictID1, "Word1", "Def1");
+        long wordID1 = singleton.addNewWord(dictID1, "Word1", "Def1");
 
         //get one word
         Cursor cursor = singleton.getAllDictionaryObjectsCursor(dictID1);
@@ -77,9 +76,9 @@ public class DictionarySQLManagerTest {
         cursor.close();
 
         //get several words
-        long wordID3 = DictionarySQLManager.getInstance().addNewWord(dictID1, "Word3", "Def1");
-        DictionarySQLManager.getInstance().addNewWord(dictID2, "Word2", "Def1");
-        long wordID4 = DictionarySQLManager.getInstance().addNewWord(dictID1, "Word4", "Def1");
+        long wordID3 = singleton.addNewWord(dictID1, "Word3", "Def1");
+        singleton.addNewWord(dictID2, "Word2", "Def1");
+        long wordID4 = singleton.addNewWord(dictID1, "Word4", "Def1");
 
 
         cursor = singleton.getAllDictionaryObjectsCursor(dictID1);
@@ -215,27 +214,27 @@ public class DictionarySQLManagerTest {
     @Test
     public void testCreateNewDictionaryObjectWhenDictionaryIDIsWrong() throws Exception {
         long memID = MemoryManagerSQLManager.getInstance().createNewMemoryMonitoringObject();
-        long id = DictionarySQLManager.getInstance().createNewDictionaryObject(-1, memID);
+        long id = singleton.createNewDictionaryObject(-1, memID);
         Assert.assertEquals("Should return bad parameter", Global.BAD_PARAMETER, id);
-        id = DictionarySQLManager.getInstance().createNewDictionaryObject(9, memID);
+        id = singleton.createNewDictionaryObject(9, memID);
         Assert.assertEquals("Should return 0 because dictionary object id points on unknown row", -1, id);
     }
     @Test
     public void testCreateNewDictionaryObjectWhenMemoryIDIsWrong() throws Exception {
-        long dict1 = DictionarySQLManager.getInstance().addDictionaryInCatalogue(midCatalogue1, "Dict1", "Test");
-        long id = DictionarySQLManager.getInstance().createNewDictionaryObject(dict1, -1);
+        long dict1 = singleton.addDictionaryInCatalogue(midCatalogue1, "Dict1", "Test");
+        long id = singleton.createNewDictionaryObject(dict1, -1);
         Assert.assertEquals("Creation should fail !", -1, id);
-        id = DictionarySQLManager.getInstance().createNewDictionaryObject(dict1, 1);
+        id = singleton.createNewDictionaryObject(dict1, 1);
         Assert.assertEquals("Creation should fail because of an unknown memory object id", -1, id);
     }
     @Test
     public void testCreateNewDictionaryObjectWhenAllFine() throws Exception {
-        long dict1 = DictionarySQLManager.getInstance().addDictionaryInCatalogue(midCatalogue1, "Dict1", "Test");
+        long dict1 = singleton.addDictionaryInCatalogue(midCatalogue1, "Dict1", "Test");
         long memObjid1 = MemoryManagerSQLManager.getInstance().createNewMemoryMonitoringObject();
-        long id = DictionarySQLManager.getInstance().createNewDictionaryObject(dict1, memObjid1);
+        long id = singleton.createNewDictionaryObject(dict1, memObjid1);
         Assert.assertTrue("Insert should success", id > 0);
         long memObjid2 = MemoryManagerSQLManager.getInstance().createNewMemoryMonitoringObject();
-        long id2 = DictionarySQLManager.getInstance().createNewDictionaryObject(dict1, memObjid2);
+        long id2 = singleton.createNewDictionaryObject(dict1, memObjid2);
         Assert.assertTrue("Insert should success", id2 > 0);
     }
 
@@ -244,9 +243,9 @@ public class DictionarySQLManagerTest {
      */
     @Test
     public void testGetMemoryObjectFromIDWhenDictionaryObjIDIsWrong() throws Exception {
-        MemoryObject obj1 = DictionarySQLManager.getInstance().getMemoryObjectFromID(-1);
+        MemoryObject obj1 = singleton.getMemoryObjectFromID(-1);
         Assert.assertNull("Should return null pointer", obj1);
-        obj1 = DictionarySQLManager.getInstance().getMemoryObjectFromID(3);
+        obj1 = singleton.getMemoryObjectFromID(3);
         Assert.assertNull("Should return null pointer", obj1);
     }
     @Test
@@ -254,8 +253,8 @@ public class DictionarySQLManagerTest {
         MemoryManagerSQLManager.getInstance().createNewMemoryMonitoringObject();
         MemoryManagerSQLManager.getInstance().createNewMemoryMonitoringObject();
         long memObjID1 = MemoryManagerSQLManager.getInstance().createNewMemoryMonitoringObject();
-        long dictObjID1 = DictionarySQLManager.getInstance().createNewDictionaryObject(midDict1, memObjID1);
-        MemoryObject obj1 = DictionarySQLManager.getInstance().getMemoryObjectFromID(dictObjID1);
+        long dictObjID1 = singleton.createNewDictionaryObject(midDict1, memObjID1);
+        MemoryObject obj1 = singleton.getMemoryObjectFromID(dictObjID1);
         Assert.assertNotNull("Should return memory object", obj1);
         Assert.assertEquals("Check object parameters", memObjID1, obj1.getMemoryObjectID());
         Assert.assertEquals("Check object parameters", dictObjID1, obj1.getDictionaryObjectID());
@@ -289,6 +288,26 @@ public class DictionarySQLManagerTest {
      */
     @Test
     public void testGetWordFromID() throws Exception {
-        //@TODO implement this test
+        singleton.addNewWord(midDict1, "Word1", "Def");
+        long wordid2 = singleton.addNewWord(midDict1, "Word2", "Def");
+        singleton.addNewWord(midDict1, "Word3", "Def");
+        long wordid4 = singleton.addNewWord(midDict2, "Word4", "Def");
+
+        WordDefinitionObj obj1 = singleton.getWordFromID(wordid2);
+        Assert.assertEquals("Should be equal", wordid2, obj1.getID());
+        Assert.assertEquals("Should be equal", midDict1, obj1.getDictionaryID());
+        Assert.assertEquals("Word should be the same", "Word2", obj1.getWord());
+
+        WordDefinitionObj obj2= singleton.getWordFromID(wordid4);
+        Assert.assertEquals("Should be equal", wordid4, obj2.getID());
+        Assert.assertEquals("Should be equal", midDict2, obj2.getDictionaryID());
+        Assert.assertEquals("Word should be the same", "Word4", obj2.getWord());
     }
+    @Test
+    public void testGetWordFromIDWhenWordIDIsWrong() throws Exception {
+        Assert.assertEquals("Should return null object", null, singleton.getWordFromID(-1));
+        Assert.assertEquals("Should return null object", null, singleton.getWordFromID(3));
+        Assert.assertEquals("Should return null object", null, singleton.getWordFromID(1));
+    }
+
 }
