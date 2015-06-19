@@ -1,7 +1,7 @@
 package model.dictionary.tools;
 
 import android.app.Activity;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -42,25 +42,25 @@ public class ViewTools {
      * ACTION BAR / TOOLBAR
      */
     public static void setTitle(Activity activity, String title){
-        android.support.v7.app.ActionBar toolbar = ((ActionBarActivity)activity).getSupportActionBar();
+        android.support.v7.app.ActionBar toolbar = ((AppCompatActivity)activity).getSupportActionBar();
 
         if (toolbar != null)
         toolbar.setTitle(title);
     }
     public static void setTitle(Activity activity, int title){
-        android.support.v7.app.ActionBar toolbar = ((ActionBarActivity)activity).getSupportActionBar();
+        android.support.v7.app.ActionBar toolbar = ((AppCompatActivity)activity).getSupportActionBar();
 
         if (toolbar != null)
             toolbar.setTitle(title);
     }
     public static void setSubtitle(Activity activity, String title){
-        android.support.v7.app.ActionBar toolbar = ((ActionBarActivity)activity).getSupportActionBar();
+        android.support.v7.app.ActionBar toolbar = ((AppCompatActivity)activity).getSupportActionBar();
 
         if (toolbar != null)
             toolbar.setSubtitle(title);
     }
     public static void setSubtitle(Activity activity, int title){
-        android.support.v7.app.ActionBar toolbar = ((ActionBarActivity)activity).getSupportActionBar();
+        android.support.v7.app.ActionBar toolbar = ((AppCompatActivity)activity).getSupportActionBar();
 
         if (toolbar != null)
             toolbar.setSubtitle(title);
