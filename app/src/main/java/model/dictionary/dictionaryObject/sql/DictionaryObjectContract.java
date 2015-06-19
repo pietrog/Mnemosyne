@@ -14,9 +14,12 @@ public class DictionaryObjectContract {
     public static abstract class DictionaryObject implements BaseColumns{
         public static final String TABLE_NAME = "dictionaryObjects";
         public static final String CID = TABLE_NAME+"."+_ID;
+        public static final String CSID = TABLE_NAME+"_"+_ID;
 
         public static final String DICTIONARYID = "dictionaryID";
         public static final String MEMORY_MONITORING_ID = "memoryMonitoringID"; // phase of the memory cycle
+
+        public static final String ALL = CID + " AS "+ CSID + " , " + DICTIONARYID + ", " + MEMORY_MONITORING_ID;
     }
 
     public static final String SQL_CREATE_TABLE =

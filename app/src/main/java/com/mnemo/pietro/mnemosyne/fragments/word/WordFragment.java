@@ -12,6 +12,7 @@ import com.mnemo.pietro.mnemosyne.MnemoMemoryManager;
 import com.mnemo.pietro.mnemosyne.R;
 
 import model.dictionary.dictionaryObject.DictionaryObject;
+import model.dictionary.dictionaryObject.MemoryObject;
 import model.dictionary.dictionaryObject.WordDefinitionObj;
 import model.dictionary.dictionary.sql.DictionarySQLManager;
 import model.dictionary.tools.GeneralTools;
@@ -26,11 +27,13 @@ public class WordFragment extends Fragment implements View.OnClickListener{
     private static final String WORD = "WORD";
     private static final String DEFINITION = "DEFINITION";
     private static final String WORDID = "ID";
+    private static final String DICTIONARYOBJECTID = "DICTOBJID";
 
 
     private String mWord;
     private String mDefinition;
     private long mID;
+    private long mDictObjID;
     private View mRootView;
 
     public static WordFragment newInstance(WordDefinitionObj obj) {
@@ -39,6 +42,7 @@ public class WordFragment extends Fragment implements View.OnClickListener{
         args.putString(WORD, obj.getWord());
         args.putString(DEFINITION, obj.getDefinition());
         args.putLong(WORDID, obj.getID());
+        args.putLong(DICTIONARYOBJECTID, obj.getDictionaryObjectID());
         fragment.setArguments(args);
         return fragment;
     }
@@ -54,6 +58,7 @@ public class WordFragment extends Fragment implements View.OnClickListener{
             mWord = getArguments().getString(WORD);
             mDefinition = getArguments().getString(DEFINITION);
             mID = getArguments().getLong(WORDID);
+            mDictObjID = getArguments().getLong(DICTIONARYOBJECTID);
         }
     }
 
@@ -95,19 +100,19 @@ public class WordFragment extends Fragment implements View.OnClickListener{
     }
 
     private void onLearntWord(){
-        MnemoMemoryManager.startActionUpdateWord(getActivity().getApplicationContext(), mID);
+        MnemoMemoryManager.startActionUpdateWord(getActivity().getApplicationContext(), mDictObjID);
         getFragmentManager().popBackStack();
     }
 
     private void showStatistics(){
-        DictionaryObject object = DictionarySQLManager.getInstance().getFullObjectFromID(mID);
-        ViewTools.setStringOfTextView(mRootView.findViewById(R.id.lastDate), GeneralTools.getSQLDate(object.getMemoryMonitoring().getLastLearnt()));
-        ViewTools.setStringOfTextView(mRootView.findViewById(R.id.nextDate), GeneralTools.getSQLDate(object.getMemoryMonitoring().getNextLearnt()));
+        MemoryObject object = DictionarySQLManager.getInstance().getMemoryObjectFromID(mID);
+        ViewTools.setStringOfTextView(mRootView.findViewById(R.id.lastDate), GeneralTools.getSQLDate(object.getLastLearnt()));
+        ViewTools.setStringOfTextView(mRootView.findViewById(R.id.nextDate), GeneralTools.getSQLDate(object.getNextLearnt()));
 
-        ViewTools.setStringOfTextView(mRootView.findViewById(R.id.date_add), GeneralTools.getSQLDate(object.getMemoryMonitoring().getDateAdded()));
-        ViewTools.setStringOfTextView(mRootView.findViewById(R.id.days_between), object.getMemoryMonitoring().getDaysBetween() + "");
-        ViewTools.setStringOfTextView(mRootView.findViewById(R.id.mem_phase), object.getMemoryMonitoring().getMemoryPhaseName());
-        ViewTools.setStringOfTextView(mRootView.findViewById(R.id.beg_mem), GeneralTools.getSQLDate(object.getMemoryMonitoring().getBeginningOfMP()));
+        ViewTools.setStringOfTextView(mRootView.findViewById(R.id.date_add), GeneralTools.getSQLDate(object.getDateAdded()));
+        ViewTools.setStringOfTextView(mRootView.findViewById(R.id.days_between), object.getDaysBetween() + "");
+        ViewTools.setStringOfTextView(mRootView.findViewById(R.id.mem_phase), object.getMemoryPhaseName());
+        ViewTools.setStringOfTextView(mRootView.findViewById(R.id.beg_mem), GeneralTools.getSQLDate(object.getBeginningOfMP()));
 
 
         ImageButton show = (ImageButton)mRootView.findViewById(R.id.showStats);

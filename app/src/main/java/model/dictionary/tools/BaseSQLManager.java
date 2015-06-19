@@ -74,7 +74,7 @@ public abstract class BaseSQLManager {
      * @param sqlClause sql request
      * @return cursor
      */
-    protected final Cursor rawQuery(String sqlClause, String[] selectionArgs){
+    public final Cursor rawQuery(String sqlClause, String[] selectionArgs){
         return getSQLDBRead().rawQuery(sqlClause, selectionArgs);
     }
 

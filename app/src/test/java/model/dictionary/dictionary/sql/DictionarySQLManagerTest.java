@@ -17,6 +17,9 @@ import java.util.Vector;
 import model.dictionary.Global;
 import model.dictionary.catalogue.sql.CatalogueSQLManager;
 import model.dictionary.dictionaryObject.DictionaryObject;
+import model.dictionary.dictionaryObject.MemoryObject;
+import model.dictionary.dictionaryObject.sql.DictionaryObjectContract;
+import model.dictionary.dictionaryObject.sql.WordContract;
 import model.dictionary.memoryManager.MemoryManager;
 import model.dictionary.memoryManager.sql.MemoryManagerSQLManager;
 import model.dictionary.tools.GeneralTools;
@@ -33,17 +36,24 @@ public class DictionarySQLManagerTest {
     private DictionarySQLManager singleton;
 
     private long midCatalogue1, midCatalogue2;
+    private long midDict1, midDict2, midDict3;
 
     @Before
     public void setUp() throws Exception {
         Context context = Robolectric.getShadowApplication().getApplicationContext();
         CatalogueSQLManager.getInstance(context);
         MemoryManagerSQLManager.getInstance(Robolectric.getShadowApplication().getApplicationContext());
+        MemoryManager.initMemoryPhaseMap();
         singleton = DictionarySQLManager.getInstance(context);
 
         //init catalogues
         midCatalogue1 = CatalogueSQLManager.getInstance().add("Catalogue1", "Desc1");
         midCatalogue2 = CatalogueSQLManager.getInstance().add("Catalogue2", "Desc2");
+
+        //init dictionary
+        midDict1 = singleton.addDictionaryInCatalogue(midCatalogue1, "DictTest1", "def");
+        midDict3 = singleton.addDictionaryInCatalogue(midCatalogue1, "DictTest3", "def");
+        midDict2 = singleton.addDictionaryInCatalogue(midCatalogue2, "DictTest2", "def");
     }
 
     @After
@@ -55,32 +65,28 @@ public class DictionarySQLManagerTest {
     public void testGetAllDictionaryObjectsCursor() throws Exception {
         //set up
         long dictID1 = singleton.addDictionaryInCatalogue(midCatalogue1, "Dict1", "desc");
-        //long dictID2 = singleton.addDictionaryInCatalogue(midCatalogue1, "Dict2", "desc");
+        long dictID2 = singleton.addDictionaryInCatalogue(midCatalogue1, "Dict2", "desc");
 
-        DictionaryObject.MemoryMonitoringObject memObj = MemoryManagerSQLManager.getInstance().createNewMemoryMonitoringObject();
-        long idDictObj1 = MemoryManagerSQLManager.getInstance().createDictionaryObject(dictID1, memObj.getID());
-        long idWord1 = singleton.addNewWord(idDictObj1, "WordTest", "Definition Test");
+        long wordID1 = DictionarySQLManager.getInstance().addNewWord(dictID1, "Word1", "Def1");
 
         //get one word
         Cursor cursor = singleton.getAllDictionaryObjectsCursor(dictID1);
         Assert.assertEquals("Should contain one word", 1, cursor.getCount());
         cursor.moveToFirst();
-        Assert.assertEquals("Word id should be equal to", idWord1, GeneralTools.getLongElement(cursor, "_id"));
+        Assert.assertEquals("Word object id should be equal to", wordID1, GeneralTools.getLongElement(cursor, WordContract.Word.CID));
         cursor.close();
 
         //get several words
-        memObj = MemoryManagerSQLManager.getInstance().createNewMemoryMonitoringObject();
-        long idDictObj2 = MemoryManagerSQLManager.getInstance().createDictionaryObject(dictID1, memObj.getID());
-        long idWord2 = singleton.addNewWord(idDictObj2, "WordTest", "Definition Test");
-        memObj = MemoryManagerSQLManager.getInstance().createNewMemoryMonitoringObject();
-        long idDictObj3 = MemoryManagerSQLManager.getInstance().createDictionaryObject(dictID1, memObj.getID());
-        long idWord3 = singleton.addNewWord(idDictObj3, "WordTest", "Definition Test");
+        long wordID3 = DictionarySQLManager.getInstance().addNewWord(dictID1, "Word3", "Def1");
+        DictionarySQLManager.getInstance().addNewWord(dictID2, "Word2", "Def1");
+        long wordID4 = DictionarySQLManager.getInstance().addNewWord(dictID1, "Word4", "Def1");
+
 
         cursor = singleton.getAllDictionaryObjectsCursor(dictID1);
         cursor.moveToFirst();
         Assert.assertEquals("Dictionary should contain 3 words", 3, cursor.getCount());
         do{
-            Assert.assertTrue("Id should be in this list", GeneralTools.getLongElement(cursor, "_id") == idWord1 || GeneralTools.getLongElement(cursor, "_id") == idWord2 || GeneralTools.getLongElement(cursor, "_id") == idWord3);
+            Assert.assertTrue("Id should be in this list", GeneralTools.getLongElement(cursor, WordContract.Word.CID) == wordID1 || GeneralTools.getLongElement(cursor, WordContract.Word.CID) == wordID3 || GeneralTools.getLongElement(cursor, WordContract.Word.CID) == wordID4);
         }while(cursor.moveToNext());
         cursor.close();
 
@@ -120,15 +126,9 @@ public class DictionarySQLManagerTest {
         //set up
         long idDict = singleton.addDictionaryInCatalogue(midCatalogue1, "Dict", "");
         MemoryManager.initMemoryPhaseMap();
-        DictionaryObject.MemoryMonitoringObject memObj = MemoryManagerSQLManager.getInstance().createNewMemoryMonitoringObject();
-        long idDictObj1 = MemoryManagerSQLManager.getInstance().createDictionaryObject(idDict, memObj.getID());
-        long idWord1 = singleton.addNewWord(idDictObj1, "Word1", "");
-        memObj = MemoryManagerSQLManager.getInstance().createNewMemoryMonitoringObject();
-        long idDictObj2 = MemoryManagerSQLManager.getInstance().createDictionaryObject(idDict, memObj.getID());
-        long idWord2 = singleton.addNewWord(idDictObj2, "Word1", "");
-        memObj = MemoryManagerSQLManager.getInstance().createNewMemoryMonitoringObject();
-        long idDictObj3 = MemoryManagerSQLManager.getInstance().createDictionaryObject(idDict, memObj.getID());
-        long idWord3 = singleton.addNewWord(idDictObj3, "Word1", "");
+        long idWord1 = singleton.addNewWord(idDict, "Word1", "");
+        long idWord2 = singleton.addNewWord(idDict, "Word2", "");
+        long idWord3 = singleton.addNewWord(idDict, "Word3", "");
         c1 = new Global.Couple(idWord1, 0);
         c2 = new Global.Couple(idWord2, 0);
         c3 = new Global.Couple(idWord3, 0);
@@ -145,43 +145,46 @@ public class DictionarySQLManagerTest {
 
     }
 
+    /**
+     * method AddNewWord
+     */
     @Test
     public void testAddNewWord() throws Exception {
         //set up
         long idDict = singleton.addDictionaryInCatalogue(midCatalogue1, "Dict", "");
-        MemoryManager.initMemoryPhaseMap();
-
-        DictionaryObject.MemoryMonitoringObject memObj = MemoryManagerSQLManager.getInstance().createNewMemoryMonitoringObject();
-        long idDictObj = MemoryManagerSQLManager.getInstance().createDictionaryObject(idDict, memObj.getID());
-        long idWord = singleton.addNewWord(idDictObj, "WordTest", "Definition Test");
+        long idWord = singleton.addNewWord(idDict, "WordTest", "Definition Test");
         Assert.assertTrue("A new word should be created", idWord > 0);
-        //add the same word should fail
-        //@TODO MODERATE we should make impossible to add two same words in the same dictionary
-        /*memObj = MemoryManagerSQLManager.getInstance().createNewMemoryMonitoringObject();
-        idDictObj = MemoryManagerSQLManager.getInstance().createDictionaryObject(idDict, memObj.getID());
-        idWord = singleton.addNewWord(idDictObj, "WordTest", "Definition Test bit different");
-        Assert.assertEquals("We could not add the same word", Global.FAILURE, idWord);*/
-
-        //cannot add an empty word
+        long idWord2 = singleton.addNewWord(idDict, "WordTest2", "Definition Test");
+        Assert.assertTrue("A new word should be created", idWord2 > 0 && idWord != idWord2);
+        long idWord3 = singleton.addNewWord(idDict, "WordTest3", "Definition Test");
+        Assert.assertTrue("A new word should be created", idWord3 > 0 && idWord2 != idWord3 && idWord3 != idWord);
+    }
+    @Test
+    public void testAddNewWordWhenWordIsEmpty() throws Exception {
         //@TODO HIGH when we add monitoring object and dictionary object, but fail to add the word, the first ones stay in DB !!!
-        memObj = MemoryManagerSQLManager.getInstance().createNewMemoryMonitoringObject();
-        idDictObj = MemoryManagerSQLManager.getInstance().createDictionaryObject(idDict, memObj.getID());
-        idWord = singleton.addNewWord(idDictObj, "", "Definition Test");
+        long idDict = singleton.addDictionaryInCatalogue(midCatalogue1, "Dict", "");
+        long idWord = singleton.addNewWord(idDict, "", "Definition Test");
         Assert.assertEquals("We could not add empty word", Global.BAD_PARAMETER, idWord);
-
-        //cannot add an null word
-        memObj = MemoryManagerSQLManager.getInstance().createNewMemoryMonitoringObject();
-        idDictObj = MemoryManagerSQLManager.getInstance().createDictionaryObject(idDict, memObj.getID());
-        idWord = singleton.addNewWord(idDictObj, null, "Definition Test");
+    }
+    @Test
+    public void testAddNewWordWhenWordIsNull() throws Exception {
+        long idDict = singleton.addDictionaryInCatalogue(midCatalogue1, "Dict", "");
+        long idWord = singleton.addNewWord(idDict, null, "Definition Test");
         Assert.assertEquals("We could not add null word", Global.BAD_PARAMETER, idWord);
-
-        //add another one word
-        memObj = MemoryManagerSQLManager.getInstance().createNewMemoryMonitoringObject();
-        idDictObj = MemoryManagerSQLManager.getInstance().createDictionaryObject(idDict, memObj.getID());
-        idWord = singleton.addNewWord(idDictObj, "WORD 2", "Definition Test");
-        Assert.assertTrue("Add the word should success", idWord > 0);
+    }
+    @Test
+    public void testAddNewWordWhenAlreadyexists() throws Exception {
+        //@TODO MODERATE we should make impossible to add two same words in the same dictionary
+        /*long idDict = singleton.addDictionaryInCatalogue(midCatalogue1, "Dict", "");
+        singleton.addNewWord(idDict, "word1", "Definition Test");
+        long idWord = singleton.addNewWord(idDict, "word1", "Definition Test");
+        Assert.assertEquals("We could not add the same word in the same dictionary", -1, idWord);*/
     }
 
+
+        /**
+         * method Remove
+         */
     @Test
     public void testRemove() throws Exception {
         //empty list
@@ -206,11 +209,61 @@ public class DictionarySQLManagerTest {
         Assert.assertEquals("Should return 0", 0, singleton.remove(list4));
     }
 
+    /**
+     * method createNewDictionaryObject
+     */
     @Test
-    public void testGetFullObjectFromID() throws Exception {
-
+    public void testCreateNewDictionaryObjectWhenDictionaryIDIsWrong() throws Exception {
+        long memID = MemoryManagerSQLManager.getInstance().createNewMemoryMonitoringObject();
+        long id = DictionarySQLManager.getInstance().createNewDictionaryObject(-1, memID);
+        Assert.assertEquals("Should return bad parameter", Global.BAD_PARAMETER, id);
+        id = DictionarySQLManager.getInstance().createNewDictionaryObject(9, memID);
+        Assert.assertEquals("Should return 0 because dictionary object id points on unknown row", -1, id);
+    }
+    @Test
+    public void testCreateNewDictionaryObjectWhenMemoryIDIsWrong() throws Exception {
+        long dict1 = DictionarySQLManager.getInstance().addDictionaryInCatalogue(midCatalogue1, "Dict1", "Test");
+        long id = DictionarySQLManager.getInstance().createNewDictionaryObject(dict1, -1);
+        Assert.assertEquals("Creation should fail !", -1, id);
+        id = DictionarySQLManager.getInstance().createNewDictionaryObject(dict1, 1);
+        Assert.assertEquals("Creation should fail because of an unknown memory object id", -1, id);
+    }
+    @Test
+    public void testCreateNewDictionaryObjectWhenAllFine() throws Exception {
+        long dict1 = DictionarySQLManager.getInstance().addDictionaryInCatalogue(midCatalogue1, "Dict1", "Test");
+        long memObjid1 = MemoryManagerSQLManager.getInstance().createNewMemoryMonitoringObject();
+        long id = DictionarySQLManager.getInstance().createNewDictionaryObject(dict1, memObjid1);
+        Assert.assertTrue("Insert should success", id > 0);
+        long memObjid2 = MemoryManagerSQLManager.getInstance().createNewMemoryMonitoringObject();
+        long id2 = DictionarySQLManager.getInstance().createNewDictionaryObject(dict1, memObjid2);
+        Assert.assertTrue("Insert should success", id2 > 0);
     }
 
+    /**
+     * method getMemoryObjectFromID
+     */
+    @Test
+    public void testGetMemoryObjectFromIDWhenDictionaryObjIDIsWrong() throws Exception {
+        MemoryObject obj1 = DictionarySQLManager.getInstance().getMemoryObjectFromID(-1);
+        Assert.assertNull("Should return null pointer", obj1);
+        obj1 = DictionarySQLManager.getInstance().getMemoryObjectFromID(3);
+        Assert.assertNull("Should return null pointer", obj1);
+    }
+    @Test
+    public void testGetMemoryObjectFromID() throws Exception {
+        MemoryManagerSQLManager.getInstance().createNewMemoryMonitoringObject();
+        MemoryManagerSQLManager.getInstance().createNewMemoryMonitoringObject();
+        long memObjID1 = MemoryManagerSQLManager.getInstance().createNewMemoryMonitoringObject();
+        long dictObjID1 = DictionarySQLManager.getInstance().createNewDictionaryObject(midDict1, memObjID1);
+        MemoryObject obj1 = DictionarySQLManager.getInstance().getMemoryObjectFromID(dictObjID1);
+        Assert.assertNotNull("Should return memory object", obj1);
+        Assert.assertEquals("Check object parameters", memObjID1, obj1.getMemoryObjectID());
+        Assert.assertEquals("Check object parameters", dictObjID1, obj1.getDictionaryObjectID());
+    }
+
+    /**
+     * method AddDictionaryInCatalogue
+     */
     @Test
     public void testAddDictionaryInCatalogue() throws Exception {
         //fails because of empty name
@@ -229,5 +282,13 @@ public class DictionarySQLManagerTest {
         Assert.assertTrue("ID should be greater than 0", id1 > 0);
         Assert.assertTrue("ID should be greater than 0", id2 > 0);
         Assert.assertNotEquals("Ids should be different", id1, id2);
+    }
+
+    /**
+     * method GetWordFromID
+     */
+    @Test
+    public void testGetWordFromID() throws Exception {
+        //@TODO implement this test
     }
 }

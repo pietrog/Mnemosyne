@@ -13,13 +13,11 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import model.dictionary.Global;
-import model.dictionary.dictionary.Dictionary;
 import model.dictionary.dictionary.sql.DictionaryContractBase;
 import model.dictionary.dictionary.sql.DictionarySQLManager;
 import model.dictionary.tools.GeneralTools;
 import model.dictionary.tools.MnemoDBHelper;
 
-import static org.junit.Assert.*;
 
 /**
  * Created by pietro on 22/05/15.
@@ -43,13 +41,13 @@ public class CatalogueSQLManagerTest {
     }
 
     @Test
-    public void testGetAll() throws Exception {
+    public void testGetAllWithOneCatalogue() throws Exception {
         //get all on empty db should return empty cursor
         Cursor cursor = singleton.getAll();
         Assert.assertEquals("Cursor should be empty", 0, cursor.getCount());
         cursor.close();
 
-        long idCat1, idCat2, idCat3;
+        long idCat1;
         //insert one catalogue
         idCat1 = singleton.add("cat1", "");
         cursor = singleton.getAll();
@@ -57,11 +55,16 @@ public class CatalogueSQLManagerTest {
         cursor.moveToFirst();
         Assert.assertEquals("First element should be equal to idCat1", idCat1, GeneralTools.getLongElement(cursor, CatalogueContract.Catalogue._ID));
         cursor.close();
+    }
 
+    @Test
+    public void testGetAllWithThreeCatalogues() throws Exception {
+        long idCat1, idCat2, idCat3;
         //insert three catalogues
+        idCat1 = singleton.add("cat1", "");
         idCat2 = singleton.add("cat2", "");
         idCat3 = singleton.add("cat3", "");
-        cursor = singleton.getAll();
+        Cursor cursor = singleton.getAll();
         Assert.assertEquals("Cursor should contain three elements", 3, cursor.getCount());
         cursor.moveToFirst();
         do {

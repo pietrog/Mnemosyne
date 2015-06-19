@@ -3,6 +3,7 @@ package model.dictionary.memory;
 import java.util.Date;
 
 import model.dictionary.dictionaryObject.DictionaryObject;
+import model.dictionary.dictionaryObject.MemoryObject;
 
 /**
  * Created by pietro on 30/03/15.
@@ -29,5 +30,5 @@ public interface IMemorisation {
      * Check if the memorisation phase jumps to the next one or not (ENCODING => STORING => UPKEEPING)
      * @param object object to update
      */
-    void updateMemorisationPhase(DictionaryObject object);
+    void updateMemorisationPhase(MemoryObject object);
 }

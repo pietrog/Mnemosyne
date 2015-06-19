@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import model.dictionary.catalogue.sql.CatalogueContract;
 import model.dictionary.dictionary.sql.DictionaryContractBase;
-import model.dictionary.dictionary.sql.WordContract;
+import model.dictionary.dictionaryObject.sql.WordContract;
 import model.dictionary.dictionaryObject.sql.DictionaryObjectContract;
 import model.dictionary.memoryManager.sql.MemoryManagerContract;
 

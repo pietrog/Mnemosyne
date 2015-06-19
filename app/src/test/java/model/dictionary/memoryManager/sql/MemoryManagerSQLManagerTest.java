@@ -2,6 +2,7 @@ package model.dictionary.memoryManager.sql;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -52,12 +53,12 @@ public class MemoryManagerSQLManagerTest {
         //create the dictionary
         midDictionary = DictionarySQLManager.getInstance().addDictionaryInCatalogue(midCatalogue, "DictTest", "DictDescTest");
 
-        DictionaryObject.MemoryMonitoringObject one = singleton.createNewMemoryMonitoringObject();
-        DictionaryObject.MemoryMonitoringObject two = singleton.createNewMemoryMonitoringObject();
-        DictionaryObject.MemoryMonitoringObject three = singleton.createNewMemoryMonitoringObject();
-        midDictObj1 = singleton.createDictionaryObject(midDictionary, one.getID());
-        midDictObj2 = singleton.createDictionaryObject(midDictionary, two.getID());
-        midDictObj3 = singleton.createDictionaryObject(midDictionary, three.getID());
+        long memObjID1 = singleton.createNewMemoryMonitoringObject();
+        long memObjID2 = singleton.createNewMemoryMonitoringObject();
+        long memObjID3 = singleton.createNewMemoryMonitoringObject();
+        midDictObj1 = DictionarySQLManager.getInstance().createNewDictionaryObject(midDictionary, memObjID1);
+        midDictObj2 = DictionarySQLManager.getInstance().createNewDictionaryObject(midDictionary, memObjID2);
+        midDictObj3 = DictionarySQLManager.getInstance().createNewDictionaryObject(midDictionary, memObjID3);
     }
 
     @After
@@ -108,51 +109,40 @@ public class MemoryManagerSQLManagerTest {
 
     @Test
     public void testCreateNewMemoryMonitoringObject() throws Exception {
-        DictionaryObject.MemoryMonitoringObject newOne = singleton.createNewMemoryMonitoringObject();
-        MemoryManager.MemoryPhaseObject firstPhase = MemoryManager.mMemoryPhaseObjectMap.get(newOne.getMemoryPhaseID());
+        long memObjID1 = singleton.createNewMemoryMonitoringObject();
+        String sql = "SELECT * FROM " + MemoryManagerContract.MemoryMonitoring.TABLE_NAME + ", " + MemoryManagerContract.MemoryPhase.TABLE_NAME
+                + " WHERE " + MemoryManagerContract.MemoryMonitoring.CID + " = " + memObjID1
+                + " AND " + MemoryManagerContract.MemoryMonitoring.MEMORY_PHASE_ID + " = " + MemoryManagerContract.MemoryPhase.CID;
 
+        Cursor cursor = MemoryManagerSQLManager.getInstance().rawQuery(sql, null);
+
+        Assert.assertTrue("Move cursor to first row", cursor.moveToFirst());
         //test object points really on the first phase
-        Assert.assertTrue("New object should point on first phase", newOne.getMemoryPhaseName().compareTo(Global.FIRST_PHASE_NAME) == 0);
+        Assert.assertTrue("New object should point on first phase", GeneralTools.getStringElement(cursor, MemoryManagerContract.MemoryPhase.PHASE_NAME).compareTo(Global.FIRST_PHASE_NAME) == 0);
 
         //test object itself
-        System.out.println("LastLearnt Date: " + newOne.getLastLearnt());
         String nowFormated = GeneralTools.getSQLDate(GeneralTools.getNowDate());
-        System.out.println("Now Date: " + nowFormated);
-        System.out.println("Next Date: " + newOne.getNextLearnt());
+        Date nowDateFormat = GeneralTools.getDateFromSQLDate(nowFormated);
 
+        Date nextLearn = GeneralTools.getDateFromSQLDate(GeneralTools.getStringElement(cursor, MemoryManagerContract.MemoryMonitoring.NEXT_LEARNT));
+        Date lastlearnt = GeneralTools.getDateFromSQLDate(GeneralTools.getStringElement(cursor, MemoryManagerContract.MemoryMonitoring.LAST_LEARNT));
+        Date dateadded = GeneralTools.getDateFromSQLDate(GeneralTools.getStringElement(cursor, MemoryManagerContract.MemoryMonitoring.DATE_ADDED));
+        Date begMP = GeneralTools.getDateFromSQLDate(GeneralTools.getStringElement(cursor, MemoryManagerContract.MemoryMonitoring.BEGINING_OF_MP));
+        int firstPeriod = (int)GeneralTools.getLongElement(cursor, MemoryManagerContract.MemoryPhase.FIRST_PERIOD);
         //test the dates
-        Assert.assertTrue("Last learnt should be today", GeneralTools.getSQLDate(newOne.getLastLearnt()).compareTo(nowFormated) == 0);
-        Assert.assertTrue("Next learning date should be after last learnt", newOne.getNextLearnt().after(newOne.getLastLearnt()));
-        Assert.assertEquals("Added date should be equal to last learn date", newOne.getLastLearnt(), newOne.getDateAdded());
-        Assert.assertEquals("Beginning date should be equal to last learn date", newOne.getBeginningOfMP(), newOne.getDateAdded());
-        Assert.assertEquals("Days between should be equal to the first period of the first memory phase", firstPhase.mFirstPeriod, newOne.getDaysBetween());
+        Assert.assertTrue("Last learnt should be today", GeneralTools.getStringElement(cursor, MemoryManagerContract.MemoryMonitoring.LAST_LEARNT).compareTo(nowFormated) == 0);
+        Assert.assertTrue("Next learning date should be after last learnt", nextLearn.after(lastlearnt));
+        Assert.assertEquals("Added date should be equal to last learn date", lastlearnt, dateadded);
+        Assert.assertEquals("Beginning date should be equal to last learn date", begMP, dateadded);
+        Assert.assertTrue("Added, beginning and last learn date should be equal to today's date", nowDateFormat.compareTo(dateadded) == 0 && nowDateFormat.compareTo(lastlearnt) == 0 && nowDateFormat.compareTo(begMP) == 0);
+        Assert.assertEquals("Days between should be equal to the first period of the first memory phase", firstPeriod, GeneralTools.getLongElement(cursor, MemoryManagerContract.MemoryMonitoring.DAYS_BETWEEN));
 
         //test the first period
         Calendar cal = new GregorianCalendar();
-        cal.setTime(newOne.getNextLearnt());
-        cal.add(Calendar.DAY_OF_YEAR, -1 * firstPhase.mFirstPeriod);
+        cal.setTime(nextLearn);
+        cal.add(Calendar.DAY_OF_YEAR, -1 * firstPeriod);
         Date formattedNext = GeneralTools.getDateFromSQLDate(GeneralTools.getSQLDate(cal.getTime()));
-        Assert.assertEquals("Next learning date should be 1 day after last learnt", newOne.getLastLearnt(), formattedNext);
-    }
-
-    @Test
-    public void testCreateDictionaryObject() throws Exception {
-
-        //add the word
-        MemoryManager.initMemoryPhaseMap();
-        DictionaryObject.MemoryMonitoringObject newOne = singleton.createNewMemoryMonitoringObject();
-        long idObj = singleton.createDictionaryObject(midDictionary, newOne.getID());
-        Assert.assertTrue("Word id should be greater than 0", idObj > 0);
-
-        //failure on bad ids
-        Assert.assertEquals(Global.FAILURE, singleton.createDictionaryObject(-1, 2));
-        Assert.assertEquals(Global.FAILURE, singleton.createDictionaryObject(3, -1));
-
-        idObj = singleton.createDictionaryObject(midDictionary, 999);
-        Assert.assertTrue("Should return FAILURE if memory phase object does not exist", idObj == Global.FAILURE);
-
-        idObj = singleton.createDictionaryObject(999, newOne.getID());
-        Assert.assertTrue("Should return FAILURE if dictionary id does not exist", idObj == Global.FAILURE);
+        Assert.assertEquals("Next learning date should be 1 day after last learnt", lastlearnt, formattedNext);
     }
 
     @Test
@@ -217,7 +207,7 @@ public class MemoryManagerSQLManagerTest {
     public void testUpdateDictionaryObjectInDB() throws Exception {
 
         //test bad parameters
-        Assert.assertEquals("Null object should return bad parameter", Global.BAD_PARAMETER, singleton.updateDictionaryObjectInDB(null));
+        //Assert.assertEquals("Null object should return bad parameter", Global.BAD_PARAMETER, singleton.updateDictionaryObjectInDB(null));
 
 
     }
@@ -239,7 +229,7 @@ public class MemoryManagerSQLManagerTest {
 
         //update some dates, in the past
         //first object set to yesterday
-        DictionaryObject dictObj = DictionarySQLManager.getInstance().getFullObjectFromID(midDictObj1);
+        DictionaryObject dictObj = DictionarySQLManager.getInstance().getMemoryObjectFromID(midDictObj1);
         //update memory monitoring object
         String where = MemoryManagerContract.MemoryMonitoring._ID + " = '" + dictObj.getMemoryMonitoringID() + "'";
         ContentValues value = new ContentValues();
@@ -259,21 +249,21 @@ public class MemoryManagerSQLManagerTest {
 
         //check with three words at different dates
         //word 1
-        dictObj = DictionarySQLManager.getInstance().getFullObjectFromID(midDictObj1);
+        dictObj = DictionarySQLManager.getInstance().getMemoryObjectFromID(midDictObj1);
         where = MemoryManagerContract.MemoryMonitoring._ID + " = '" + dictObj.getMemoryMonitoringID() + "'";
         value = new ContentValues();
         value.put(MemoryManagerContract.MemoryMonitoring.NEXT_LEARNT, GeneralTools.getSQLDate(todayMinusOne.getTime()));
         MnemoDBHelper.getInstance(Robolectric.getShadowApplication().getApplicationContext()).getWritableDatabase().update(MemoryManagerContract.MemoryMonitoring.TABLE_NAME, value, where, null);
         singleton.addWordToLearnSession(midDictObj1, todayMinusOne.getTime());
         //word 2
-        dictObj = DictionarySQLManager.getInstance().getFullObjectFromID(midDictObj2);
+        dictObj = DictionarySQLManager.getInstance().getMemoryObjectFromID(midDictObj2);
         where = MemoryManagerContract.MemoryMonitoring._ID + " = '" + dictObj.getMemoryMonitoringID() + "'";
         value = new ContentValues();
         value.put(MemoryManagerContract.MemoryMonitoring.NEXT_LEARNT, GeneralTools.getSQLDate(todayMinusThree.getTime()));
         MnemoDBHelper.getInstance(Robolectric.getShadowApplication().getApplicationContext()).getWritableDatabase().update(MemoryManagerContract.MemoryMonitoring.TABLE_NAME, value, where, null);
         singleton.addWordToLearnSession(midDictObj2, todayMinusThree.getTime());
         //word 3
-        dictObj = DictionarySQLManager.getInstance().getFullObjectFromID(midDictObj3);
+        dictObj = DictionarySQLManager.getInstance().getMemoryObjectFromID(midDictObj3);
         where = MemoryManagerContract.MemoryMonitoring._ID + " = '" + dictObj.getMemoryMonitoringID() + "'";
         value = new ContentValues();
         value.put(MemoryManagerContract.MemoryMonitoring.NEXT_LEARNT, GeneralTools.getSQLDate(todayMinusSeven.getTime()));

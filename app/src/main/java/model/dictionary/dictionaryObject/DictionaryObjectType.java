@@ -6,5 +6,6 @@ package model.dictionary.dictionaryObject;
  */
 public enum DictionaryObjectType {
     All,        // all types accepted
+    MemoryObject, // memory object (no user data)
     WordDefinition // filter on wordDefinition object
 }

@@ -7,8 +7,10 @@ import android.database.Cursor;
 import java.util.Vector;
 
 import model.dictionary.Global;
-import model.dictionary.dictionaryObject.DictionaryObject;
+import model.dictionary.dictionaryObject.MemoryObject;
+import model.dictionary.dictionaryObject.WordDefinitionObj;
 import model.dictionary.dictionaryObject.sql.DictionaryObjectContract;
+import model.dictionary.dictionaryObject.sql.WordContract;
 import model.dictionary.memoryManager.sql.MemoryManagerContract;
 import model.dictionary.memoryManager.sql.MemoryManagerSQLManager;
 import model.dictionary.tools.BaseSQLManager;
@@ -84,28 +86,73 @@ public class DictionarySQLManager extends BaseSQLManager{
     }
 
     /**
+     * Create sql row corresponding to dictionary ID and a memoryObject ID
+     * @param dictionaryID dictionary sql id poiting on existing dictionary
+     * @param memoryObjectID memory monitoring sql id, can be null, or point on a memory monitoring row
+     * @return id of the new row
+     */
+    public long createNewDictionaryObject (long dictionaryID, long memoryObjectID){
+        if (dictionaryID <= 0)
+            return Global.BAD_PARAMETER;
+
+        ContentValues value = new ContentValues();
+        value.put(DictionaryObjectContract.DictionaryObject.DICTIONARYID, dictionaryID);
+        value.put(DictionaryObjectContract.DictionaryObject.MEMORY_MONITORING_ID, memoryObjectID);
+
+        return add(value, DictionaryObjectContract.DictionaryObject.TABLE_NAME);
+    }
+
+    /**
      * Insert new word in the dictionary, related to dictionary object
-     * @param dictionaryObjectID dictionary object id
+     * @param dictionaryID  sql dictionary id
      * @param word word to insert
      * @param definition word definition
      * @return id of the inserted object if successful, -1 otherwise
      */
-    public long addNewWord(long dictionaryObjectID, String word, String definition){
+    public long addNewWord(long dictionaryID, String word, String definition){
 
-        //create the memory monitoring object part
-        DictionaryObject.MemoryMonitoringObject monitor = MemoryManagerSQLManager.getInstance().createNewMemoryMonitoringObject();
-
-        if (dictionaryObjectID < 0)
+        if (dictionaryID < 0)
             return Global.BAD_PARAMETER;
 
         if (word == null || word.length() == 0)
             return  Global.BAD_PARAMETER;
 
+        //create the sql memory monitoring object
+        long memoryObjID = MemoryManagerSQLManager.getInstance().createNewMemoryMonitoringObject();
+
+        //create the dictionary object object
+        long dictObjID = createNewDictionaryObject(dictionaryID, memoryObjID);
+
+        //create the word in sql
         ContentValues val = new ContentValues();
-        val.put(WordContract.Word.DICTIONARYOBJECTID, dictionaryObjectID);
+        val.put(WordContract.Word.DICTIONARYOBJECTID, dictObjID);
         val.put(WordContract.Word.WORD, word);
         val.put(WordContract.Word.DEFINITION, definition);
         return add(val, WordContract.Word.TABLE_NAME);
+    }
+
+    /**
+     * Get Word object from its id
+     * @param wordID sql id of a word
+     * @return WordDefinitionObj object null otherwise
+     */
+    public WordDefinitionObj getWordFromID(long wordID){
+        if (wordID <= 0)
+            return null;
+
+        String fullObjectSQL =
+                "SELECT " +  DictionaryObjectContract.DictionaryObject.ALL + ", " + MemoryManagerContract.MemoryMonitoring.ALL + ", " + WordContract.Word.ALL
+                        + " from " + DictionaryObjectContract.DictionaryObject.TABLE_NAME + ", " + MemoryManagerContract.MemoryMonitoring.TABLE_NAME + ", " + WordContract.Word.TABLE_NAME
+                        + " WHERE " + WordContract.Word.CID + " = " + wordID
+                        + " AND " + DictionaryObjectContract.DictionaryObject.CID + "=" + WordContract.Word.DICTIONARYOBJECTID
+                        + " AND " + DictionaryObjectContract.DictionaryObject.MEMORY_MONITORING_ID + " = " + MemoryManagerContract.MemoryMonitoring.CID;
+
+        Cursor cursor = rawQuery(fullObjectSQL, null);
+
+        if (! cursor.moveToFirst())
+            return null;
+
+        return WordDefinitionObj.LoadFromCursor(cursor);
     }
 
     /**
@@ -118,17 +165,21 @@ public class DictionarySQLManager extends BaseSQLManager{
     }
 
     /**
-     * Get the dictionary object with the memory monitoring part
+     * Get the memory object from the dictionary object id
      * Full object means object built from dictionary and memory manager tables
-     * @param objectid long dictionary object id
-     * @return DictionaryObject dictionary object if successful, null otherwise
+     * @param dictionaryObjectID long sql dictionary object id
+     * @return MemoryObject object if successful, null otherwise
      */
-    public DictionaryObject getFullObjectFromID(long objectid){
+    public MemoryObject getMemoryObjectFromID(long dictionaryObjectID){
+
+        if (dictionaryObjectID <= 0)
+            return null;
+
         //get the full object cursor (object from dictionaryObject + memory monitoring + memory phase)
         String fullObjectSQL =
-                "SELECT * from " + DictionaryObjectContract.DictionaryObject.TABLE_NAME + ", " + MemoryManagerContract.MemoryMonitoring.TABLE_NAME
-                        + " ON " + MemoryManagerContract.MemoryMonitoring.CID + " = " + DictionaryObjectContract.DictionaryObject.CID
-                        + " WHERE " + DictionaryObjectContract.DictionaryObject.CID + " = " + objectid
+                "SELECT " + DictionaryObjectContract.DictionaryObject.ALL + ", " + MemoryManagerContract.MemoryMonitoring.ALL
+                        + " from " + DictionaryObjectContract.DictionaryObject.TABLE_NAME + ", " + MemoryManagerContract.MemoryMonitoring.TABLE_NAME
+                        + " WHERE " + DictionaryObjectContract.DictionaryObject.CID + " = " + dictionaryObjectID
                         + " AND " + DictionaryObjectContract.DictionaryObject.MEMORY_MONITORING_ID + " = " + MemoryManagerContract.MemoryMonitoring.CID;
 
         Cursor cursor = rawQuery(fullObjectSQL, null);
@@ -136,7 +187,7 @@ public class DictionarySQLManager extends BaseSQLManager{
         if (!cursor.moveToFirst())
             return null;
 
-        DictionaryObject res = DictionaryObject.LoadFromCursor(cursor);
+        MemoryObject res = MemoryObject.LoadFromCursor(cursor);
         cursor.close();
 
         return res;

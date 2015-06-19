@@ -4,33 +4,26 @@ import android.content.ContentValues;
 import android.database.Cursor;
 
 import model.dictionary.dictionary.sql.DictionaryContractBase;
-import model.dictionary.dictionary.sql.WordContract;
+import model.dictionary.dictionaryObject.sql.WordContract;
 import model.dictionary.tools.GeneralTools;
 
 /**
  * Created by pietro on 02/02/15.
  *
  */
-public class WordDefinitionObj extends DictionaryObject {
+public class WordDefinitionObj extends MemoryObject{
 
-    private long mID;
+    private long mID; // sql row id
     private String m_sWord; // word
     private String m_sDefinition; // definition of word
 
 
-    /**
-     * Complete constructor for WordDefinitionObj
-     * @param id sql Word object id
-     * @param word word name
-     * @param definition definition of the word
-     */
-    public WordDefinitionObj(long id, String word, String definition)
-    {
-        mID = id;
-        m_sWord = word;
-        m_sDefinition = definition;
+    protected WordDefinitionObj(Cursor cursor){
+        super(cursor);
+        mID = GeneralTools.getLongElement(cursor, WordContract.Word.CSID);
+        m_sWord = GeneralTools.getStringElement(cursor, WordContract.Word.WORD);
+        m_sDefinition = GeneralTools.getStringElement(cursor, WordContract.Word.DEFINITION);
     }
-
 
 
     public String getWord() {
@@ -45,7 +38,6 @@ public class WordDefinitionObj extends DictionaryObject {
         return mID;
     }
 
-
     @Override
     public DictionaryObjectType getType() {
         return DictionaryObjectType.WordDefinition;
@@ -56,9 +48,8 @@ public class WordDefinitionObj extends DictionaryObject {
      * Extends the toContentValue of DictionaryObject
      * @return ContentValues of this word object
      */
-    @Override
     public ContentValues toContentValues(){
-        ContentValues content = super.toContentValues();
+        ContentValues content = new ContentValues();
         content.put(WordContract.Word.WORD, m_sWord);
         content.put(WordContract.Word.DEFINITION, m_sDefinition);
         return content;
@@ -75,9 +66,7 @@ public class WordDefinitionObj extends DictionaryObject {
      * @return WordDefinitionObj loaded from cursor
      */
     public static WordDefinitionObj LoadFromCursor(Cursor cursor){
-        return new WordDefinitionObj(GeneralTools.getLongElement(cursor, DictionaryContractBase.DictionaryBase._ID),
-                GeneralTools.getStringElement(cursor, WordContract.Word.WORD),
-                GeneralTools.getStringElement(cursor, WordContract.Word.DEFINITION));
+        return new WordDefinitionObj(cursor);
     }
 
 

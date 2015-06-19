@@ -10,10 +10,7 @@ import java.util.Map;
 import java.util.Vector;
 
 import model.dictionary.Global;
-import model.dictionary.dictionaryObject.DictionaryObject;
-import model.dictionary.dictionaryObject.DictionaryObject.MemoryMonitoringObject;
-import model.dictionary.dictionary.sql.DictionaryContractBase;
-import model.dictionary.dictionaryObject.sql.DictionaryObjectContract;
+import model.dictionary.dictionaryObject.MemoryObject;
 import model.dictionary.memoryManager.MemoryManager;
 import model.dictionary.tools.BaseSQLManager;
 import model.dictionary.tools.GeneralTools;
@@ -92,43 +89,35 @@ public class MemoryManagerSQLManager extends BaseSQLManager{
 
 
     /**
-     * Create a new memory monitoring object. The init object points on the first memory phase and everything is set for the init process
+     * Create a new basic memory monitoring object. The init object points on the first memory phase and everything is set for the init process
      * @return id of the new row
      */
-    public MemoryMonitoringObject createNewMemoryMonitoringObject(){
-        MemoryMonitoringObject obj = new MemoryMonitoringObject();
-        long id = add(obj.toContentValues(), MemoryManagerContract.MemoryMonitoring.TABLE_NAME);
-        obj.setID(id);
-        return obj;
-    }
+    public long createNewMemoryMonitoringObject(){
 
-    /**
-     * Create the base dictionary object from a dictionary id and memory monitoring id
-     * @param dictionaryID long dictionary id
-     * @param memoryMonitoringID long memory monitoring id
-     * @return id of the new row
-     */
-    public long createDictionaryObject(long dictionaryID, long memoryMonitoringID){
-        if (dictionaryID < 0 || memoryMonitoringID < 0)
-            return Global.FAILURE;
+        Calendar now = Calendar.getInstance();
         ContentValues value = new ContentValues();
-        value.put(DictionaryObjectContract.DictionaryObject.MEMORY_MONITORING_ID, memoryMonitoringID);
-        value.put(DictionaryObjectContract.DictionaryObject.DICTIONARYID, dictionaryID);
-        return add(value, DictionaryObjectContract.DictionaryObject.TABLE_NAME);
-    }
+        value.put(MemoryManagerContract.MemoryMonitoring.BEGINING_OF_MP, GeneralTools.getSQLDate(now.getTime()));
+        value.put(MemoryManagerContract.MemoryMonitoring.DATE_ADDED, GeneralTools.getSQLDate(now.getTime()));
+        value.put(MemoryManagerContract.MemoryMonitoring.LAST_LEARNT, GeneralTools.getSQLDate(now.getTime()));
+        now.add(Calendar.DAY_OF_YEAR, MemoryManager.mMemoryPhaseObjectMap.get(MemoryManager.mIDFirstPhase).mFirstPeriod);
+        value.put(MemoryManagerContract.MemoryMonitoring.NEXT_LEARNT, GeneralTools.getSQLDate(now.getTime()));
+        value.put(MemoryManagerContract.MemoryMonitoring.DAYS_BETWEEN, MemoryManager.mMemoryPhaseObjectMap.get(MemoryManager.mIDFirstPhase).mFirstPeriod);
+        value.put(MemoryManagerContract.MemoryMonitoring.MEMORY_PHASE_ID, MemoryManager.mIDFirstPhase);
 
+        return add(value, MemoryManagerContract.MemoryMonitoring.TABLE_NAME);
+    }
 
     /**
      * Add the word to the learn session given by date parameter
-     * @param id id of the word
+     * @param dictObjID long sql dictionary object id
      * @param date alert date
      * @return the id of the memory monitoring database object
      */
-    public long addWordToLearnSession(long id, Date date){
+    public long addWordToLearnSession(long dictObjID, Date date){
         ContentValues value = new ContentValues();
         String strdate = GeneralTools.getSQLDate(date);
         value.put(MemoryManagerContract.MemoryManager.DATE, strdate);
-        value.put(MemoryManagerContract.MemoryManager.DICTIONARYOBJECTID, id);
+        value.put(MemoryManagerContract.MemoryManager.DICTIONARYOBJECTID, dictObjID);
         return add(value, MemoryManagerContract.MemoryManager.TABLE_NAME);
     }
 
@@ -178,29 +167,19 @@ public class MemoryManagerSQLManager extends BaseSQLManager{
      * @param object object to persist
      * @return {Global.SUCCESS} if successful, {Global.FAILURE} otherwise
      */
-    public int updateDictionaryObjectInDB(DictionaryObject object){
+    public int updateMemoryObjectInDB(MemoryObject object){
         if (object == null) {
             Logger.i("MemoryManagerSQLManager::updateDictionaryObjectInDB"," null object");
             return Global.BAD_PARAMETER;
         }
 
         int res = Global.SUCCESS;
-        //if it is the first time we update this object
-        if (object.getMemoryMonitoringID() == -1){
-            //create the memory monitoring object
-            long id = add(object.getMemoryMonitoring().toContentValues(), MemoryManagerContract.MemoryMonitoring.TABLE_NAME);
-            if (id != Global.FAILURE)
-                object.setMemoryMonitoringID(id);
-        }
-
         //process for object in normal cycle
         //update dictionary object and memory monitoring object
-        if (update(object.toContentValues(), DictionaryContractBase.DictionaryBase.TABLE_NAME, " _ID = " + object.getID()) == 0)
-            res = Global.FAILURE;
-        if (update(object.getMemoryMonitoring().toContentValues(), MemoryManagerContract.MemoryMonitoring.TABLE_NAME, "_ID = "+object.getMemoryMonitoringID()) == 0)
+        if (update(object.toContentValues(), MemoryManagerContract.MemoryMonitoring.TABLE_NAME, MemoryManagerContract.MemoryMonitoring.CID + " = "+object.getMemoryMonitoringID()) == 0)
             res = Global.FAILURE;
         //if memory monitoring object changes next dates, keep it up to date
-        if (addWordToLearnSession(object.getID(), object.getMemoryMonitoring().getNextLearnt()) == -1)
+        if (addWordToLearnSession(object.getDictionaryObjectID(), object.getNextLearnt()) == -1)
             res = Global.FAILURE;
 
         if (res == Global.FAILURE)

@@ -6,6 +6,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import model.dictionary.dictionaryObject.DictionaryObject;
+import model.dictionary.dictionaryObject.MemoryObject;
 import model.dictionary.memoryManager.sql.MemoryManagerSQLManager;
 
 /**
@@ -49,26 +50,26 @@ public class LongTermMemory implements IMemorisation{
     }
 
     @Override
-    public void updateMemorisationPhase(DictionaryObject object) {
+    public void updateMemorisationPhase(MemoryObject object) {
 
         //fix the lastlearnt date for removing id from list of id to raise
-        Date oldNext = object.getMemoryMonitoring().getNextLearnt();
+        Date oldNext = object.getNextLearnt();
         //we implement a strict update of the phase, will change later
         //we just check if the begin date of the phase + number of days of this phase is gt or equal to today's date
         Calendar cal = Calendar.getInstance();
-        cal.setTime(object.getMemoryMonitoring().getBeginningOfMP());
-        cal.add(Calendar.DAY_OF_YEAR, object.getMemoryMonitoring().getDurationPhase());
+        cal.setTime(object.getBeginningOfMP());
+        cal.add(Calendar.DAY_OF_YEAR, object.getDurationPhase());
 
         // compare with today's date, if we are not in last phase
         if (cal.compareTo(Calendar.getInstance()) <= 0)
             //we go to the next phase
-            object.getMemoryMonitoring().updateToNextPhase();
+            object.updateToNextPhase();
         //increment in this phase
         else
-            object.getMemoryMonitoring().incrementDaysInPhaseAndUpdateLearningDates();
+            object.incrementDaysInPhaseAndUpdateLearningDates();
 
         //update object in database
-        MemoryManagerSQLManager.getInstance().updateDictionaryObjectInDB(object);
+        MemoryManagerSQLManager.getInstance().updateMemoryObjectInDB(object);
     }
 
 

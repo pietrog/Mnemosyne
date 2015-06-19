@@ -13,6 +13,8 @@ import java.util.Vector;
 
 import model.dictionary.dictionaryObject.DictionaryObject;
 import model.dictionary.dictionary.sql.DictionarySQLManager;
+import model.dictionary.dictionaryObject.MemoryObject;
+import model.dictionary.dictionaryObject.WordDefinitionObj;
 import model.dictionary.memory.LongTermMemory;
 import model.dictionary.memoryManager.sql.MemoryManagerSQLManager;
 import model.dictionary.tools.GeneralTools;
@@ -32,7 +34,7 @@ public class MnemoMemoryManager extends IntentService {
     private static final String DICTID = "DICTID";
     private static final String WORD = "WORD";
     private static final String DEFINITION = "DEFINITION";
-    private static final String WORDID = "WORDID";
+    private static final String DICTIONARYOBJECTID = "DICTOBJID";
 
 
     public static void startActionRiseTodayList(Context context) {
@@ -64,7 +66,7 @@ public class MnemoMemoryManager extends IntentService {
      */
     public static void startActionUpdateWord(Context context, long id){
         Intent intent = new Intent(context, MnemoMemoryManager.class);
-        intent.putExtra(WORDID, id);
+        intent.putExtra(DICTIONARYOBJECTID, id);
         intent.setAction(ACTION_UPDATE_MEMORY_PHASE_WORD);
         context.startService(intent);
     }
@@ -92,7 +94,7 @@ public class MnemoMemoryManager extends IntentService {
                             intent.getStringExtra(DEFINITION));
                     break;
                 case ACTION_UPDATE_MEMORY_PHASE_WORD:
-                    updateMemoryPhaseOfDictionaryObject(intent.getLongExtra(WORDID,-1));
+                    updateMemoryPhaseOfDictionaryObject(intent.getLongExtra(DICTIONARYOBJECTID,-1));
                     break;
                 case ACTION_POSTPONE_LEARNING_SESSION:
                     reportNonLearntObjects();
@@ -131,7 +133,7 @@ public class MnemoMemoryManager extends IntentService {
 
 
     /**
-     * Add a word in dictionary and memory monitoring system
+     * Add a new word (task in background)
      * @param dictionaryID dictionary id
      * @param word word
      * @param definition definition
@@ -141,24 +143,20 @@ public class MnemoMemoryManager extends IntentService {
         if (dictionaryID == -1)
             return;
 
-        //create the memory monitoring part
-        DictionaryObject.MemoryMonitoringObject monitor = MemoryManagerSQLManager.getInstance().createNewMemoryMonitoringObject();
-
-        //create the dictionary base object
-        long dictObjID = MemoryManagerSQLManager.getInstance().createDictionaryObject(dictionaryID, monitor.getID());
-
         //create the word part
-        long wordID = DictionarySQLManager.getInstance(getApplicationContext()).addNewWord(dictObjID, word, definition);
+        long wordID = DictionarySQLManager.getInstance(getApplicationContext()).addNewWord(dictionaryID, word, definition);
+
+        WordDefinitionObj obj = DictionarySQLManager.getInstance().getWordFromID(wordID);
 
         //add to the first learning session
-        MemoryManagerSQLManager.getInstance().addWordToLearnSession(wordID, monitor.getNextLearnt());
+        MemoryManagerSQLManager.getInstance().addWordToLearnSession(wordID, obj.getNextLearnt());
 
     }
 
     private void updateMemoryPhaseOfDictionaryObject(long dictionaryObjectID){
         if (dictionaryObjectID < 0)
             return;
-        DictionaryObject object = DictionarySQLManager.getInstance(getApplicationContext()).getFullObjectFromID(dictionaryObjectID);
+        MemoryObject object = DictionarySQLManager.getInstance(getApplicationContext()).getMemoryObjectFromID(dictionaryObjectID);
         if (object == null) {
             Logger.i("MnemoMemoryManager::updateMemoryPhaseOfDictionaryObject", " object whith id " + dictionaryObjectID + " is null");
             return;
@@ -166,7 +164,7 @@ public class MnemoMemoryManager extends IntentService {
         //check if object was already updated today
         //if it was, do not update it again
         String now = GeneralTools.getSQLDate(Calendar.getInstance().getTime());
-        if (now.compareTo(GeneralTools.getSQLDate(object.getMemoryMonitoring().getLastLearnt())) != 0)
+        if (now.compareTo(GeneralTools.getSQLDate(object.getLastLearnt())) != 0)
             LongTermMemory.getInstance(getApplicationContext()).updateMemorisationPhase(object);
     }
 

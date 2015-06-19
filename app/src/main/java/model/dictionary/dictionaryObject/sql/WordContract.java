@@ -1,4 +1,4 @@
-package model.dictionary.dictionary.sql;
+package model.dictionary.dictionaryObject.sql;
 
 import android.provider.BaseColumns;
 
@@ -15,9 +15,12 @@ public class WordContract {
 
     public static abstract class Word implements BaseColumns {
         public static final String TABLE_NAME = "wordObjects";
+        public static final String CID = TABLE_NAME + "." + _ID;
+        public static final String CSID = TABLE_NAME+"_"+_ID;
         public static final String WORD = "word";
         public static final String DEFINITION = "definition";
         public static final String DICTIONARYOBJECTID = "dictionaryobjectID";
+        public static final String ALL = CID + " AS " + CSID + ", " + WORD + ", " + DEFINITION + ", " + DICTIONARYOBJECTID;
     }
 
 

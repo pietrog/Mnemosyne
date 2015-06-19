@@ -31,12 +31,14 @@ public class MemoryManagerContract {
     public static abstract class MemoryMonitoring implements BaseColumns{
         public static final String TABLE_NAME = "memorymonitoring";
         public static final String CID = TABLE_NAME + "." + _ID;
+        public static final String CSID = TABLE_NAME + _ID;
         public static final String LAST_LEARNT = "last_learnt"; // date of the last learning session of this object
         public static final String NEXT_LEARNT = "next_learnt"; // date of the next learning session on this object
         public static final String DATE_ADDED = "dateadded"; // date word was added for the first time
         public static final String MEMORY_PHASE_ID = "memoryphase"; // the learning memory phase
         public static final String BEGINING_OF_MP = "endofmp"; // date of the beginning of the memory phase
         public static final String DAYS_BETWEEN = "daysbetween"; // current number of days between two learning sessions
+        public static final String ALL = CID + " AS " + CSID +", " + LAST_LEARNT + ", " + NEXT_LEARNT + ", " + DATE_ADDED + ", " + MEMORY_PHASE_ID + ", " + BEGINING_OF_MP + ", " + DAYS_BETWEEN;
 
     }
 
