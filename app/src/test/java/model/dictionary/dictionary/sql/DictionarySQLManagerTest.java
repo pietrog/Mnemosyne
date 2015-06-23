@@ -72,7 +72,7 @@ public class DictionarySQLManagerTest {
         Cursor cursor = singleton.getAllDictionaryObjectsCursor(dictID1);
         Assert.assertEquals("Should contain one word", 1, cursor.getCount());
         cursor.moveToFirst();
-        Assert.assertEquals("Word object id should be equal to", wordID1, GeneralTools.getLongElement(cursor, WordContract.Word.CID));
+        Assert.assertEquals("Word object id should be equal to", wordID1, GeneralTools.getLongElement(cursor, WordContract.Word.CSID));
         cursor.close();
 
         //get several words
@@ -85,7 +85,7 @@ public class DictionarySQLManagerTest {
         cursor.moveToFirst();
         Assert.assertEquals("Dictionary should contain 3 words", 3, cursor.getCount());
         do{
-            Assert.assertTrue("Id should be in this list", GeneralTools.getLongElement(cursor, WordContract.Word.CID) == wordID1 || GeneralTools.getLongElement(cursor, WordContract.Word.CID) == wordID3 || GeneralTools.getLongElement(cursor, WordContract.Word.CID) == wordID4);
+            Assert.assertTrue("Id should be in this list", GeneralTools.getLongElement(cursor, WordContract.Word.CSID) == wordID1 || GeneralTools.getLongElement(cursor, WordContract.Word.CSID) == wordID3 || GeneralTools.getLongElement(cursor, WordContract.Word.CSID) == wordID4);
         }while(cursor.moveToNext());
         cursor.close();
 
@@ -139,7 +139,7 @@ public class DictionarySQLManagerTest {
         Assert.assertEquals("Should contain 3 objects", 3, cursor.getCount());
         cursor.moveToFirst();
         do{
-            Assert.assertTrue("We should have a coherent result", GeneralTools.getLongElement(cursor, "_id") == idWord1 || GeneralTools.getLongElement(cursor, "_id") == idWord2 || GeneralTools.getLongElement(cursor, "_id") == idWord3);
+            Assert.assertTrue("We should have a coherent result", GeneralTools.getLongElement(cursor, WordContract.Word.CSID) == idWord1 || GeneralTools.getLongElement(cursor, WordContract.Word.CSID) == idWord2 || GeneralTools.getLongElement(cursor, WordContract.Word.CSID) == idWord3);
         }while(cursor.moveToNext());
 
     }

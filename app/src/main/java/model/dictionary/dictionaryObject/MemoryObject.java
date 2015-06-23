@@ -113,6 +113,7 @@ public class MemoryObject extends DictionaryObject {
         return DictionaryObjectType.MemoryObject;
     }
 
+    @Override
     public ContentValues toContentValues(){
         ContentValues value = new ContentValues();
         value.put(MemoryManagerContract.MemoryMonitoring.BEGINING_OF_MP, GeneralTools.getSQLDate(mBeginningOfMP));
@@ -126,6 +127,18 @@ public class MemoryObject extends DictionaryObject {
 
     public static MemoryObject LoadFromCursor(Cursor cursor){
         return new MemoryObject(cursor);
+    }
+
+    @Override
+    public String toString(){
+        String res = super.toString();
+        res += " Date last learn: " + mLastLearnt != null ? mLastLearnt.toString() : "";
+        res += " Date next learn: " + mNextLearnt != null ? mNextLearnt.toString() : "";
+        res += " Date added date: " + mDateAdded != null ? mDateAdded.toString() : "";
+        res += " Memory phase id: " + mMemoryPhaseID;
+        res += " Date beginning of memory phase: " + mBeginningOfMP != null ? mBeginningOfMP.toString() : "";
+        res += " Days between: " + mDaysBetween;
+        return res;
     }
 
 }

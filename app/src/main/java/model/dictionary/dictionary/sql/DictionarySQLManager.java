@@ -57,7 +57,8 @@ public class DictionarySQLManager extends BaseSQLManager{
      * @return cursor
      */
     public Cursor getAllDictionaryObjectsCursor(long dictionaryID){
-        String sql =  "SELECT * FROM " + WordContract.Word.TABLE_NAME + ", " + DictionaryObjectContract.DictionaryObject.TABLE_NAME
+        String sql =  "SELECT " + WordContract.Word.CID + ", " + WordContract.Word.ALL + ", " + DictionaryObjectContract.DictionaryObject.ALL
+                + " FROM " + WordContract.Word.TABLE_NAME + ", " + DictionaryObjectContract.DictionaryObject.TABLE_NAME
                 + " WHERE " + DictionaryObjectContract.DictionaryObject.DICTIONARYID + " = " + dictionaryID
                 + " AND " + WordContract.Word.DICTIONARYOBJECTID + " = " + DictionaryObjectContract.DictionaryObject.CID
                 + " ORDER BY " + WordContract.Word.WORD;
@@ -74,13 +75,15 @@ public class DictionarySQLManager extends BaseSQLManager{
         if (list == null || list.size() == 0)
             return null;
 
-        String sql = "SELECT * FROM " + WordContract.Word.TABLE_NAME
-                + " WHERE " + DictionaryContractBase.DictionaryBase._ID + " IN (" ;
+        String sql =  "SELECT " + WordContract.Word.CID + ", " + WordContract.Word.ALL + ", " + DictionaryObjectContract.DictionaryObject.ALL
+                + " FROM " + WordContract.Word.TABLE_NAME + ", " + DictionaryObjectContract.DictionaryObject.TABLE_NAME
+                + " WHERE " + DictionaryObjectContract.DictionaryObject.CID + " IN (" ;
 
         for (Couple c : list)
             sql += c.val1 + ", ";
         sql = sql.substring(0, sql.length() - 2);
-        sql += ")";
+
+        sql += ") AND " + WordContract.Word.DICTIONARYOBJECTID + " = " + DictionaryObjectContract.DictionaryObject.CID + " ORDER BY " + WordContract.Word.WORD;
 
         return rawQuery(sql, null);
     }

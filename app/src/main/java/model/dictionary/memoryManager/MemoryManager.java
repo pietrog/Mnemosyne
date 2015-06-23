@@ -25,7 +25,7 @@ public class MemoryManager {
     public static boolean mHasBeenInitialized = false;
     public static long mIDFirstPhase;
 
-    public static boolean initMemoryPhaseMap(){
+    public static synchronized boolean initMemoryPhaseMap(){
         mHasBeenInitialized = MemoryManagerSQLManager.getInstance().initMemoryPhaseMap(mMemoryPhaseObjectMap) == Global.SUCCESS;
         if (mHasBeenInitialized)
             for(Long current: mMemoryPhaseObjectMap.keySet())

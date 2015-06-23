@@ -124,6 +124,7 @@ public class LibraryFragment extends ListFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        mAdapter.getCursor().close();
+        if (mAdapter != null && mAdapter.getCursor() != null)
+            mAdapter.getCursor().close();
     }
 }

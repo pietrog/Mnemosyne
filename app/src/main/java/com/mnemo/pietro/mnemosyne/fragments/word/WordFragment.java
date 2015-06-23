@@ -104,7 +104,7 @@ public class WordFragment extends Fragment implements View.OnClickListener{
     }
 
     private void showStatistics(){
-        MemoryObject object = DictionarySQLManager.getInstance().getMemoryObjectFromDictionaryObjectID(mID);
+        MemoryObject object = DictionarySQLManager.getInstance().getMemoryObjectFromDictionaryObjectID(mDictObjID);
         ViewTools.setStringOfTextView(mRootView.findViewById(R.id.lastDate), GeneralTools.getSQLDate(object.getLastLearnt()));
         ViewTools.setStringOfTextView(mRootView.findViewById(R.id.nextDate), GeneralTools.getSQLDate(object.getNextLearnt()));
 

@@ -11,10 +11,12 @@ import android.support.v4.app.TaskStackBuilder;
 import java.util.Calendar;
 import java.util.Vector;
 
+import model.dictionary.catalogue.sql.CatalogueSQLManager;
 import model.dictionary.dictionary.sql.DictionarySQLManager;
 import model.dictionary.dictionaryObject.MemoryObject;
 import model.dictionary.dictionaryObject.WordDefinitionObj;
 import model.dictionary.memory.LongTermMemory;
+import model.dictionary.memoryManager.MemoryManager;
 import model.dictionary.memoryManager.sql.MemoryManagerSQLManager;
 import model.dictionary.tools.GeneralTools;
 import model.dictionary.tools.Logger;
@@ -34,6 +36,13 @@ public class MnemoMemoryManager extends IntentService {
     private static final String WORD = "WORD";
     private static final String DEFINITION = "DEFINITION";
     private static final String DICTIONARYOBJECTID = "DICTOBJID";
+
+    public static void initSystem(Context context){
+        CatalogueSQLManager.getInstance(context);
+        DictionarySQLManager.getInstance(context);
+        MemoryManagerSQLManager.getInstance(context);
+        MemoryManager.initMemoryPhaseMap();
+    }
 
 
     public static void startActionRiseTodayList(Context context) {
@@ -118,7 +127,7 @@ public class MnemoMemoryManager extends IntentService {
          * test notif
          */
         int mID = 0;
-        NotificationCompat.Builder mbuilder = new NotificationCompat.Builder(this).setSmallIcon(R.drawable.ic_action_new).setContentTitle("ID PRESENT").setContentText("" + list.toString());
+        NotificationCompat.Builder mbuilder = new NotificationCompat.Builder(this).setSmallIcon(R.drawable.ic_action_new).setContentTitle(getResources().getString(R.string.hint_raised_message)).setContentText("");
         Intent intent = new Intent(getApplicationContext(), MnemoCentral.class);
         intent.putExtra(MnemoCentral.EXTRA_ALERT_DATE, GeneralTools.getSQLDate(now.getTime()));
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(getApplicationContext());

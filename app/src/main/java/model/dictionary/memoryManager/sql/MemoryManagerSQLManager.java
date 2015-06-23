@@ -173,6 +173,7 @@ public class MemoryManagerSQLManager extends BaseSQLManager{
             return Global.BAD_PARAMETER;
         }
 
+        Logger.i("MemoryManagerSQLManager::updateMemoryObjectInDB", " Update memory object: " + object.toString());
         //process for object in normal cycle
         //update memory monitoring object
         if (update(object.toContentValues(), MemoryManagerContract.MemoryMonitoring.TABLE_NAME, MemoryManagerContract.MemoryMonitoring.CID + " = "+object.getMemoryMonitoringID()) <= 0) {
@@ -209,7 +210,7 @@ public class MemoryManagerSQLManager extends BaseSQLManager{
             //for each day before, increment the delay
             Vector<Couple<Long, Integer>> list = getListOfObjectsToLearn(pastDate.getTime());
             // maybe there is nothing at this date
-            if (list == null) {
+            if (list == null || list.size() == 0) {
                 cal.add(Calendar.DAY_OF_YEAR, -1);
                 ++delay;
                 continue;

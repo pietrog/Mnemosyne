@@ -46,7 +46,8 @@ public abstract class BaseDictionaryFragment extends ListFragment{
         super.onStop();
 
         //close the cursor before leaving
-        mAdapter.getCursor().close();
+        if (mAdapter != null && mAdapter.getCursor() != null)
+            mAdapter.getCursor().close();
     }
 
     @Override

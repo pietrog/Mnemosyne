@@ -146,6 +146,7 @@ public class CatalogueFragment extends ListFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mAdapter.getCursor().close();
+        if(mAdapter != null)
+            mAdapter.getCursor().close();
     }
 }

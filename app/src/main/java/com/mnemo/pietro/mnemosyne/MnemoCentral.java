@@ -98,10 +98,7 @@ public class MnemoCentral
      * @return {Global.SUCCESS} if successful
      */
     private int InitSystem(){
-        CatalogueSQLManager.getInstance(getApplicationContext());
-        DictionarySQLManager.getInstance(getApplicationContext());
-        MemoryManagerSQLManager.getInstance(getApplicationContext());
-        MemoryManager.initMemoryPhaseMap();
+        MnemoMemoryManager.initSystem(getApplicationContext());
         return Global.SUCCESS;
     }
 

@@ -37,6 +37,7 @@
     <string name="hint_mem_beg_mp">Date de demarrage de la phase </string>
     <string name="hint_mem_days_between">Nombre de jours entre 2 revisions </string>
     <string name="action_raise_alert">Verifier les mots a reviser</string>
+    <string name="hint_raised_message">Revision du jour</string>
     
 
 
