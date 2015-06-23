@@ -19,8 +19,10 @@ import model.dictionary.tools.MnemoDBHelper;
 
 //EN COURS
 //@TODO: implementer un rappel basé sur l'alarme
+//@TODO: retirer les mots revises de la todays list
 
 //A FAIRE
+//@TODO: definir une regle de navigation dans l'appli (d'un dictionaire a l'autre, ...) coherente pour l'utilisateur
 //@TODO: manager l'initialisation/destruction de certaines ressources(dbhelpers, ...) dans MnemoCentral, rationaliser l'utilissation des dbhelpers
 //@TODO: implementer la modification des entites
 //@TODO: modifier l'ecran d'affichage des mot a réviser, avec couleurs pour noter l'importance(jours de retard)
