@@ -48,8 +48,7 @@ public class WordDefinitionObj extends MemoryObject{
      * Extends the toContentValue of DictionaryObject
      * @return ContentValues of this word object
      */
-    @Override
-    public ContentValues toContentValues(){
+    public ContentValues wordToContentValues(){
         ContentValues content = new ContentValues();
         content.put(WordContract.Word.WORD, m_sWord);
         content.put(WordContract.Word.DEFINITION, m_sDefinition);

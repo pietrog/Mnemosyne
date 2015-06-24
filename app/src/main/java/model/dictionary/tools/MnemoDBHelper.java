@@ -1,10 +1,12 @@
 package model.dictionary.tools;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import model.dictionary.catalogue.sql.CatalogueContract;
+import model.dictionary.dictionary.Dictionary;
 import model.dictionary.dictionary.sql.DictionaryContractBase;
 import model.dictionary.dictionaryObject.sql.WordContract;
 import model.dictionary.dictionaryObject.sql.DictionaryObjectContract;
@@ -71,6 +73,29 @@ public class MnemoDBHelper extends SQLiteOpenHelper {
     public void onConfigure(SQLiteDatabase db) {
         super.onConfigure(db);
         db.execSQL("PRAGMA foreign_keys=ON;");
+    }
+
+    private void initTestDatabase(SQLiteDatabase db){
+        //add a catalogue
+        ContentValues val = new ContentValues();
+        val.put(CatalogueContract.Catalogue.CATALOGUE_NAME, "Dictionnaires de langue");
+        val.put(CatalogueContract.Catalogue.CATALOGUE_DESC, "Contient des dictionnaires de langue");
+        long idCatalogue = db.insert(CatalogueContract.Catalogue.TABLE_NAME, null, val);
+
+        //add dictionaries
+        val = new ContentValues();
+        val.put(DictionaryContractBase.DictionaryBase.NAME, "Anglais");
+        val.put(DictionaryContractBase.DictionaryBase.DESCRIPTION, "Dictionnaire d'anglais");
+        val.put(DictionaryContractBase.DictionaryBase.CATALOGUEID, idCatalogue);
+        long idDictUK = db.insert(DictionaryObjectContract.DictionaryObject.TABLE_NAME, null, val);
+        val = new ContentValues();
+        val.put(DictionaryContractBase.DictionaryBase.NAME, "Italien");
+        val.put(DictionaryContractBase.DictionaryBase.DESCRIPTION, "Dictionnaire d'italien");
+        val.put(DictionaryContractBase.DictionaryBase.CATALOGUEID, idCatalogue);
+        long idDictIT = db.insert(DictionaryObjectContract.DictionaryObject.TABLE_NAME, null, val);
+
+        //add words at different dates
+
     }
 
 }

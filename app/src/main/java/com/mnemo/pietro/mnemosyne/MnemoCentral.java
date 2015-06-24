@@ -101,6 +101,7 @@ public class MnemoCentral
      */
     private int InitSystem(){
         MnemoMemoryManager.initSystem(getApplicationContext());
+        MnemoMemoryManager.initDBSetOfTest();
         return Global.SUCCESS;
     }
 

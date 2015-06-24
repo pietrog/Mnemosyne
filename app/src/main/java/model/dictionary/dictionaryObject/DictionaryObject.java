@@ -56,7 +56,7 @@ public class DictionaryObject {
      * Get the object in ContentValues container, for sql. Method to override in all subclasses
      * @return ContentValues of this object
      */
-    public ContentValues toContentValues(){
+    public ContentValues dictionaryObjectToContentValues(){
         return new ContentValues();
     }
 

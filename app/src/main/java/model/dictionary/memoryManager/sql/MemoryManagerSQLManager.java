@@ -176,7 +176,7 @@ public class MemoryManagerSQLManager extends BaseSQLManager{
         Logger.i("MemoryManagerSQLManager::updateMemoryObjectInDB", " Update memory object: " + object.toString());
         //process for object in normal cycle
         //update memory monitoring object
-        if (update(object.toContentValues(), MemoryManagerContract.MemoryMonitoring.TABLE_NAME, MemoryManagerContract.MemoryMonitoring.CID + " = "+object.getMemoryMonitoringID()) <= 0) {
+        if (update(object.memoryObjectToContentValues(), MemoryManagerContract.MemoryMonitoring.TABLE_NAME, MemoryManagerContract.MemoryMonitoring.CID + " = "+object.getMemoryMonitoringID()) <= 0) {
             Logger.w("MemoryManagerSQLManager::updateDictionaryObjectInDB", " something wrong occured during update of object");
             return Global.FAILURE;
         }

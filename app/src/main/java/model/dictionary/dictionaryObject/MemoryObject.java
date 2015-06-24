@@ -113,8 +113,7 @@ public class MemoryObject extends DictionaryObject {
         return DictionaryObjectType.MemoryObject;
     }
 
-    @Override
-    public ContentValues toContentValues(){
+    public ContentValues memoryObjectToContentValues(){
         ContentValues value = new ContentValues();
         value.put(MemoryManagerContract.MemoryMonitoring.BEGINING_OF_MP, GeneralTools.getSQLDate(mBeginningOfMP));
         value.put(MemoryManagerContract.MemoryMonitoring.DATE_ADDED, GeneralTools.getSQLDate(mDateAdded));
@@ -141,4 +140,20 @@ public class MemoryObject extends DictionaryObject {
         return res;
     }
 
+
+    //*************************************************************************
+    //**************************TEST PURPOSE*********************************//
+    //*************************************************************************
+    public void setNext(Date next){
+        mNextLearnt = next;
+    }
+    public void setmLastLearnt(Date last){
+        mLastLearnt = last;
+    }
+    public void setDateAdded(Date added){
+        mDateAdded = added;
+    }
+    public void setBegMP(Date date){
+        mBeginningOfMP = date;
+    }
 }

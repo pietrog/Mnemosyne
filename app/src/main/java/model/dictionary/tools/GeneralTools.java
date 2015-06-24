@@ -141,6 +141,10 @@ public class GeneralTools {
         return date;
     }
 
+    public static Date getFormattedDate(Date date){
+        return getDateFromSQLDate(getSQLDate(date));
+    }
+
     /**
      * Return a string list from vector vect
      * @param vect vector to put in string list
