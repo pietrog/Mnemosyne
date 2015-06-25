@@ -9,12 +9,9 @@ import android.view.Menu;
 
 import com.mnemo.pietro.mnemosyne.fragments.dictionary.TodayListFragment;
 import com.mnemo.pietro.mnemosyne.fragments.library.LibraryFragment;
+import com.mnemo.pietro.mnemosyne.fragments.word.WordFragment;
 
 import model.dictionary.Global;
-import model.dictionary.catalogue.sql.CatalogueSQLManager;
-import model.dictionary.dictionary.sql.DictionarySQLManager;
-import model.dictionary.memoryManager.MemoryManager;
-import model.dictionary.memoryManager.sql.MemoryManagerSQLManager;
 import model.dictionary.tools.MnemoDBHelper;
 
 //EN COURS
@@ -29,7 +26,7 @@ import model.dictionary.tools.MnemoDBHelper;
 
 
 public class MnemoCentral
-        extends AppCompatActivity {
+        extends AppCompatActivity{
 
     public static final String EXTRA_ALERT_DATE = "com.mnemo.pietro.ALERT_DATE";
 
@@ -114,4 +111,5 @@ public class MnemoCentral
         MnemoDBHelper.release();
         return Global.SUCCESS;
     }
+
 }

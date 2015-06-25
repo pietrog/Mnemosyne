@@ -20,7 +20,7 @@ public class WordContract {
         public static final String WORD = "word";
         public static final String DEFINITION = "definition";
         public static final String DICTIONARYOBJECTID = "dictionaryobjectID";
-        public static final String ALL = CID + " AS " + CSID + ", " + WORD + ", " + DEFINITION + ", " + DICTIONARYOBJECTID;
+        public static final String ALL = CID + " AS " + CSID + ", " + WORD + ", " + DEFINITION ;
     }
 
 

@@ -12,6 +12,7 @@ import android.widget.ListView;
 
 import com.mnemo.pietro.mnemosyne.R;
 import com.mnemo.pietro.mnemosyne.fragments.dictionary.tools.DictionaryAdapter;
+import com.mnemo.pietro.mnemosyne.fragments.dictionary.tools.TodayListAdapter;
 import com.mnemo.pietro.mnemosyne.fragments.word.WordFragment;
 
 import model.dictionary.dictionaryObject.WordDefinitionObj;
@@ -54,8 +55,7 @@ public abstract class BaseDictionaryFragment extends ListFragment{
     public void onListItemClick(ListView l, View v, int position, long id) {
         Cursor cursor = mAdapter.getCursor();
         cursor.moveToPosition(position);
-        WordDefinitionObj obj = WordDefinitionObj.LoadFromCursor(cursor);
-        WordFragment fragment = WordFragment.newInstance(obj);
+        WordFragment fragment = WordFragment.newInstance(cursor);
         getFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.main_subscreen, fragment).commit();
     }
 

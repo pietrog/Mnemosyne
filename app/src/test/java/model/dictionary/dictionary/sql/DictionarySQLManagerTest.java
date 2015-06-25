@@ -2,6 +2,7 @@ package model.dictionary.dictionary.sql;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.support.v4.hardware.display.DisplayManagerCompat;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -12,6 +13,8 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Vector;
 
 import model.dictionary.Global;
@@ -107,19 +110,11 @@ public class DictionarySQLManagerTest {
         //list null or empty
         Cursor cursor = singleton.getDictionaryObjectsFromLearningList(null);
         Assert.assertNull("Null list should return null cursor", cursor);
-        //empty list should return null cursor
-        cursor = singleton.getDictionaryObjectsFromLearningList(null);
-        Assert.assertNull("Empty list should return null cursor", cursor);
-        //list with unknown ids
-        Global.Couple c1 = new Global.Couple(2, 0);
-        Global.Couple c2 = new Global.Couple(1, 0);
-        Global.Couple c3 = new Global.Couple(4, 0);
-        Vector<Global.Couple<Long, Integer>> list = new Vector<>();
-        list.add(c1);
-        list.add(c2);
-        list.add(c3);
-        cursor = singleton.getDictionaryObjectsFromLearningList(list);
-        Assert.assertTrue("Should return an empty cursor because of unknown ids", cursor.getCount() == 0);
+        //no word added, should have empty cursor
+        Calendar cal = Calendar.getInstance();
+        String date = GeneralTools.getSQLDate(cal.getTime());
+        cursor = singleton.getDictionaryObjectsFromLearningList(date);
+        Assert.assertTrue("Should return an empty cursor because of empty database", cursor.getCount() == 0);
 
         //list of dictionary objects
         //set up
@@ -128,18 +123,21 @@ public class DictionarySQLManagerTest {
         long idWord1 = singleton.addNewWord(idDict, "Word1", "");
         long idWord2 = singleton.addNewWord(idDict, "Word2", "");
         long idWord3 = singleton.addNewWord(idDict, "Word3", "");
-        c1 = new Global.Couple(idWord1, 0);
-        c2 = new Global.Couple(idWord2, 0);
-        c3 = new Global.Couple(idWord3, 0);
-        list = new Vector<>();
-        list.add(c2);
-        list.add(c1);
-        list.add(c3);
-        cursor = singleton.getDictionaryObjectsFromLearningList(list);
+        long idWord4 = singleton.addNewWord(idDict, "Word4", "");
+        cal.add(Calendar.DAY_OF_YEAR, 1);
+        date = GeneralTools.getSQLDate(cal.getTime());
+        WordDefinitionObj obj = DictionarySQLManager.getInstance().getWordFromID(idWord4);
+        MemoryManagerSQLManager.getInstance().addWordToLearnSession(obj.getDictionaryObjectID(), cal.getTime());
+        obj = DictionarySQLManager.getInstance().getWordFromID(idWord2);
+        MemoryManagerSQLManager.getInstance().addWordToLearnSession(obj.getDictionaryObjectID(), cal.getTime());
+        obj = DictionarySQLManager.getInstance().getWordFromID(idWord3);
+        MemoryManagerSQLManager.getInstance().addWordToLearnSession(obj.getDictionaryObjectID(), cal.getTime());
+
+        cursor = singleton.getDictionaryObjectsFromLearningList(date);
         Assert.assertEquals("Should contain 3 objects", 3, cursor.getCount());
         cursor.moveToFirst();
         do{
-            Assert.assertTrue("We should have a coherent result", GeneralTools.getLongElement(cursor, WordContract.Word.CSID) == idWord1 || GeneralTools.getLongElement(cursor, WordContract.Word.CSID) == idWord2 || GeneralTools.getLongElement(cursor, WordContract.Word.CSID) == idWord3);
+            Assert.assertTrue("We should have a coherent result", GeneralTools.getLongElement(cursor, WordContract.Word.CSID) == idWord4 || GeneralTools.getLongElement(cursor, WordContract.Word.CSID) == idWord2 || GeneralTools.getLongElement(cursor, WordContract.Word.CSID) == idWord3);
         }while(cursor.moveToNext());
 
     }

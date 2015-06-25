@@ -50,7 +50,7 @@ public class DictionaryObject {
      */
     public DictionaryObjectType getType() {
         return null;
-    };
+    }
 
     /**
      * Get the object in ContentValues container, for sql. Method to override in all subclasses

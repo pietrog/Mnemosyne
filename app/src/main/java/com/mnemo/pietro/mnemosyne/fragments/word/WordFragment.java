@@ -1,6 +1,8 @@
 package com.mnemo.pietro.mnemosyne.fragments.word;
 
 
+import android.app.Activity;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
@@ -14,6 +16,7 @@ import com.mnemo.pietro.mnemosyne.R;
 import model.dictionary.dictionaryObject.MemoryObject;
 import model.dictionary.dictionaryObject.WordDefinitionObj;
 import model.dictionary.dictionary.sql.DictionarySQLManager;
+import model.dictionary.memory.LongTermMemory;
 import model.dictionary.tools.GeneralTools;
 import model.dictionary.tools.ViewTools;
 
@@ -23,10 +26,11 @@ import model.dictionary.tools.ViewTools;
  * create an instance of this fragment.
  */
 public class WordFragment extends Fragment implements View.OnClickListener{
-    private static final String WORD = "WORD";
-    private static final String DEFINITION = "DEFINITION";
+
+    private static final String WORD = "WRD";
+    private static final String DEFINITION = "DEF";
     private static final String WORDID = "ID";
-    private static final String DICTIONARYOBJECTID = "DICTOBJID";
+    private static final String DICTIONARYOBJECTID = "DCTOBJID";
 
 
     private String mWord;
@@ -35,7 +39,8 @@ public class WordFragment extends Fragment implements View.OnClickListener{
     private long mDictObjID;
     private View mRootView;
 
-    public static WordFragment newInstance(WordDefinitionObj obj) {
+    public static WordFragment newInstance(Cursor cursor) {
+        WordDefinitionObj obj = WordDefinitionObj.LoadFromCursor(cursor);
         WordFragment fragment = new WordFragment();
         Bundle args = new Bundle();
         args.putString(WORD, obj.getWord());
@@ -99,7 +104,8 @@ public class WordFragment extends Fragment implements View.OnClickListener{
     }
 
     private void onLearntWord(){
-        MnemoMemoryManager.startActionUpdateWord(getActivity().getApplicationContext(), mDictObjID);
+        //MnemoMemoryManager.startActionUpdateWord(getActivity().getApplicationContext(), mDictObjID);
+        LongTermMemory.getInstance(getActivity().getApplicationContext()).updateMemoryPhaseOfDictionaryObject(mDictObjID);
         getFragmentManager().popBackStack();
     }
 
@@ -119,4 +125,6 @@ public class WordFragment extends Fragment implements View.OnClickListener{
         stats.setVisibility(View.VISIBLE);
         show.setVisibility(View.INVISIBLE);
     }
+
+
 }

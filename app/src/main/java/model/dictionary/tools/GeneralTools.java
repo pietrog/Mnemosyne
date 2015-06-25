@@ -2,6 +2,7 @@ package model.dictionary.tools;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Color;
 
 
 import org.json.JSONException;
@@ -155,7 +156,7 @@ public class GeneralTools {
         for(Object curr : vect)
             res += curr.toString() + ",";
 
-        return res.substring(0, res.length()-1);
+        return res.substring(0, res.length() - 1);
     }
 
     public static Vector<Integer> getVectorFromString(String str){
@@ -192,5 +193,30 @@ public class GeneralTools {
 
     public static Date getNowDate(){
         return Calendar.getInstance().getTime();
+    }
+
+
+    /**
+     * Return a color corresponding to a delay. If there is no delay, color is white. More important is the delay, more red is the returned color
+     * @param delay number of days
+     * @return color for background
+     */
+    public static int getColorFromDelay(int delay){
+        switch (delay){
+            case 0:
+                return Color.WHITE;
+            case 1:
+                return Color.parseColor("#FFD7D7");
+            case 2:
+                return Color.parseColor("#FFBBBB");
+            case 3:
+                return Color.parseColor("#FFA6A6");
+            case 4:
+                return Color.parseColor("#FF8383");
+            case 5:
+                return Color.parseColor("#FF6E6E");
+            default:
+                return Color.parseColor("#FF0000");
+        }
     }
 }

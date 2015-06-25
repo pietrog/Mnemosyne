@@ -183,6 +183,16 @@ public class MemoryManagerSQLManager extends BaseSQLManager{
         return Global.SUCCESS;
     }
 
+    /**
+     * Remove dictionary object identified by dictionaryObjectID from learning session
+     * @param dictionaryObjectID dictionary object id
+     * @return
+     */
+    public int removeObjectFromLearningSession(long dictionaryObjectID){
+        long[] ids = { dictionaryObjectID };
+        return remove(ids, MemoryManagerContract.MemoryManager.TABLE_NAME);
+    }
+
 
     /**
      * Retrieve all missed learning session(from today to pastDate), update dely and nextLearningSession to today
@@ -236,6 +246,26 @@ public class MemoryManagerSQLManager extends BaseSQLManager{
             ++delay;
         }
         return nbUpdated;
+    }
+
+    public void getall(){
+        String sql = "SELECT * FROM " + MemoryManagerContract.MemoryManager.TABLE_NAME;
+
+        Cursor cursor = rawQuery(sql, null);
+        Vector<String> vect = new Vector<>();
+
+        cursor.moveToFirst();
+
+        do{
+            String str = GeneralTools.getStringElement(cursor, MemoryManagerContract.MemoryManager.DATE)
+                    + " -- ID " + GeneralTools.getLongElement(cursor, MemoryManagerContract.MemoryManager.CID)
+                    + " -- DELAY " + GeneralTools.getLongElement(cursor, MemoryManagerContract.MemoryManager.DAYS_OF_DELAY)
+                    + " -- DICTID " + GeneralTools.getLongElement(cursor, MemoryManagerContract.MemoryManager.DICTIONARYOBJECTID);
+            vect.add(str);
+        }while (cursor.moveToNext());
+
+        int t = 5;
+        t+= -6;
     }
 
 }

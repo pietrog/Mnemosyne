@@ -6,9 +6,12 @@ import java.util.Calendar;
 import java.util.Date;
 
 import model.dictionary.Global;
+import model.dictionary.dictionary.sql.DictionarySQLManager;
 import model.dictionary.dictionaryObject.DictionaryObject;
 import model.dictionary.dictionaryObject.MemoryObject;
 import model.dictionary.memoryManager.sql.MemoryManagerSQLManager;
+import model.dictionary.tools.GeneralTools;
+import model.dictionary.tools.Logger;
 
 /**
  * Created by pietro on 30/03/15.
@@ -26,12 +29,29 @@ public class LongTermMemory implements IMemorisation{
         return instance;
     }
 
+
     private Context mContext;
 
     private LongTermMemory(Context context){
         mContext = context;
     }
 
+
+
+    public void updateMemoryPhaseOfDictionaryObject(long dictionaryObjectID) {
+        if (dictionaryObjectID < 0)
+            return;
+        MemoryObject object = DictionarySQLManager.getInstance().getMemoryObjectFromDictionaryObjectID(dictionaryObjectID);
+        if (object == null) {
+            Logger.i("MnemoMemoryManager::updateMemoryPhaseOfDictionaryObject", " object whith id " + dictionaryObjectID + " is null");
+            return;
+        }
+        //check if object was already updated today
+        //if it was, do not update it again
+        String now = GeneralTools.getSQLDate(Calendar.getInstance().getTime());
+        if (now.compareTo(GeneralTools.getSQLDate(object.getLastLearnt())) != 0)
+            updateMemorisationPhase(object);
+    }
 
     @Override
     public Date computeNextLearningDate(DictionaryObject object) {
@@ -75,6 +95,7 @@ public class LongTermMemory implements IMemorisation{
         if (res != Global.SUCCESS)
             return Global.FAILURE;
 
+        MemoryManagerSQLManager.getInstance().removeObjectFromLearningSession(object.getDictionaryObjectID());
         if (MemoryManagerSQLManager.getInstance().addWordToLearnSession(object.getDictionaryObjectID(), object.getNextLearnt()) > 0)
             return Global.SUCCESS;
 

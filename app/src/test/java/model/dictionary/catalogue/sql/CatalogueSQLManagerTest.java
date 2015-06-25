@@ -78,7 +78,7 @@ public class CatalogueSQLManagerTest {
     public void testGetAllDictionaryOfCatalogue() throws Exception {
         //catalogue does not exist
         Cursor cursor = singleton.getAllDictionaryOfCatalogue(3);
-        Assert.assertEquals("Cursor shloud be empty", 0, cursor.getCount());
+        Assert.assertEquals("Cursor should be empty", 0, cursor.getCount());
         cursor.close();
         //bad ids
         cursor = singleton.getAllDictionaryOfCatalogue(-2);

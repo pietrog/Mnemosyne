@@ -20,7 +20,7 @@ public class MemoryManagerContract {
     public static abstract class MemoryManager implements BaseColumns{
         public static final String TABLE_NAME = "memorymanager";
         public static final String CID = TABLE_NAME + "." + _ID;
-        public static final String DATE = "date";
+        public static final String DATE = "date"; // date of the next learning session
         public static final String DICTIONARYOBJECTID = "dictionaryobjectid";
         public static final String DAYS_OF_DELAY = "daysdelay"; // delay in number of days from the initially computed next learning date
     }
@@ -61,7 +61,7 @@ public class MemoryManagerContract {
                     + MemoryManager.DATE + Global.TEXT_TYPE + Global.COMMASEP
                     + MemoryManager.DICTIONARYOBJECTID + Global.INTEGER_TYPE + " REFERENCES " + DictionaryObjectContract.DictionaryObject.TABLE_NAME + "(" + DictionaryObjectContract.DictionaryObject._ID + ") ON DELETE CASCADE " + Global.COMMASEP
                     + MemoryManager.DAYS_OF_DELAY + Global.INTEGER_TYPE + " DEFAULT 0 " + Global.COMMASEP
-                    + " UNIQUE (" + MemoryManager.DICTIONARYOBJECTID + "," + MemoryManager.DATE +") ON CONFLICT ABORT"
+                    + " UNIQUE (" + MemoryManager.DICTIONARYOBJECTID + "," + MemoryManager.DATE +") ON CONFLICT REPLACE"
                     + ")"
             ;
 

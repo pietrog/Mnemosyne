@@ -13,7 +13,6 @@ import java.util.Calendar;
 import java.util.Vector;
 
 import model.dictionary.catalogue.sql.CatalogueSQLManager;
-import model.dictionary.dictionary.Dictionary;
 import model.dictionary.dictionary.sql.DictionarySQLManager;
 import model.dictionary.dictionaryObject.MemoryObject;
 import model.dictionary.dictionaryObject.WordDefinitionObj;
@@ -23,7 +22,6 @@ import model.dictionary.memoryManager.sql.MemoryManagerSQLManager;
 import model.dictionary.tools.GeneralTools;
 import model.dictionary.tools.Logger;
 import model.dictionary.Global.Couple;
-import model.dictionary.tools.MnemoDBHelper;
 
 public class MnemoMemoryManager extends IntentService {
 
@@ -107,6 +105,44 @@ public class MnemoMemoryManager extends IntentService {
         obj.setmLastLearnt(GeneralTools.getFormattedDate(calM1.getTime()));
         MemoryManagerSQLManager.getInstance().updateMemoryObjectInDB(obj);
         MemoryManagerSQLManager.getInstance().addWordToLearnSession(obj.getDictionaryObjectID(), GeneralTools.getFormattedDate(cal.getTime()));
+
+
+        //in the past
+        Calendar calM7 = Calendar.getInstance();
+        calM7.add(Calendar.DAY_OF_YEAR, -7);
+        Calendar calM9 = Calendar.getInstance();
+        calM9.add(Calendar.DAY_OF_YEAR, -9);
+        Calendar calM6 = Calendar.getInstance();
+        calM6.add(Calendar.DAY_OF_YEAR, -6);
+        Calendar calM8 = Calendar.getInstance();
+        calM8.add(Calendar.DAY_OF_YEAR, -8);
+        Calendar calM3 = Calendar.getInstance();
+        calM3.add(Calendar.DAY_OF_YEAR, -3);
+
+        WordDefinitionObj obj2 = DictionarySQLManager.getInstance().getWordFromID(wordUK2);
+        obj = DictionarySQLManager.getInstance().getWordFromID(wordIT3);
+        obj.setBegMP(GeneralTools.getFormattedDate(calM9.getTime()));
+        obj.setDateAdded(GeneralTools.getFormattedDate(calM9.getTime()));
+        obj.setNext(GeneralTools.getFormattedDate(calM5.getTime()));
+        obj.setmLastLearnt(GeneralTools.getFormattedDate(calM6.getTime()));
+        MemoryManagerSQLManager.getInstance().updateMemoryObjectInDB(obj);
+        MemoryManagerSQLManager.getInstance().addWordToLearnSession(obj.getDictionaryObjectID(), GeneralTools.getFormattedDate(calM5.getTime()));
+
+        obj = DictionarySQLManager.getInstance().getWordFromID(wordUK4);
+        obj.setBegMP(GeneralTools.getFormattedDate(calM7.getTime()));
+        obj.setDateAdded(GeneralTools.getFormattedDate(calM7.getTime()));
+        obj.setNext(GeneralTools.getFormattedDate(calM5.getTime()));
+        obj.setmLastLearnt(GeneralTools.getFormattedDate(calM6.getTime()));
+        MemoryManagerSQLManager.getInstance().updateMemoryObjectInDB(obj);
+        MemoryManagerSQLManager.getInstance().addWordToLearnSession(obj.getDictionaryObjectID(), GeneralTools.getFormattedDate(calM7.getTime()));
+
+        obj = DictionarySQLManager.getInstance().getWordFromID(wordIT1);
+        obj.setBegMP(GeneralTools.getFormattedDate(calM4.getTime()));
+        obj.setDateAdded(GeneralTools.getFormattedDate(calM4.getTime()));
+        obj.setNext(GeneralTools.getFormattedDate(calM1.getTime()));
+        obj.setmLastLearnt(GeneralTools.getFormattedDate(calM2.getTime()));
+        MemoryManagerSQLManager.getInstance().updateMemoryObjectInDB(obj);
+        MemoryManagerSQLManager.getInstance().addWordToLearnSession(obj.getDictionaryObjectID(), GeneralTools.getFormattedDate(calM1.getTime()));
 
     }
 
@@ -247,6 +283,8 @@ public class MnemoMemoryManager extends IntentService {
         //for each older date than today in memory manager table, update next learning date and delay of objects
         //we take a depth of 7 days, will change it in the future
         //@TODO: change the way we fix the depth in days, should be persisted in memory
+        MemoryManagerSQLManager.getInstance().getall();
         MemoryManagerSQLManager.getInstance().DelayLearningSessionFromDate(7);
+        MemoryManagerSQLManager.getInstance().getall();
     }
 }
