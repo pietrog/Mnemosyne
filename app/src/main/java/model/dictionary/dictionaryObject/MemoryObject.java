@@ -9,6 +9,7 @@ import java.util.Date;
 import model.dictionary.memoryManager.MemoryManager;
 import model.dictionary.memoryManager.sql.MemoryManagerContract;
 import model.dictionary.tools.GeneralTools;
+import model.dictionary.tools.MnemoCalendar;
 
 /**
  * Created by pietro on 16/06/15.
@@ -22,6 +23,7 @@ public class MemoryObject extends DictionaryObject {
     private long mMemoryPhaseID;
     private Date mBeginningOfMP;
     private int  mDaysBetween;
+    private int mdelay;
 
     public boolean mLearningSessionsModified = false;
 
@@ -69,6 +71,7 @@ public class MemoryObject extends DictionaryObject {
             mLastLearnt = mBeginningOfMP;
             time.add(Calendar.DAY_OF_YEAR, mDaysBetween);
             mNextLearnt = time.getTime();
+            mdelay = 0; //reset delay sum
         }
     }
 

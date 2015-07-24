@@ -25,6 +25,7 @@ import model.dictionary.dictionaryObject.sql.WordContract;
 import model.dictionary.memoryManager.MemoryManager;
 import model.dictionary.memoryManager.sql.MemoryManagerSQLManager;
 import model.dictionary.tools.GeneralTools;
+import model.dictionary.tools.MnemoCalendar;
 import model.dictionary.tools.MnemoDBHelper;
 
 /**
@@ -42,14 +43,13 @@ public class DictionarySQLManagerTest {
 
     @Before
     public void setUp() throws Exception {
-        Context context = Robolectric.getShadowApplication().getApplicationContext();
-        CatalogueSQLManager.getInstance(context);
+        CatalogueSQLManager.getInstance(Robolectric.getShadowApplication().getApplicationContext());
         MemoryManagerSQLManager.getInstance(Robolectric.getShadowApplication().getApplicationContext());
         MemoryManager.initMemoryPhaseMap();
-        singleton = DictionarySQLManager.getInstance(context);
+        singleton = DictionarySQLManager.getInstance(Robolectric.getShadowApplication().getApplicationContext());
 
         //init catalogues
-        midCatalogue1 = CatalogueSQLManager.getInstance().add("Catalogue1", "Desc1");
+        midCatalogue1 = CatalogueSQLManager.getInstance().add("DCatalogue1", "Desc1");
         midCatalogue2 = CatalogueSQLManager.getInstance().add("Catalogue2", "Desc2");
 
         //init dictionary
@@ -111,7 +111,7 @@ public class DictionarySQLManagerTest {
         Cursor cursor = singleton.getDictionaryObjectsFromLearningList(null);
         Assert.assertNull("Null list should return null cursor", cursor);
         //no word added, should have empty cursor
-        Calendar cal = Calendar.getInstance();
+        Calendar cal = MnemoCalendar.getInstance();
         String date = GeneralTools.getSQLDate(cal.getTime());
         cursor = singleton.getDictionaryObjectsFromLearningList(date);
         Assert.assertTrue("Should return an empty cursor because of empty database", cursor.getCount() == 0);

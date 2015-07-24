@@ -10,6 +10,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.Vector;
 
 import model.dictionary.catalogue.sql.CatalogueSQLManager;
@@ -22,6 +23,7 @@ import model.dictionary.memoryManager.sql.MemoryManagerSQLManager;
 import model.dictionary.tools.GeneralTools;
 import model.dictionary.tools.Logger;
 import model.dictionary.Global.Couple;
+import model.dictionary.tools.MnemoCalendar;
 
 public class MnemoMemoryManager extends IntentService {
 
@@ -71,78 +73,79 @@ public class MnemoMemoryManager extends IntentService {
         long wordIT3 = DictionarySQLManager.getInstance().addNewWord(idDictIT, "Comprare", "Entrare in possesso di qlco. attraverso il pagamento del prezzo fissato");
 
         //modify some dates
-        Calendar calM1 = Calendar.getInstance();
+        Calendar calM1 = MnemoCalendar.getInstance();
         calM1.add(Calendar.DAY_OF_YEAR, -1);
-        Calendar calM2 = Calendar.getInstance();
+        Calendar calM2 = MnemoCalendar.getInstance();
         calM2.add(Calendar.DAY_OF_YEAR, -2);
-        Calendar calM4 = Calendar.getInstance();
+        Calendar calM4 = MnemoCalendar.getInstance();
         calM4.add(Calendar.DAY_OF_YEAR, -4);
-        Calendar calM5 = Calendar.getInstance();
+        Calendar calM5 = MnemoCalendar.getInstance();
         calM5.add(Calendar.DAY_OF_YEAR, -5);
-        Calendar cal = Calendar.getInstance();
+
+        Calendar cal = MnemoCalendar.getInstance();
 
         WordDefinitionObj obj = DictionarySQLManager.getInstance().getWordFromID(wordUK1);
-        obj.setBegMP(GeneralTools.getFormattedDate(calM2.getTime()));
-        obj.setDateAdded(GeneralTools.getFormattedDate(calM2.getTime()));
-        obj.setNext(GeneralTools.getFormattedDate(cal.getTime()));
-        obj.setmLastLearnt(GeneralTools.getFormattedDate(calM1.getTime()));
+        obj.setBegMP(calM2.getTime());
+        obj.setDateAdded(calM2.getTime());
+        obj.setNext(cal.getTime());
+        obj.setmLastLearnt(calM1.getTime());
         MemoryManagerSQLManager.getInstance().updateMemoryObjectInDB(obj);
-        MemoryManagerSQLManager.getInstance().addWordToLearnSession(obj.getDictionaryObjectID(), GeneralTools.getFormattedDate(cal.getTime()));
+        MemoryManagerSQLManager.getInstance().addWordToLearnSession(obj.getDictionaryObjectID(), cal.getTime());
 
 
         obj = DictionarySQLManager.getInstance().getWordFromID(wordUK3);
-        obj.setBegMP(GeneralTools.getFormattedDate(calM5.getTime()));
-        obj.setDateAdded(GeneralTools.getFormattedDate(calM5.getTime()));
-        obj.setNext(GeneralTools.getFormattedDate(cal.getTime()));
-        obj.setmLastLearnt(GeneralTools.getFormattedDate(calM1.getTime()));
+        obj.setBegMP(calM5.getTime());
+        obj.setDateAdded(calM5.getTime());
+        obj.setNext(cal.getTime());
+        obj.setmLastLearnt(calM1.getTime());
         MemoryManagerSQLManager.getInstance().updateMemoryObjectInDB(obj);
-        MemoryManagerSQLManager.getInstance().addWordToLearnSession(obj.getDictionaryObjectID(), GeneralTools.getFormattedDate(cal.getTime()));
+        MemoryManagerSQLManager.getInstance().addWordToLearnSession(obj.getDictionaryObjectID(), cal.getTime());
 
         obj = DictionarySQLManager.getInstance().getWordFromID(wordIT2);
-        obj.setBegMP(GeneralTools.getFormattedDate(calM4.getTime()));
-        obj.setDateAdded(GeneralTools.getFormattedDate(calM4.getTime()));
-        obj.setNext(GeneralTools.getFormattedDate(cal.getTime()));
-        obj.setmLastLearnt(GeneralTools.getFormattedDate(calM1.getTime()));
+        obj.setBegMP(calM4.getTime());
+        obj.setDateAdded(calM4.getTime());
+        obj.setNext(cal.getTime());
+        obj.setmLastLearnt(calM1.getTime());
         MemoryManagerSQLManager.getInstance().updateMemoryObjectInDB(obj);
-        MemoryManagerSQLManager.getInstance().addWordToLearnSession(obj.getDictionaryObjectID(), GeneralTools.getFormattedDate(cal.getTime()));
+        MemoryManagerSQLManager.getInstance().addWordToLearnSession(obj.getDictionaryObjectID(), cal.getTime());
 
 
         //in the past
-        Calendar calM7 = Calendar.getInstance();
+        Calendar calM7 = MnemoCalendar.getInstance();
         calM7.add(Calendar.DAY_OF_YEAR, -7);
-        Calendar calM9 = Calendar.getInstance();
+        Calendar calM9 = MnemoCalendar.getInstance();
         calM9.add(Calendar.DAY_OF_YEAR, -9);
-        Calendar calM6 = Calendar.getInstance();
+        Calendar calM6 = MnemoCalendar.getInstance();
         calM6.add(Calendar.DAY_OF_YEAR, -6);
-        Calendar calM8 = Calendar.getInstance();
+        Calendar calM8 = MnemoCalendar.getInstance();
         calM8.add(Calendar.DAY_OF_YEAR, -8);
-        Calendar calM3 = Calendar.getInstance();
+        Calendar calM3 = MnemoCalendar.getInstance();
         calM3.add(Calendar.DAY_OF_YEAR, -3);
 
         WordDefinitionObj obj2 = DictionarySQLManager.getInstance().getWordFromID(wordUK2);
         obj = DictionarySQLManager.getInstance().getWordFromID(wordIT3);
-        obj.setBegMP(GeneralTools.getFormattedDate(calM9.getTime()));
-        obj.setDateAdded(GeneralTools.getFormattedDate(calM9.getTime()));
-        obj.setNext(GeneralTools.getFormattedDate(calM5.getTime()));
-        obj.setmLastLearnt(GeneralTools.getFormattedDate(calM6.getTime()));
+        obj.setBegMP(calM9.getTime());
+        obj.setDateAdded(calM9.getTime());
+        obj.setNext(calM5.getTime());
+        obj.setmLastLearnt(calM6.getTime());
         MemoryManagerSQLManager.getInstance().updateMemoryObjectInDB(obj);
-        MemoryManagerSQLManager.getInstance().addWordToLearnSession(obj.getDictionaryObjectID(), GeneralTools.getFormattedDate(calM5.getTime()));
+        MemoryManagerSQLManager.getInstance().addWordToLearnSession(obj.getDictionaryObjectID(), calM5.getTime());
 
         obj = DictionarySQLManager.getInstance().getWordFromID(wordUK4);
-        obj.setBegMP(GeneralTools.getFormattedDate(calM7.getTime()));
-        obj.setDateAdded(GeneralTools.getFormattedDate(calM7.getTime()));
-        obj.setNext(GeneralTools.getFormattedDate(calM5.getTime()));
-        obj.setmLastLearnt(GeneralTools.getFormattedDate(calM6.getTime()));
+        obj.setBegMP(calM7.getTime());
+        obj.setDateAdded(calM7.getTime());
+        obj.setNext(calM5.getTime());
+        obj.setmLastLearnt(calM6.getTime());
         MemoryManagerSQLManager.getInstance().updateMemoryObjectInDB(obj);
-        MemoryManagerSQLManager.getInstance().addWordToLearnSession(obj.getDictionaryObjectID(), GeneralTools.getFormattedDate(calM7.getTime()));
+        MemoryManagerSQLManager.getInstance().addWordToLearnSession(obj.getDictionaryObjectID(), calM7.getTime());
 
         obj = DictionarySQLManager.getInstance().getWordFromID(wordIT1);
-        obj.setBegMP(GeneralTools.getFormattedDate(calM4.getTime()));
-        obj.setDateAdded(GeneralTools.getFormattedDate(calM4.getTime()));
-        obj.setNext(GeneralTools.getFormattedDate(calM1.getTime()));
-        obj.setmLastLearnt(GeneralTools.getFormattedDate(calM2.getTime()));
+        obj.setBegMP(calM4.getTime());
+        obj.setDateAdded(calM4.getTime());
+        obj.setNext(calM1.getTime());
+        obj.setmLastLearnt(calM2.getTime());
         MemoryManagerSQLManager.getInstance().updateMemoryObjectInDB(obj);
-        MemoryManagerSQLManager.getInstance().addWordToLearnSession(obj.getDictionaryObjectID(), GeneralTools.getFormattedDate(calM1.getTime()));
+        MemoryManagerSQLManager.getInstance().addWordToLearnSession(obj.getDictionaryObjectID(), calM1.getTime());
 
     }
 
@@ -217,8 +220,7 @@ public class MnemoMemoryManager extends IntentService {
 
     private void riseTodayList() {
 
-        Calendar now = Calendar.getInstance();
-        //now.add(Calendar.DAY_OF_YEAR, 1);
+        Calendar now = MnemoCalendar.getInstance();
 
         MemoryManagerSQLManager manager = MemoryManagerSQLManager.getInstance();
         Vector<Couple<Long, Integer>> list = manager.getListOfObjectsToLearn(now.getTime());

@@ -59,13 +59,7 @@ public class MnemoDBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE " + MemoryManagerContract.MemoryManager.TABLE_NAME);
-        db.execSQL("DROP TABLE " + MemoryManagerContract.MemoryMonitoring.TABLE_NAME);
-        db.execSQL("DROP TABLE " + MemoryManagerContract.MemoryPhase.TABLE_NAME);
-        db.execSQL(WordContract.SQL_DROP_TABLE);
-        db.execSQL(CatalogueContract.SQL_DROP_TABLE);
-        db.execSQL(DictionaryContractBase.SQL_DROP_TABLE);
-        db.execSQL(DictionaryObjectContract.SQL_DROP_TABLE);
+        onDrop(db);
         onCreate(db);
     }
 
@@ -95,7 +89,28 @@ public class MnemoDBHelper extends SQLiteOpenHelper {
         long idDictIT = db.insert(DictionaryObjectContract.DictionaryObject.TABLE_NAME, null, val);
 
         //add words at different dates
+    }
 
+
+
+    /** CREATE AND DROP DB FROM INSTANCE **/
+    private void onDrop(SQLiteDatabase db){
+        db.execSQL("DROP TABLE " + MemoryManagerContract.MemoryManager.TABLE_NAME);
+        db.execSQL("DROP TABLE " + MemoryManagerContract.MemoryMonitoring.TABLE_NAME);
+        db.execSQL("DROP TABLE " + MemoryManagerContract.MemoryPhase.TABLE_NAME);
+        db.execSQL(WordContract.SQL_DROP_TABLE);
+        db.execSQL(CatalogueContract.SQL_DROP_TABLE);
+        db.execSQL(DictionaryContractBase.SQL_DROP_TABLE);
+        db.execSQL(DictionaryObjectContract.SQL_DROP_TABLE);
+    }
+
+    public static void onDrop(){
+        if (instance != null)
+            instance.onDrop(instance.getWritableDatabase());
+    }
+    public static void onCreate(){
+        if (instance != null)
+            instance.onCreate(instance.getWritableDatabase());
     }
 
 }

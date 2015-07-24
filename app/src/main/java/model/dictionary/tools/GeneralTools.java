@@ -192,7 +192,7 @@ public class GeneralTools {
     }
 
     public static Date getNowDate(){
-        return Calendar.getInstance().getTime();
+        return MnemoCalendar.getInstance().getTime();
     }
 
 

@@ -16,6 +16,7 @@ import model.dictionary.tools.BaseSQLManager;
 import model.dictionary.tools.GeneralTools;
 import model.dictionary.tools.Logger;
 import model.dictionary.Global.Couple;
+import model.dictionary.tools.MnemoCalendar;
 
 /**
  * Created by pietro on 24/03/15.
@@ -94,7 +95,7 @@ public class MemoryManagerSQLManager extends BaseSQLManager{
      */
     public long createNewMemoryMonitoringObject(){
 
-        Calendar now = Calendar.getInstance();
+        Calendar now = MnemoCalendar.getInstance();
         ContentValues value = new ContentValues();
         value.put(MemoryManagerContract.MemoryMonitoring.BEGINING_OF_MP, GeneralTools.getSQLDate(now.getTime()));
         value.put(MemoryManagerContract.MemoryMonitoring.DATE_ADDED, GeneralTools.getSQLDate(now.getTime()));
@@ -122,9 +123,9 @@ public class MemoryManagerSQLManager extends BaseSQLManager{
     }
 
     /**
-     * Return a list of dictionary object for a given date
-     * @param date date
-     * @return vector of longMemoryPhaseObject
+     * Return a list of couple of dictionary object for a given date
+     * @param date date to fetch
+     * @return vector of couple of longMemoryPhaseObject, delay in days
      */
     public Vector<Couple<Long, Integer>> getListOfObjectsToLearn(Date date){
         if (date == null)
@@ -200,8 +201,8 @@ public class MemoryManagerSQLManager extends BaseSQLManager{
      * @return return the number of object updated
      */
     public int DelayLearningSessionFromDate(int daysInThePast){
-        Calendar cal = Calendar.getInstance();
-        String today = GeneralTools.getSQLDate(Calendar.getInstance().getTime());
+        Calendar cal = MnemoCalendar.getInstance();
+        String today = GeneralTools.getSQLDate(cal.getTime());
         int nbUpdated = 0;
         int incr = 0;
 
@@ -214,7 +215,7 @@ public class MemoryManagerSQLManager extends BaseSQLManager{
         cal.add(Calendar.DAY_OF_YEAR, -1);
 
         while (incr++ < daysInThePast){
-            Calendar pastDate = Calendar.getInstance();
+            Calendar pastDate = MnemoCalendar.getInstance();
             pastDate.add(Calendar.DAY_OF_YEAR, -1*incr);
 
             //for each day before, increment the delay

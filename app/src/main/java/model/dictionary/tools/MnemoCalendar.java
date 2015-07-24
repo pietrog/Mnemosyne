@@ -2,40 +2,50 @@ package model.dictionary.tools;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 /**
  * Created by pietro on 01/07/15.
  *
  * Handle calendar dates
  */
-public class MnemoCalendar {
+public class MnemoCalendar{
 
-    private static MnemoCalendar instance;
+    private static int     mDelay = 0;
+    private static int     mTypeOfDelay = 0;
 
-    public static synchronized MnemoCalendar getInstance(){
-        if (instance == null){
-            instance = new MnemoCalendar();
+    public static void init(int type, int delay){
+        mDelay = delay;
+        mTypeOfDelay = type;
+    }
+
+    public static synchronized Calendar getInstance(){
+        Calendar cal = Calendar.getInstance();
+        switch (mTypeOfDelay){
+            case Calendar.DAY_OF_WEEK:
+                cal.add(Calendar.DAY_OF_WEEK, mDelay);
+                break;
+            case Calendar.MONTH:
+                cal.add(Calendar.MONTH, mDelay);
+                break;
+            case Calendar.DAY_OF_YEAR:
+                cal.add(Calendar.DAY_OF_YEAR, mDelay);
+                break;
+            case Calendar.YEAR:
+                cal.add(Calendar.YEAR, mDelay);
+                break;
+            default:
+                //do nothing
+                Logger.w("MnemoCalendar::getInstance", " Type of delay does not match anything. Given calendar is set to local time");
+                break;
         }
-        return instance;
+        return cal;
     }
 
 
-    private Calendar mCalendar;
     private Date mNowFormattedDate;
     private String mNowStrFormattedDate;
 
-    private MnemoCalendar(){
-        mCalendar = Calendar.getInstance();
-        mNowStrFormattedDate = GeneralTools.getSQLDate(mCalendar.getTime());
-        mNowFormattedDate = GeneralTools.getDateFromSQLDate(mNowStrFormattedDate);
-    }
-
-    protected MnemoCalendar(int delayInDays){
-        mCalendar = Calendar.getInstance();
-        mCalendar.add(Calendar.DAY_OF_YEAR, delayInDays);
-        mNowStrFormattedDate = GeneralTools.getSQLDate(mCalendar.getTime());
-        mNowFormattedDate = GeneralTools.getDateFromSQLDate(mNowStrFormattedDate);
-    }
 
     /**
      * Get today's formatted date
@@ -53,4 +63,11 @@ public class MnemoCalendar {
         return mNowStrFormattedDate;
     }
 
+    /**
+     * Reset the calendar to the date defined in the cstor
+     */
+    private void initCal(Calendar cal){
+        mNowStrFormattedDate = GeneralTools.getSQLDate(cal.getTime());
+        mNowFormattedDate = GeneralTools.getDateFromSQLDate(mNowStrFormattedDate);
+    }
 }
