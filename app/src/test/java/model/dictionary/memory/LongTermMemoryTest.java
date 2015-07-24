@@ -1,6 +1,6 @@
 package model.dictionary.memory;
 
-import org.junit.Assert;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -8,15 +8,12 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
-import java.util.Calendar;
 
-import model.dictionary.Global;
 import model.dictionary.catalogue.sql.CatalogueSQLManager;
 import model.dictionary.dictionary.sql.DictionarySQLManager;
-import model.dictionary.dictionaryObject.MemoryObject;
 import model.dictionary.memoryManager.MemoryManager;
 import model.dictionary.memoryManager.sql.MemoryManagerSQLManager;
-import model.dictionary.tools.GeneralTools;
+import model.dictionary.tools.MnemoDBHelper;
 
 
 /**
@@ -49,6 +46,11 @@ public class LongTermMemoryTest {
         dict3ID = DictionarySQLManager.getInstance().addDictionaryInCatalogue(cat1ID, "Dict 3", "def");
         dict4ID = DictionarySQLManager.getInstance().addDictionaryInCatalogue(cat1ID, "Dict 4", "def");
         dict5ID = DictionarySQLManager.getInstance().addDictionaryInCatalogue(cat2ID, "Dict 5", "def");
+    }
+
+    @After
+    public void tearDown() throws Exception{
+        MnemoDBHelper.release();
     }
 
     @Test

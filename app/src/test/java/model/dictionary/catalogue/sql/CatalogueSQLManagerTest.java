@@ -45,16 +45,7 @@ public class CatalogueSQLManagerTest {
         //TODO Implement this part !! do not forget db is not reset between junit tests
         //TODO i deactivated it because i had some catalogues existing before
         //get all on empty db should return empty cursor
-        /*Cursor cursor = singleton.getAll();
-
-        String str = "Catalogues ==> ";
-        cursor.moveToFirst();
-        do{
-            str += GeneralTools.getStringElement(cursor, CatalogueContract.Catalogue.CATALOGUE_NAME);
-            str += " -- ";
-        }while (cursor.moveToNext());
-        System.out.println(str);
-
+        Cursor cursor = singleton.getAll();
         Assert.assertEquals("Cursor should be empty", 0, cursor.getCount());
         cursor.close();
 
@@ -65,7 +56,7 @@ public class CatalogueSQLManagerTest {
         Assert.assertEquals("Cursor should contain one element", 1, cursor.getCount());
         cursor.moveToFirst();
         Assert.assertEquals("First element should be equal to idCat1", idCat1, GeneralTools.getLongElement(cursor, CatalogueContract.Catalogue._ID));
-        cursor.close();*/
+        cursor.close();
     }
 
     @Test

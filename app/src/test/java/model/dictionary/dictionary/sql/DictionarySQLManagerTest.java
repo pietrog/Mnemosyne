@@ -1,8 +1,6 @@
 package model.dictionary.dictionary.sql;
 
-import android.content.Context;
 import android.database.Cursor;
-import android.support.v4.hardware.display.DisplayManagerCompat;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -14,8 +12,6 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import java.util.Calendar;
-import java.util.Date;
-import java.util.Vector;
 
 import model.dictionary.Global;
 import model.dictionary.catalogue.sql.CatalogueSQLManager;

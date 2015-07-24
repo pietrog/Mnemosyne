@@ -24,11 +24,11 @@ import model.dictionary.Global;
 import model.dictionary.catalogue.sql.CatalogueSQLManager;
 import model.dictionary.dictionaryObject.DictionaryObject;
 import model.dictionary.dictionary.sql.DictionarySQLManager;
-import model.dictionary.dictionaryObject.MemoryObject;
 import model.dictionary.memoryManager.MemoryManager;
 import model.dictionary.tools.GeneralTools;
 import model.dictionary.tools.MnemoCalendar;
 import model.dictionary.tools.MnemoDBHelper;
+
 
 
 /**
@@ -65,7 +65,6 @@ public class MemoryManagerSQLManagerTest {
 
     @After
     public void tearDown() throws Exception {
-        //TODO test ressource closing
         MnemoDBHelper.release();
     }
 
@@ -167,6 +166,7 @@ public class MemoryManagerSQLManagerTest {
         idMemoryManagerObj = singleton.addWordToLearnSession(midDictObj3, cal.getTime());
         Assert.assertTrue("Add a word session for a future date should success", idMemoryManagerObj > 0);
     }
+
     @Test
     public void testAddWordToLearnSessionTwiceForTheSameWord() throws Exception {
         //TODO implement this part

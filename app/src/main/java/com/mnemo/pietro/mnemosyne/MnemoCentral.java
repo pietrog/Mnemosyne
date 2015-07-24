@@ -9,7 +9,6 @@ import android.view.Menu;
 
 import com.mnemo.pietro.mnemosyne.fragments.dictionary.TodayListFragment;
 import com.mnemo.pietro.mnemosyne.fragments.library.LibraryFragment;
-import com.mnemo.pietro.mnemosyne.fragments.word.WordFragment;
 
 import model.dictionary.Global;
 import model.dictionary.tools.MnemoDBHelper;
@@ -74,6 +73,7 @@ public class MnemoCentral
     }
 
     /*******************/
+
     /// ONCLICK METHODS
     /*******************/
 
