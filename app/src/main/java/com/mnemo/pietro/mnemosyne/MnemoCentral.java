@@ -13,6 +13,7 @@ import com.mnemo.pietro.mnemosyne.fragments.word.WordFragment;
 
 import model.dictionary.Global;
 import model.dictionary.tools.MnemoDBHelper;
+import model.dictionary.tools.TestEnvironment;
 
 //EN COURS
 //@TODO: VERY HIGH !!! implementer les tests unitaires sur la partie memorisation
@@ -99,7 +100,7 @@ public class MnemoCentral
      */
     private int InitSystem(){
         MnemoMemoryManager.initSystem(getApplicationContext());
-        MnemoMemoryManager.initDBSetOfTest();
+        TestEnvironment.initDBSetOfTest();
         return Global.SUCCESS;
     }
 
