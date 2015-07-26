@@ -4,8 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 
-import java.util.Date;
-
 import model.dictionary.Global;
 import model.dictionary.dictionaryObject.MemoryObject;
 import model.dictionary.dictionaryObject.WordDefinitionObj;
@@ -14,9 +12,6 @@ import model.dictionary.dictionaryObject.sql.WordContract;
 import model.dictionary.memoryManager.sql.MemoryManagerContract;
 import model.dictionary.memoryManager.sql.MemoryManagerSQLManager;
 import model.dictionary.tools.BaseSQLManager;
-
-import model.dictionary.Global.Couple;
-import model.dictionary.tools.GeneralTools;
 
 /**
  * Created by pietro on 23/03/15.
@@ -63,25 +58,6 @@ public class DictionarySQLManager extends BaseSQLManager{
                 + " WHERE " + DictionaryObjectContract.DictionaryObject.DICTIONARYID + " = " + dictionaryID
                 + " AND " + WordContract.Word.DICTIONARYOBJECTID + " = " + DictionaryObjectContract.DictionaryObject.CID
                 + " ORDER BY " + WordContract.Word.WORD;
-
-        return rawQuery(sql, null);
-    }
-
-    /**
-     * Get a cursor containing a list of DictionaryObject to learn, from a date
-     * @param date date to check all object to learn
-     * @return cursor containing all dictionariy objects
-     */
-    public Cursor getDictionaryObjectsFromLearningList(String date){
-
-        if (date == null)
-            return null;
-
-        String sql =  "SELECT " + WordContract.Word.CID + ", " + WordContract.Word.ALL + ", " + DictionaryObjectContract.DictionaryObject.ALL + ", " + MemoryManagerContract.MemoryManager.DAYS_OF_DELAY
-                + " FROM " + WordContract.Word.TABLE_NAME + ", " + DictionaryObjectContract.DictionaryObject.TABLE_NAME + ", " + MemoryManagerContract.MemoryManager.TABLE_NAME
-                + " WHERE " + MemoryManagerContract.MemoryManager.DATE + " = '" + date + "'"
-                + " AND " + DictionaryObjectContract.DictionaryObject.CID + " = " + MemoryManagerContract.MemoryManager.TABLE_NAME +"." + MemoryManagerContract.MemoryManager.DICTIONARYOBJECTID
-                + " AND " + WordContract.Word.TABLE_NAME +"."+ WordContract.Word.DICTIONARYOBJECTID + " = " + DictionaryObjectContract.DictionaryObject.CID + " ORDER BY " + WordContract.Word.WORD;
 
         return rawQuery(sql, null);
     }

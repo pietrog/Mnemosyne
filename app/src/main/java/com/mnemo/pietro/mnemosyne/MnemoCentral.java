@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 
-
 import com.mnemo.pietro.mnemosyne.fragments.dictionary.TodayListFragment;
 import com.mnemo.pietro.mnemosyne.fragments.library.LibraryFragment;
 
@@ -15,13 +14,12 @@ import model.dictionary.tools.MnemoDBHelper;
 import model.dictionary.tools.TestEnvironment;
 
 //EN COURS
-//@TODO: VERY HIGH !!! implementer les tests unitaires sur la partie memorisation
 
 //A FAIRE
+//@TODO: implementer la gestion des jours de retard dans l'apprentissage
 //@TODO: implementer un rappel basé sur l'alarme
 //@TODO: retirer les mots revises de la todays list
 //@TODO: definir une regle de navigation dans l'appli (d'un dictionaire a l'autre, ...) coherente pour l'utilisateur
-//@TODO: manager l'initialisation/destruction de certaines ressources(dbhelpers, ...) dans MnemoCentral, rationaliser l'utilissation des dbhelpers
 //@TODO: implementer la modification des entites
 //@TODO: modifier l'ecran d'affichage des mot a réviser, avec couleurs pour noter l'importance(jours de retard)
 
@@ -50,8 +48,8 @@ public class MnemoCentral
         }
 
         if (savedInstanceState == null){
-            if (getIntent() != null && getIntent().getStringExtra(EXTRA_ALERT_DATE) != null ){
-                TodayListFragment fgt = TodayListFragment.newInstance(getIntent().getStringExtra(EXTRA_ALERT_DATE));
+            if (getIntent() != null && getIntent().getLongExtra(EXTRA_ALERT_DATE, -1) >= 0){
+                TodayListFragment fgt = TodayListFragment.newInstance(getIntent().getLongExtra(EXTRA_ALERT_DATE, -1));
                 getFragmentManager().beginTransaction().add(R.id.main_subscreen, fgt).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
             }
             else {

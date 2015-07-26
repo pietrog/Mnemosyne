@@ -29,7 +29,7 @@ public class MemoryManager {
         mHasBeenInitialized = MemoryManagerSQLManager.getInstance().initMemoryPhaseMap(mMemoryPhaseObjectMap) == Global.SUCCESS;
         if (mHasBeenInitialized)
             for(Long current: mMemoryPhaseObjectMap.keySet())
-                if (mMemoryPhaseObjectMap.get(current).mPhaseName.compareTo(Global.FIRST_PHASE_NAME) == 0) {
+                if (mMemoryPhaseObjectMap.get(current).mPhaseName.compareTo(Global.PHASE_NAME_P1) == 0) {
                     mIDFirstPhase = current;
                     break;
                 }

@@ -30,7 +30,6 @@ public class MnemosyneBroadcastReceiver extends BroadcastReceiver {
      */
     private void startMnemoryManagerService(Context context){
         MnemoMemoryManager.initSystem(context);
-        MnemoMemoryManager.startActionPostponeLearningSessions(context);
         MnemoMemoryManager.startActionRiseTodayList(context);
     }
 

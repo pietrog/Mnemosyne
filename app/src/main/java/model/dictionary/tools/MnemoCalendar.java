@@ -1,7 +1,6 @@
 package model.dictionary.tools;
 
 import java.util.Calendar;
-import java.util.Date;
 
 /**
  * Created by pietro on 01/07/15.
@@ -16,6 +15,11 @@ public class MnemoCalendar{
     public static void init(int type, int delay){
         mDelay = delay;
         mTypeOfDelay = type;
+    }
+
+    public  static void reset(){
+        mDelay = 0;
+        mTypeOfDelay = 0;
     }
 
     public static synchronized Calendar getInstance(){
@@ -39,34 +43,5 @@ public class MnemoCalendar{
                 break;
         }
         return cal;
-    }
-
-
-    private Date mNowFormattedDate;
-    private String mNowStrFormattedDate;
-
-
-    /**
-     * Get today's formatted date
-     * @return date formatted date
-     */
-    public Date getTime(){
-        return mNowFormattedDate;
-    }
-
-    /**
-     * Get today's formatted date as a string
-     * @return string formatted date
-     */
-    public String getTimeAsString(){
-        return mNowStrFormattedDate;
-    }
-
-    /**
-     * Reset the calendar to the date defined in the cstor
-     */
-    private void initCal(Calendar cal){
-        mNowStrFormattedDate = GeneralTools.getSQLDate(cal.getTime());
-        mNowFormattedDate = GeneralTools.getDateFromSQLDate(mNowStrFormattedDate);
     }
 }

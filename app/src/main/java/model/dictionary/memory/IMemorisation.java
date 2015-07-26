@@ -1,8 +1,5 @@
 package model.dictionary.memory;
 
-import java.util.Date;
-
-import model.dictionary.dictionaryObject.DictionaryObject;
 import model.dictionary.dictionaryObject.MemoryObject;
 
 /**
@@ -13,23 +10,10 @@ import model.dictionary.dictionaryObject.MemoryObject;
 public interface IMemorisation {
 
     /**
-     * Return the computed next date to learn for object identified by objectid
-     * @param object dictionary object
-     * @return date for the next alert
-     */
-    Date computeNextLearningDate(DictionaryObject object);
-
-    /**
-     * Postpone the learning date of an object (for exemple when the user did not learn the object at the rappel date)
-     * @param object dictionary object
-     * @return date of postpone
-     */
-    Date postponeLearningDate(DictionaryObject object);
-
-    /**
      * Check if the memorisation phase jumps to the next one or not (ENCODING => STORING => UPKEEPING)
-     * @param object object to update
-     * @return {Global.SUCCESS} if successful, {Global.FAILURE} otherwise
+     * @param dictionaryObjectID id of sal dictionary object
+     * @return {Global.SUCCESS} if successful incremented or changed the phase, {Global.NOTTHING_DONE} if nothing done(now date is before the next learn date), {Global.FAILURE} otherwise
      */
-    int updateMemorisationPhase(MemoryObject object);
+    int onLearnt(long dictionaryObjectID);
+    int onLearnt(MemoryObject object);
 }

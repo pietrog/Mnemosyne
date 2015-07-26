@@ -1,12 +1,11 @@
 package com.mnemo.pietro.mnemosyne.fragments.dictionary;
 
-import android.database.Cursor;
 import android.os.Bundle;
 
 import com.mnemo.pietro.mnemosyne.R;
 import com.mnemo.pietro.mnemosyne.fragments.dictionary.tools.TodayListAdapter;
 
-import model.dictionary.dictionary.sql.DictionarySQLManager;
+import model.dictionary.memoryManager.sql.MemoryManagerSQLManager;
 import model.dictionary.tools.ViewTools;
 
 /**
@@ -19,12 +18,12 @@ public class TodayListFragment extends BaseDictionaryFragment{
 
 
     public static final String ALERTDATE = "ALERTDATE"; // the date corresponding to the raise alert
-    private String mDate;
+    private long mDate;
 
-    public static TodayListFragment newInstance(String date){
+    public static TodayListFragment newInstance(long date){
         TodayListFragment fragment = new TodayListFragment();
         Bundle args = new Bundle();
-        args.putString(ALERTDATE, date);
+        args.putLong(ALERTDATE, date);
 
         fragment.setArguments(args);
 
@@ -38,7 +37,7 @@ public class TodayListFragment extends BaseDictionaryFragment{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null)
-            mDate = getArguments().getString(ALERTDATE);
+            mDate = getArguments().getLong(ALERTDATE);
     }
 
     @Override
@@ -62,15 +61,14 @@ public class TodayListFragment extends BaseDictionaryFragment{
     @Override
     protected void removeWord(int position) {
         super.removeWord(position);
-        mAdapter.changeCursor(DictionarySQLManager.getInstance().getDictionaryObjectsFromLearningList(mDate));
+        mAdapter.changeCursor(MemoryManagerSQLManager.getInstance().getCursorOfObjectsToLearn(mDate));
     }
 
     public void refreshListView(){
         if (mAdapter == null){
-            Cursor mRawCursor = DictionarySQLManager.getInstance().getDictionaryObjectsFromLearningList(mDate);
-            mAdapter = new TodayListAdapter(getActivity().getApplicationContext(), R.layout.std_list_fragment, mRawCursor, 0);
+            mAdapter = new TodayListAdapter(mDate, getActivity().getApplicationContext(), R.layout.std_list_fragment, MemoryManagerSQLManager.getInstance().getCursorOfObjectsToLearn(mDate), 0);
         }
         else
-            mAdapter.changeCursor(DictionarySQLManager.getInstance().getDictionaryObjectsFromLearningList(mDate));
+            mAdapter.changeCursor(MemoryManagerSQLManager.getInstance().getCursorOfObjectsToLearn(mDate));
     }
 }

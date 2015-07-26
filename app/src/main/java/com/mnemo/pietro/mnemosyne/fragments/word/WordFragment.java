@@ -1,21 +1,21 @@
 package com.mnemo.pietro.mnemosyne.fragments.word;
 
 
-import android.app.Activity;
+import android.app.Fragment;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
-import com.mnemo.pietro.mnemosyne.MnemoMemoryManager;
 import com.mnemo.pietro.mnemosyne.R;
 
+import java.util.Date;
+
+import model.dictionary.dictionary.sql.DictionarySQLManager;
 import model.dictionary.dictionaryObject.MemoryObject;
 import model.dictionary.dictionaryObject.WordDefinitionObj;
-import model.dictionary.dictionary.sql.DictionarySQLManager;
 import model.dictionary.memory.LongTermMemory;
 import model.dictionary.tools.GeneralTools;
 import model.dictionary.tools.ViewTools;
@@ -105,14 +105,14 @@ public class WordFragment extends Fragment implements View.OnClickListener{
 
     private void onLearntWord(){
         //MnemoMemoryManager.startActionUpdateWord(getActivity().getApplicationContext(), mDictObjID);
-        LongTermMemory.getInstance(getActivity().getApplicationContext()).updateMemoryPhaseOfDictionaryObject(mDictObjID);
+        LongTermMemory.getInstance(getActivity().getApplicationContext()).onLearnt(mDictObjID);
         getFragmentManager().popBackStack();
     }
 
     private void showStatistics(){
         MemoryObject object = DictionarySQLManager.getInstance().getMemoryObjectFromDictionaryObjectID(mDictObjID);
         ViewTools.setStringOfTextView(mRootView.findViewById(R.id.lastDate), GeneralTools.getSQLDate(object.getLastLearnt()));
-        ViewTools.setStringOfTextView(mRootView.findViewById(R.id.nextDate), GeneralTools.getSQLDate(object.getNextLearnt()));
+        ViewTools.setStringOfTextView(mRootView.findViewById(R.id.nextDate), GeneralTools.getSQLDate(new Date(object.getNextLearn())));
 
         ViewTools.setStringOfTextView(mRootView.findViewById(R.id.date_add), GeneralTools.getSQLDate(object.getDateAdded()));
         ViewTools.setStringOfTextView(mRootView.findViewById(R.id.days_between), object.getDaysBetween() + "");

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Color;
 
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -141,6 +140,17 @@ public class GeneralTools {
         return date;
     }
 
+    /**
+     * Convert long sqldate to date
+     * @param sqlDate long to convert into date
+     * @return date object, null if sqldate is negative
+     */
+    public static Date getDateFromSQLDate(long sqlDate){
+        if (sqlDate < 0)
+            return null;
+        return new Date(sqlDate);
+    }
+
     public static Date getFormattedDate(Date date){
         return getDateFromSQLDate(getSQLDate(date));
     }
@@ -217,5 +227,31 @@ public class GeneralTools {
             default:
                 return Color.parseColor("#FF0000");
         }
+    }
+
+
+    /**
+     * Return the number of days between two dates
+     * @param date1 date one
+     * @param date2 date two
+     * @return the number of days between date1 and date2
+     */
+    public static long getNumberOfDaysBetweenTwoDates(long date1, long date2){
+        if (date1 >= date2)
+            return (date1-date2)/ 86400000; //86400000 is the number of milliseconds in one day
+        return (date2-date1)/ 86400000;
+    }
+
+    public static long getNumberOfMillisBetweenTwoDates(long date1, long date2){
+        if (date1 >= date2)
+            return date1 - date1;
+        return date2-date1;
+    }
+
+    public static boolean isTheSameDay(long d1, long d2){
+        return getNumberOfDaysBetweenTwoDates(d1, d2) == (long)0;
+    }
+    public static boolean isTheSameDay(Date d1, Date d2){
+        return getNumberOfDaysBetweenTwoDates(d1.getTime(), d2.getTime()) == (long)0;
     }
 }

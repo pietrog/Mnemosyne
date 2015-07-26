@@ -11,8 +11,6 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
-import java.util.Calendar;
-
 import model.dictionary.Global;
 import model.dictionary.catalogue.sql.CatalogueSQLManager;
 import model.dictionary.dictionaryObject.MemoryObject;
@@ -21,7 +19,6 @@ import model.dictionary.dictionaryObject.sql.WordContract;
 import model.dictionary.memoryManager.MemoryManager;
 import model.dictionary.memoryManager.sql.MemoryManagerSQLManager;
 import model.dictionary.tools.GeneralTools;
-import model.dictionary.tools.MnemoCalendar;
 import model.dictionary.tools.MnemoDBHelper;
 
 /**
@@ -97,44 +94,6 @@ public class DictionarySQLManagerTest {
             Assert.assertTrue("Id should be in this list", GeneralTools.getLongElement(cursor, "_id") == idWord1  || GeneralTools.getLongElement(cursor, "_id") == idWord3);
         }while(cursor.moveToNext());
         cursor.close();*/
-
-    }
-
-    @Test
-    public void testGetDictionaryObjectsFromLearningList() throws Exception {
-
-        //list null or empty
-        Cursor cursor = singleton.getDictionaryObjectsFromLearningList(null);
-        Assert.assertNull("Null list should return null cursor", cursor);
-        //no word added, should have empty cursor
-        Calendar cal = MnemoCalendar.getInstance();
-        String date = GeneralTools.getSQLDate(cal.getTime());
-        cursor = singleton.getDictionaryObjectsFromLearningList(date);
-        Assert.assertTrue("Should return an empty cursor because of empty database", cursor.getCount() == 0);
-
-        //list of dictionary objects
-        //set up
-        long idDict = singleton.addDictionaryInCatalogue(midCatalogue1, "Dict", "");
-        MemoryManager.initMemoryPhaseMap();
-        long idWord1 = singleton.addNewWord(idDict, "Word1", "");
-        long idWord2 = singleton.addNewWord(idDict, "Word2", "");
-        long idWord3 = singleton.addNewWord(idDict, "Word3", "");
-        long idWord4 = singleton.addNewWord(idDict, "Word4", "");
-        cal.add(Calendar.DAY_OF_YEAR, 1);
-        date = GeneralTools.getSQLDate(cal.getTime());
-        WordDefinitionObj obj = DictionarySQLManager.getInstance().getWordFromID(idWord4);
-        MemoryManagerSQLManager.getInstance().addWordToLearnSession(obj.getDictionaryObjectID(), cal.getTime());
-        obj = DictionarySQLManager.getInstance().getWordFromID(idWord2);
-        MemoryManagerSQLManager.getInstance().addWordToLearnSession(obj.getDictionaryObjectID(), cal.getTime());
-        obj = DictionarySQLManager.getInstance().getWordFromID(idWord3);
-        MemoryManagerSQLManager.getInstance().addWordToLearnSession(obj.getDictionaryObjectID(), cal.getTime());
-
-        cursor = singleton.getDictionaryObjectsFromLearningList(date);
-        Assert.assertEquals("Should contain 3 objects", 3, cursor.getCount());
-        cursor.moveToFirst();
-        do{
-            Assert.assertTrue("We should have a coherent result", GeneralTools.getLongElement(cursor, WordContract.Word.CSID) == idWord4 || GeneralTools.getLongElement(cursor, WordContract.Word.CSID) == idWord2 || GeneralTools.getLongElement(cursor, WordContract.Word.CSID) == idWord3);
-        }while(cursor.moveToNext());
 
     }
 

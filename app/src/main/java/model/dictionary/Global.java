@@ -19,6 +19,7 @@ public class Global {
     public static final int NOT_FOUND = 5;
     public static final int OUT_OF_BOUNDS = 6;
     public static final int BAD_PARAMETER = 7;
+    public static final int NOTHING_DONE = 15;
 
 
     public static final String TEXT_TYPE = " TEXT";
@@ -26,15 +27,30 @@ public class Global {
     public static final String COMMASEP = " ,";
     public static final String DEFAULT_EMPTY_STRING = " DEFAULT '' ";
 
+    public static final long DAYINMILLIS = 86400000;
+    public static final long HOURINMILLI = 3600000;
+
 
     /**
      * DATABASE RELATED SECTION
      */
-    // this is the first phase, phase name should be a global constant variable because we use it for dictionary object creation
-    public static final String FIRST_PHASE_NAME = "ENCODING";
-    public static final String SECOND_PHASE_NAME = "STORING";
-    public static final String THIRD_PHASE_NAME = "UPKEEPING";
+    //First phase
+    public static final String PHASE_NAME_P1 = "ENCODING";
+    public static final int DURATION_PHASE_P1 = 5;
+    public static final int PERIOD_INCREMENT_P1 = 0;
+    public static final int FIRST_PERIOD_P1 = 1;
+    //Second phase
+    public static final String PHASE_NAME_P2 = "STORING";
+    public static final int DURATION_PHASE_P2 = 95;
+    public static final int PERIOD_INCREMENT_P2 = 1;
+    public static final int FIRST_PERIOD_P2 = 5;
+    //Third phase
+    public static final String PHASE_NAME_P3 = "UPKEEPING";
+    public static final int DURATION_PHASE_P3 = 0;
+    public static final int PERIOD_INCREMENT_P3 = 0;
+    public static final int FIRST_PERIOD_P3 = 62;
 
+    public static final String LAST_PHASE_NAME = PHASE_NAME_P3;
 
     public static String getLogFromResult(int result){
         switch (result){

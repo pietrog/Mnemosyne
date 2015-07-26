@@ -5,8 +5,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.provider.BaseColumns;
 
 import model.dictionary.Global;
-import model.dictionary.dictionary.sql.DictionaryContractBase;
-import model.dictionary.dictionaryObject.sql.DictionaryObjectContract;
 
 
 /**
@@ -17,14 +15,6 @@ public class MemoryManagerContract {
 
     public MemoryManagerContract(){}
 
-    public static abstract class MemoryManager implements BaseColumns{
-        public static final String TABLE_NAME = "memorymanager";
-        public static final String CID = TABLE_NAME + "." + _ID;
-        public static final String DATE = "date"; // date of the next learning session
-        public static final String DICTIONARYOBJECTID = "dictionaryobjectid";
-        public static final String DAYS_OF_DELAY = "daysdelay"; // delay in number of days from the initially computed next learning date
-    }
-
     /**
      * Monitoring of the memory process for each dictionary object
      */
@@ -33,12 +23,12 @@ public class MemoryManagerContract {
         public static final String CID = TABLE_NAME + "." + _ID;
         public static final String CSID = TABLE_NAME + _ID;
         public static final String LAST_LEARNT = "last_learnt"; // date of the last learning session of this object
-        public static final String NEXT_LEARNT = "next_learnt"; // date of the next learning session on this object
+        public static final String NEXT_LEARN = "next_learn"; // date of the next learning session on this object as long in milliseconds
         public static final String DATE_ADDED = "dateadded"; // date word was added for the first time
         public static final String MEMORY_PHASE_ID = "memoryphase"; // the learning memory phase
         public static final String BEGINING_OF_MP = "endofmp"; // date of the beginning of the memory phase
         public static final String DAYS_BETWEEN = "daysbetween"; // current number of days between two learning sessions
-        public static final String ALL = CID + " AS " + CSID +", " + LAST_LEARNT + ", " + NEXT_LEARNT + ", " + DATE_ADDED + ", " + MEMORY_PHASE_ID + ", " + BEGINING_OF_MP + ", " + DAYS_BETWEEN;
+        public static final String ALL = CID + " AS " + CSID +", " + LAST_LEARNT + ", " + NEXT_LEARN + ", " + DATE_ADDED + ", " + MEMORY_PHASE_ID + ", " + BEGINING_OF_MP + ", " + DAYS_BETWEEN;
 
     }
 
@@ -54,16 +44,6 @@ public class MemoryManagerContract {
         public static final String PERIOD_INCREMENT = "periodIncr"; // increment of the period (in days)
         public static final String NEXT_PHASE_ID = "nextphaseid"; // id of the next phase
     }
-
-    public static final String SQL_CREATE_MEMORY_MANAGER_TABLE =
-            "CREATE TABLE " + MemoryManager.TABLE_NAME + "( "
-                    + MemoryManager._ID + Global.INTEGER_TYPE + " PRIMARY KEY" + Global.COMMASEP
-                    + MemoryManager.DATE + Global.TEXT_TYPE + Global.COMMASEP
-                    + MemoryManager.DICTIONARYOBJECTID + Global.INTEGER_TYPE + " REFERENCES " + DictionaryObjectContract.DictionaryObject.TABLE_NAME + "(" + DictionaryObjectContract.DictionaryObject._ID + ") ON DELETE CASCADE " + Global.COMMASEP
-                    + MemoryManager.DAYS_OF_DELAY + Global.INTEGER_TYPE + " DEFAULT 0 " + Global.COMMASEP
-                    + " UNIQUE (" + MemoryManager.DICTIONARYOBJECTID + "," + MemoryManager.DATE +") ON CONFLICT REPLACE"
-                    + ")"
-            ;
 
     public static final String SQL_CREATE_MEMORY_PHASE_TABLE =
             "CREATE TABLE " + MemoryPhase.TABLE_NAME + "("
@@ -81,7 +61,7 @@ public class MemoryManagerContract {
             "CREATE TABLE " + MemoryMonitoring.TABLE_NAME + "("
                     + MemoryMonitoring._ID + Global.INTEGER_TYPE + " PRIMARY KEY" + Global.COMMASEP
                     + MemoryMonitoring.LAST_LEARNT + Global.TEXT_TYPE + Global.COMMASEP
-                    + MemoryMonitoring.NEXT_LEARNT + Global.TEXT_TYPE + Global.COMMASEP
+                    + MemoryMonitoring.NEXT_LEARN + Global.INTEGER_TYPE + Global.COMMASEP
                     + MemoryMonitoring.DATE_ADDED + Global.TEXT_TYPE + Global.COMMASEP
                     + MemoryMonitoring.MEMORY_PHASE_ID + Global.INTEGER_TYPE + Global.COMMASEP
                     + MemoryMonitoring.BEGINING_OF_MP + Global.TEXT_TYPE + Global.COMMASEP
@@ -92,25 +72,25 @@ public class MemoryManagerContract {
 
     public static void populateDefaultMemoryPhase(SQLiteDatabase db){
         ContentValues value = new ContentValues();
-        value.put(MemoryPhase.PHASE_NAME, Global.THIRD_PHASE_NAME);
-        value.put(MemoryPhase.DURATION_PHASE, 0);
-        value.put(MemoryPhase.FIRST_PERIOD, 62);
-        value.put(MemoryPhase.PERIOD_INCREMENT, 0);
+        value.put(MemoryPhase.PHASE_NAME, Global.PHASE_NAME_P3);
+        value.put(MemoryPhase.DURATION_PHASE, Global.DURATION_PHASE_P3);
+        value.put(MemoryPhase.FIRST_PERIOD, Global.FIRST_PERIOD_P3);
+        value.put(MemoryPhase.PERIOD_INCREMENT, Global.PERIOD_INCREMENT_P3);
         long id = db.insert(MemoryPhase.TABLE_NAME, null, value);
         value = new ContentValues();
-        value.put(MemoryPhase.PHASE_NAME, Global.SECOND_PHASE_NAME);
-        value.put(MemoryPhase.DURATION_PHASE, 95);
-        value.put(MemoryPhase.FIRST_PERIOD, 5);
-        value.put(MemoryPhase.PERIOD_INCREMENT, 1);
+        value.put(MemoryPhase.PHASE_NAME, Global.PHASE_NAME_P2);
+        value.put(MemoryPhase.DURATION_PHASE, Global.DURATION_PHASE_P2);
+        value.put(MemoryPhase.FIRST_PERIOD, Global.FIRST_PERIOD_P2);
+        value.put(MemoryPhase.PERIOD_INCREMENT, Global.PERIOD_INCREMENT_P2);
         value.put(MemoryPhase.NEXT_PHASE_ID, id);
         id = db.insert(MemoryPhase.TABLE_NAME, null, value);
         value = new ContentValues();
 
         // this is the first phase, phase name should be a global constant variable because we use it for dictionary object creation
-        value.put(MemoryPhase.PHASE_NAME, Global.FIRST_PHASE_NAME);
-        value.put(MemoryPhase.DURATION_PHASE, 5);
-        value.put(MemoryPhase.FIRST_PERIOD, 1);
-        value.put(MemoryPhase.PERIOD_INCREMENT, 0);
+        value.put(MemoryPhase.PHASE_NAME, Global.PHASE_NAME_P1);
+        value.put(MemoryPhase.DURATION_PHASE, Global.DURATION_PHASE_P1);
+        value.put(MemoryPhase.FIRST_PERIOD, Global.FIRST_PERIOD_P1);
+        value.put(MemoryPhase.PERIOD_INCREMENT, Global.PERIOD_INCREMENT_P1);
         value.put(MemoryPhase.NEXT_PHASE_ID, id);
         db.insert(MemoryPhase.TABLE_NAME, null, value);
     }

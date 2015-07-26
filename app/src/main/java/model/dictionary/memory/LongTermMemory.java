@@ -3,15 +3,12 @@ package model.dictionary.memory;
 import android.content.Context;
 
 import java.util.Calendar;
-import java.util.Date;
 
 import model.dictionary.Global;
 import model.dictionary.dictionary.sql.DictionarySQLManager;
-import model.dictionary.dictionaryObject.DictionaryObject;
 import model.dictionary.dictionaryObject.MemoryObject;
 import model.dictionary.memoryManager.sql.MemoryManagerSQLManager;
-import model.dictionary.tools.GeneralTools;
-import model.dictionary.tools.Logger;
+import model.dictionary.tools.MnemoCalendar;
 
 /**
  * Created by pietro on 30/03/15.
@@ -37,70 +34,55 @@ public class LongTermMemory implements IMemorisation{
     }
 
 
-
-    public void updateMemoryPhaseOfDictionaryObject(long dictionaryObjectID) {
-        if (dictionaryObjectID < 0)
-            return;
-        MemoryObject object = DictionarySQLManager.getInstance().getMemoryObjectFromDictionaryObjectID(dictionaryObjectID);
-        if (object == null) {
-            Logger.i("MnemoMemoryManager::updateMemoryPhaseOfDictionaryObject", " object whith id " + dictionaryObjectID + " is null");
-            return;
-        }
-        //check if object was already updated today
-        //if it was, do not update it again
-        String now = GeneralTools.getSQLDate(Calendar.getInstance().getTime());
-        if (now.compareTo(GeneralTools.getSQLDate(object.getLastLearnt())) != 0)
-            updateMemorisationPhase(object);
-    }
-
     @Override
-    public Date computeNextLearningDate(DictionaryObject object) {
+    public int onLearnt(MemoryObject object){
         if (object == null)
-            return null;
+            return Global.NOT_FOUND;
 
-        Date res = new Date();
+        if (object.getNextLearn() <= MnemoCalendar.getInstance().getTimeInMillis()){
+            //we implement a strict update of the phase, will change later
+            //we just check if the begin date of the phase + number of days of this phase is gt or equal to today's date
+            /*Calendar cal = MnemoCalendar.getInstance();
+            cal.setTime(object.getBeginningOfMP());
+            cal.add(Calendar.DAY_OF_YEAR, object.getDurationPhase());
 
+            // compare with today's date, if we are not in last phase
+            if (cal.compareTo(MnemoCalendar.getInstance()) <= 0)
+                //we go to the next phase
+                object.updateToNextPhase();
+                //increment in this phase
+            else
+                object.incrementDaysInPhaseAndUpdateLearningDates();*/
 
+            Calendar endOfPhase = MnemoCalendar.getInstance();
+            endOfPhase.setTime(object.getBeginningOfMP());
+            endOfPhase.add(Calendar.DAY_OF_YEAR, object.getDurationPhase());
 
-        return res;
-    }
+            // compare with today's date, if we are not in last phase
+            if (object.getDurationPhase() != 0 && endOfPhase.getTimeInMillis() < MnemoCalendar.getInstance().getTimeInMillis())
+                //we go to the next phase
+                object.updateToNextPhase();
+                //increment in this phase
+            else
+                object.incrementDaysInPhaseAndUpdateLearningDates();
 
-    @Override
-    public Date postponeLearningDate(DictionaryObject object) {
-        return null;
-    }
+            //update object in database
+            int res = MemoryManagerSQLManager.getInstance().updateMemoryObjectInDB(object);
 
-    @Override
-    public int updateMemorisationPhase(MemoryObject object) {
+            if (res != Global.SUCCESS)
+                return Global.FAILURE;
 
-        //fix the lastlearnt date for removing id from list of id to raise
-        Date oldNext = object.getNextLearnt();
-        //we implement a strict update of the phase, will change later
-        //we just check if the begin date of the phase + number of days of this phase is gt or equal to today's date
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(object.getBeginningOfMP());
-        cal.add(Calendar.DAY_OF_YEAR, object.getDurationPhase());
-
-        // compare with today's date, if we are not in last phase
-        if (cal.compareTo(Calendar.getInstance()) <= 0)
-            //we go to the next phase
-            object.updateToNextPhase();
-        //increment in this phase
-        else
-            object.incrementDaysInPhaseAndUpdateLearningDates();
-
-        //update object in database
-        int res = MemoryManagerSQLManager.getInstance().updateMemoryObjectInDB(object);
-
-        if (res != Global.SUCCESS)
-            return Global.FAILURE;
-
-        MemoryManagerSQLManager.getInstance().removeObjectFromLearningSession(object.getDictionaryObjectID());
-        if (MemoryManagerSQLManager.getInstance().addWordToLearnSession(object.getDictionaryObjectID(), object.getNextLearnt()) > 0)
             return Global.SUCCESS;
+        }
 
-        return Global.FAILURE;
+        return Global.NOTHING_DONE;
     }
 
+    @Override
+    public int onLearnt(long dictionaryObjectID){
+        if (dictionaryObjectID < 0)
+            return Global.BAD_PARAMETER;
+        return onLearnt(DictionarySQLManager.getInstance().getMemoryObjectFromDictionaryObjectID(dictionaryObjectID));
+    }
 
 }
