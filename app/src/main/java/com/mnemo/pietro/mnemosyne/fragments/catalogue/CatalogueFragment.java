@@ -1,8 +1,8 @@
 package com.mnemo.pietro.mnemosyne.fragments.catalogue;
 
-import android.app.ListFragment;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.app.ListFragment;
 import android.view.ContextMenu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -108,7 +108,7 @@ public class CatalogueFragment extends ListFragment {
         cursor.moveToPosition(position);
         Dictionary dictionary = Dictionary.LoadFromCursor(cursor);
         DictionaryFragment fragment = DictionaryFragment.newInstance(dictionary.getID(), dictionary.getName());
-        getActivity().getFragmentManager().beginTransaction().addToBackStack(MnemoCentral.FGT_DICTIONARY_TAG).replace(R.id.main_subscreen, fragment).commit();
+        getActivity().getSupportFragmentManager().beginTransaction().addToBackStack(MnemoCentral.FGT_DICTIONARY_TAG).replace(R.id.main_subscreen, fragment).commit();
     }
 
     @Override

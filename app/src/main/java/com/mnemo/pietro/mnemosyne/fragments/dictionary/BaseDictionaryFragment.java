@@ -1,8 +1,8 @@
 package com.mnemo.pietro.mnemosyne.fragments.dictionary;
 
-import android.app.ListFragment;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.app.ListFragment;
 import android.view.ContextMenu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -12,12 +12,10 @@ import android.widget.ListView;
 
 import com.mnemo.pietro.mnemosyne.R;
 import com.mnemo.pietro.mnemosyne.fragments.dictionary.tools.DictionaryAdapter;
-import com.mnemo.pietro.mnemosyne.fragments.dictionary.tools.TodayListAdapter;
 import com.mnemo.pietro.mnemosyne.fragments.word.WordFragment;
 
-import model.dictionary.dictionaryObject.WordDefinitionObj;
-import model.dictionary.dictionaryObject.sql.WordContract;
 import model.dictionary.dictionary.sql.DictionarySQLManager;
+import model.dictionary.dictionaryObject.sql.WordContract;
 import model.dictionary.tools.GeneralTools;
 
 /**

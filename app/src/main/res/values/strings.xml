@@ -47,7 +47,7 @@
         Pour parvenir à stocker ce que nous voulons dans cette mémoire, nous devons suivre un processus de mémorisation. C\'est la qu\'intervient Mnemosyne, qui vous force à suivre
         ce processus.
     </string>
-    <string name="hint_todayslist">REVISION</string>
+    <string name="hint_todayslist">Revisions</string>
 
 
 </resources>

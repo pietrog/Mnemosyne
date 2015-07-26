@@ -2,7 +2,7 @@ package com.mnemo.pietro.mnemosyne.fragments.dictionary;
 
 
 import android.os.Bundle;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,7 +13,6 @@ import android.widget.Toast;
 import com.mnemo.pietro.mnemosyne.R;
 
 import model.dictionary.Global;
-import model.dictionary.catalogue.sql.CatalogueSQLManager;
 import model.dictionary.dictionary.sql.DictionarySQLManager;
 import model.dictionary.tools.ViewTools;
 

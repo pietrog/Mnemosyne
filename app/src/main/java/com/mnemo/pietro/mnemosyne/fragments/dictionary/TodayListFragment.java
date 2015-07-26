@@ -6,6 +6,7 @@ import com.mnemo.pietro.mnemosyne.R;
 import com.mnemo.pietro.mnemosyne.fragments.dictionary.tools.TodayListAdapter;
 
 import model.dictionary.memoryManager.sql.MemoryManagerSQLManager;
+import model.dictionary.tools.MnemoCalendar;
 import model.dictionary.tools.ViewTools;
 
 /**
@@ -22,10 +23,12 @@ public class TodayListFragment extends BaseDictionaryFragment{
 
     public static TodayListFragment newInstance(long date){
         TodayListFragment fragment = new TodayListFragment();
-        Bundle args = new Bundle();
-        args.putLong(ALERTDATE, date);
 
-        fragment.setArguments(args);
+        if (date > 0) {
+            Bundle args = new Bundle();
+            args.putLong(ALERTDATE, date);
+            fragment.setArguments(args);
+        }
 
         return fragment;
     }
@@ -38,6 +41,8 @@ public class TodayListFragment extends BaseDictionaryFragment{
         super.onCreate(savedInstanceState);
         if (getArguments() != null)
             mDate = getArguments().getLong(ALERTDATE);
+        else
+            mDate = MnemoCalendar.getInstance().getTimeInMillis();
     }
 
     @Override

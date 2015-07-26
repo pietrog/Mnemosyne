@@ -1,13 +1,20 @@
 package com.mnemo.pietro.mnemosyne;
 
-import android.app.FragmentTransaction;
+import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 
 import com.mnemo.pietro.mnemosyne.fragments.dictionary.TodayListFragment;
 import com.mnemo.pietro.mnemosyne.fragments.library.LibraryFragment;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import model.dictionary.Global;
 import model.dictionary.tools.MnemoDBHelper;
@@ -32,6 +39,10 @@ public class MnemoCentral
     public static final String FGT_CATALOGUE_TAG = "CATALOGUE";
     public static final String FGT_DICTIONARY_TAG = "DICTIONARY";
 
+
+    ViewPager mViewPager ;
+    CentralPagerAdapter mPageAdapter;
+
     /*******************/
     /// ACTIVITY LIFECYLE
     /*******************/
@@ -47,17 +58,23 @@ public class MnemoCentral
             setSupportActionBar(mToolbar);
         }
 
-        if (savedInstanceState == null){
+        if (savedInstanceState == null) {
+            mPageAdapter = new CentralPagerAdapter(getSupportFragmentManager(), getApplicationContext());
+            mViewPager = (ViewPager) findViewById(R.id.pager);
+            mViewPager.setAdapter(mPageAdapter);
+        }
+
+        /*if (savedInstanceState == null){
             if (getIntent() != null && getIntent().getLongExtra(EXTRA_ALERT_DATE, -1) >= 0){
                 TodayListFragment fgt = TodayListFragment.newInstance(getIntent().getLongExtra(EXTRA_ALERT_DATE, -1));
-                getFragmentManager().beginTransaction().add(R.id.main_subscreen, fgt).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
+                getFragmentManager().beginTransaction().add(R.id.main_subscreen, (Fragment)fgt).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
             }
             else {
                 //create the catalogue list fragment
                 LibraryFragment fgt = LibraryFragment.newInstance();
                 getFragmentManager().beginTransaction().add(R.id.main_subscreen, fgt).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
             }
-        }
+        }*/
 
         // init the system, database helpers, ...
         InitSystem();
@@ -110,6 +127,38 @@ public class MnemoCentral
 
         MnemoDBHelper.release();
         return Global.SUCCESS;
+    }
+
+
+    public static class CentralPagerAdapter extends FragmentPagerAdapter{
+
+        private final List<Fragment> mFragments = new ArrayList<>();
+        private final List<String> mTitles = new ArrayList<>();
+
+        public CentralPagerAdapter(FragmentManager fm, Context context){
+            super(fm);
+
+            mFragments.add(LibraryFragment.newInstance());
+            mTitles.add(context.getString(R.string.hint_catalogue_list));
+
+            mFragments.add(TodayListFragment.newInstance(-1));
+            mTitles.add(context.getString(R.string.hint_todayslist));
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return mFragments.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return mFragments.size();
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position){
+            return mTitles.get(position);
+        }
     }
 
 }
