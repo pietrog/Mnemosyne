@@ -17,6 +17,7 @@ public class TodayListAdapter extends DictionaryAdapter {
 
     public TodayListAdapter(long refDate, Context context, int layout, Cursor cursor, int flags){
         super(context, layout, cursor, flags);
+        mRefDate = refDate;
     }
 
     @Override

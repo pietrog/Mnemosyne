@@ -14,14 +14,14 @@ import model.dictionary.tools.MnemoDBHelper;
 import model.dictionary.tools.TestEnvironment;
 
 //EN COURS
+//@TODO: modifier l'ecran d'affichage des mot a réviser, avec couleurs pour noter l'importance(jours de retard)
 
 //A FAIRE
 //@TODO: implementer la gestion des jours de retard dans l'apprentissage
 //@TODO: implementer un rappel basé sur l'alarme
-//@TODO: retirer les mots revises de la todays list
 //@TODO: definir une regle de navigation dans l'appli (d'un dictionaire a l'autre, ...) coherente pour l'utilisateur
 //@TODO: implementer la modification des entites
-//@TODO: modifier l'ecran d'affichage des mot a réviser, avec couleurs pour noter l'importance(jours de retard)
+//@TODO: implementer la differenciation des cartes  (item date, image, definition, ...)
 
 
 public class MnemoCentral
