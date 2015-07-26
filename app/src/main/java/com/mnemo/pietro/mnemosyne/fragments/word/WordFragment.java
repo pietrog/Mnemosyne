@@ -27,10 +27,10 @@ import model.dictionary.tools.ViewTools;
  */
 public class WordFragment extends Fragment implements View.OnClickListener{
 
-    private static final String WORD = "WRD";
-    private static final String DEFINITION = "DEF";
-    private static final String WORDID = "ID";
-    private static final String DICTIONARYOBJECTID = "DCTOBJID";
+    public static final String WORD = "WRD";
+    public static final String DEFINITION = "DEF";
+    public static final String WORDID = "ID";
+    public static final String DICTIONARYOBJECTID = "DCTOBJID";
 
 
     private String mWord;
@@ -47,6 +47,17 @@ public class WordFragment extends Fragment implements View.OnClickListener{
         args.putString(DEFINITION, obj.getDefinition());
         args.putLong(WORDID, obj.getID());
         args.putLong(DICTIONARYOBJECTID, obj.getDictionaryObjectID());
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public static WordFragment newInstance(String word, String definition, long id, long dictID) {
+        WordFragment fragment = new WordFragment();
+        Bundle args = new Bundle();
+        args.putString(WORD, word);
+        args.putString(DEFINITION, definition);
+        args.putLong(WORDID, id);
+        args.putLong(DICTIONARYOBJECTID, dictID);
         fragment.setArguments(args);
         return fragment;
     }

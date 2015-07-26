@@ -2,6 +2,7 @@ package com.mnemo.pietro.mnemosyne.fragments.library;
 
 //import android.app.ListFragment;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -12,13 +13,11 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.mnemo.pietro.mnemosyne.MnemoCentral;
+import com.mnemo.pietro.mnemosyne.MnemoCatalogue;
 import com.mnemo.pietro.mnemosyne.R;
-import com.mnemo.pietro.mnemosyne.fragments.catalogue.CatalogueFragment;
 import com.mnemo.pietro.mnemosyne.fragments.catalogue.CreateCatalogueFragment;
 import com.mnemo.pietro.mnemosyne.fragments.library.tools.LibraryAdapter;
 
-import model.dictionary.catalogue.Catalogue;
 import model.dictionary.catalogue.sql.CatalogueContract;
 import model.dictionary.catalogue.sql.CatalogueSQLManager;
 import model.dictionary.tools.GeneralTools;
@@ -70,11 +69,18 @@ public class LibraryFragment extends ListFragment {
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
+        Intent intent = new Intent(getActivity().getApplicationContext(), MnemoCatalogue.class);
         Cursor cursor = mAdapter.getCursor();
         cursor.moveToPosition(position);
+        intent.putExtra(MnemoCatalogue.CATALOGUEID, GeneralTools.getLongElement(cursor, CatalogueContract.Catalogue._ID));
+        intent.putExtra(MnemoCatalogue.CATALOGUENAME, GeneralTools.getStringElement(cursor, CatalogueContract.Catalogue.CATALOGUE_NAME));
+        startActivity(intent);
+        /*Cursor cursor = mAdapter.getCursor();
+        cursor.moveToPosition(position);
         Catalogue catalogue = Catalogue.LoadFromSQL(cursor);
-        CatalogueFragment cfgt = CatalogueFragment.newInstance(catalogue.getID(), catalogue.getName());
-        getFragmentManager().beginTransaction().replace(R.id.main_subscreen, cfgt).addToBackStack(MnemoCentral.FGT_CATALOGUE_TAG).commit();
+        CatalogueFragment fragment = CatalogueFragment.newInstance(catalogue.getID(), catalogue.getName());
+        //getChildFragmentManager().beginTransaction().replace(R.id.main_subscreen, fragment).addToBackStack(MnemoCentral.FGT_CATALOGUE_TAG).commit();
+        getChildFragmentManager().beginTransaction().add(0, fragment).commit();*/
     }
 
     @Override
@@ -89,7 +95,7 @@ public class LibraryFragment extends ListFragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         CreateCatalogueFragment fragment = CreateCatalogueFragment.newInstance();
-        getFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.main_subscreen, fragment).commit();
+        //getFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.main_subscreen, fragment).commit();
         return true;
     }
 

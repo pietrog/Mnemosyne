@@ -64,18 +64,6 @@ public class MnemoCentral
             mViewPager.setAdapter(mPageAdapter);
         }
 
-        /*if (savedInstanceState == null){
-            if (getIntent() != null && getIntent().getLongExtra(EXTRA_ALERT_DATE, -1) >= 0){
-                TodayListFragment fgt = TodayListFragment.newInstance(getIntent().getLongExtra(EXTRA_ALERT_DATE, -1));
-                getFragmentManager().beginTransaction().add(R.id.main_subscreen, (Fragment)fgt).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
-            }
-            else {
-                //create the catalogue list fragment
-                LibraryFragment fgt = LibraryFragment.newInstance();
-                getFragmentManager().beginTransaction().add(R.id.main_subscreen, fgt).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
-            }
-        }*/
-
         // init the system, database helpers, ...
         InitSystem();
     }

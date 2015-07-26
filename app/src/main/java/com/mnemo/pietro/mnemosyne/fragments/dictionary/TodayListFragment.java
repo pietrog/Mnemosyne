@@ -1,11 +1,19 @@
 package com.mnemo.pietro.mnemosyne.fragments.dictionary;
 
+import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ListView;
 
+import com.mnemo.pietro.mnemosyne.MnemoWord;
 import com.mnemo.pietro.mnemosyne.R;
 import com.mnemo.pietro.mnemosyne.fragments.dictionary.tools.TodayListAdapter;
+import com.mnemo.pietro.mnemosyne.fragments.word.WordFragment;
 
+import model.dictionary.dictionaryObject.sql.WordContract;
 import model.dictionary.memoryManager.sql.MemoryManagerSQLManager;
+import model.dictionary.tools.GeneralTools;
 import model.dictionary.tools.MnemoCalendar;
 import model.dictionary.tools.ViewTools;
 
@@ -50,6 +58,19 @@ public class TodayListFragment extends BaseDictionaryFragment{
         super.onActivityCreated(savedInstanceState);
         refreshListView();
         setListAdapter(mAdapter);
+    }
+
+
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        Intent intent = new Intent(getActivity().getApplicationContext(), MnemoWord.class);
+        Cursor cursor = mAdapter.getCursor();
+        cursor.moveToPosition(position);
+        intent.putExtra(WordFragment.WORDID, GeneralTools.getLongElement(cursor, WordContract.Word.CID));
+        intent.putExtra(WordFragment.DICTIONARYOBJECTID, GeneralTools.getLongElement(cursor, WordContract.Word.DICTIONARYOBJECTID));
+        intent.putExtra(WordFragment.WORD, GeneralTools.getStringElement(cursor, WordContract.Word.WORD));
+        intent.putExtra(WordFragment.DEFINITION, GeneralTools.getStringElement(cursor, WordContract.Word.DEFINITION));
+        startActivity(intent);
     }
 
 
