@@ -69,8 +69,8 @@ public class MnemoDBHelper extends SQLiteOpenHelper {
     private void initTestDatabase(SQLiteDatabase db){
         //add a catalogue
         ContentValues val = new ContentValues();
-        val.put(CatalogueContract.Catalogue.CATALOGUE_NAME, "Dictionnaires de langue");
-        val.put(CatalogueContract.Catalogue.CATALOGUE_DESC, "Contient des dictionnaires de langue");
+        val.put(CatalogueContract.Catalogue.NAME, "Dictionnaires de langue");
+        val.put(CatalogueContract.Catalogue.DESCRIPTION, "Contient des dictionnaires de langue");
         long idCatalogue = db.insert(CatalogueContract.Catalogue.TABLE_NAME, null, val);
 
         //add dictionaries

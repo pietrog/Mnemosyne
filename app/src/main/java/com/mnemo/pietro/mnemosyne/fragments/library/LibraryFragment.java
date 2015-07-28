@@ -3,25 +3,24 @@ package com.mnemo.pietro.mnemosyne.fragments.library;
 //import android.app.ListFragment;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
+import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ListView;
 
-import com.mnemo.pietro.mnemosyne.MnemoCatalogue;
+import com.mnemo.pietro.mnemosyne.MnemoCreation;
 import com.mnemo.pietro.mnemosyne.R;
-import com.mnemo.pietro.mnemosyne.fragments.catalogue.CreateCatalogueFragment;
 import com.mnemo.pietro.mnemosyne.fragments.library.tools.LibraryAdapter;
 
-import model.dictionary.catalogue.sql.CatalogueContract;
 import model.dictionary.catalogue.sql.CatalogueSQLManager;
-import model.dictionary.tools.GeneralTools;
-import model.dictionary.tools.Logger;
 import model.dictionary.tools.ViewTools;
 
 /**
@@ -29,10 +28,10 @@ import model.dictionary.tools.ViewTools;
  * You can click on a catalogue to open the catalogue fragment and obtain the list of dictionaries
  *
  */
-public class LibraryFragment extends ListFragment {
+public class LibraryFragment extends Fragment {
 
     private LibraryAdapter mAdapter;
-
+    private RecyclerView mRecyclerView;
 
     /**
      * Use this factory method to create a new instance of
@@ -49,11 +48,21 @@ public class LibraryFragment extends ListFragment {
         // Required empty public constructor
     }
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true); // for toolbar interaction
     }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.std_list_fragment, container, false);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+        return null;
+    }
+
 
 
     @Override
@@ -62,40 +71,42 @@ public class LibraryFragment extends ListFragment {
 
         //bind the adapter
         CatalogueSQLManager manager = CatalogueSQLManager.getInstance();
-        mAdapter = new LibraryAdapter(getActivity().getApplicationContext(), R.layout.library_view, manager.getAll(), 0);
-        setListAdapter(mAdapter);
-        registerForContextMenu(getListView());
+        mAdapter = new LibraryAdapter(manager.getAllDictionary());
+        mRecyclerView.setAdapter(mAdapter);
+        //registerForContextMenu(getListView());
     }
 
-    @Override
+    /*@Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         Intent intent = new Intent(getActivity().getApplicationContext(), MnemoCatalogue.class);
         Cursor cursor = mAdapter.getCursor();
         cursor.moveToPosition(position);
-        intent.putExtra(MnemoCatalogue.CATALOGUEID, GeneralTools.getLongElement(cursor, CatalogueContract.Catalogue._ID));
-        intent.putExtra(MnemoCatalogue.CATALOGUENAME, GeneralTools.getStringElement(cursor, CatalogueContract.Catalogue.CATALOGUE_NAME));
+        intent.putExtra(MnemoCatalogue.ID, GeneralTools.getLongElement(cursor, CatalogueContract.Catalogue._ID));
+        intent.putExtra(MnemoCatalogue.NAME, GeneralTools.getStringElement(cursor, CatalogueContract.Catalogue.NAME));
         startActivity(intent);
-        /*Cursor cursor = mAdapter.getCursor();
-        cursor.moveToPosition(position);
-        Catalogue catalogue = Catalogue.LoadFromSQL(cursor);
-        CatalogueFragment fragment = CatalogueFragment.newInstance(catalogue.getID(), catalogue.getName());
-        //getChildFragmentManager().beginTransaction().replace(R.id.main_subscreen, fragment).addToBackStack(MnemoCentral.FGT_CATALOGUE_TAG).commit();
-        getChildFragmentManager().beginTransaction().add(0, fragment).commit();*/
-    }
+    }*/
 
     @Override
     public void onResume() {
         super.onResume();
         mAdapter.notifyDataSetChanged();
         ViewTools.setTitle(getActivity(), R.string.hint_catalogue_list);
-        ViewTools.setSubtitle(getActivity(), "");
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.findItem(R.id.raiseAlert).setVisible(false);
+        menu.findItem(R.id.validate).setVisible(false);
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        CreateCatalogueFragment fragment = CreateCatalogueFragment.newInstance();
-        //getFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.main_subscreen, fragment).commit();
+        switch (item.getItemId()){
+            case R.id.add_item:
+                startActivity(new Intent(getActivity().getApplicationContext(), MnemoCreation.class));
+        }
+
         return true;
     }
 
@@ -120,19 +131,22 @@ public class LibraryFragment extends ListFragment {
     }
 
     private void removeCatalogue(int position){
-        mAdapter.getCursor().moveToPosition(position);
+        /*mAdapter.getCursor().moveToPosition(position);
         long[] listIDs = {GeneralTools.getLongElement(mAdapter.getCursor(), CatalogueContract.Catalogue._ID)};
 
         CatalogueSQLManager.getInstance().remove(listIDs);
         Logger.i("LibraryFragment::removeCatalogue", " catalogue(s) " + listIDs[0] + " removed");
 
-        mAdapter.changeCursor(CatalogueSQLManager.getInstance().getAll());
+        mAdapter.changeCursor(CatalogueSQLManager.getInstance().getAll());*/
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if (mAdapter != null && mAdapter.getCursor() != null)
-            mAdapter.getCursor().close();
+        /*if (mAdapter != null && mAdapter.getCursor() != null)
+            mAdapter.getCursor().close();*/
     }
+
+
+
 }

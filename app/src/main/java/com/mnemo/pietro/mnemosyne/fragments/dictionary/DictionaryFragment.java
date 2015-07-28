@@ -6,9 +6,9 @@ import android.view.MenuItem;
 
 import com.mnemo.pietro.mnemosyne.R;
 import com.mnemo.pietro.mnemosyne.fragments.dictionary.tools.DictionaryAdapter;
+import com.mnemo.pietro.mnemosyne.fragments.word.CreateWordFragment;
 
 import model.dictionary.dictionary.sql.DictionarySQLManager;
-import com.mnemo.pietro.mnemosyne.fragments.word.CreateWordFragment;
 import model.dictionary.tools.ViewTools;
 
 /**
@@ -17,8 +17,8 @@ import model.dictionary.tools.ViewTools;
 public class DictionaryFragment extends BaseDictionaryFragment {
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String DICTIONARY_NAME = "DICTIONARY_NAME";
-    private static final String DICTIONARY_ID = "DICTIONARY_ID";
+    private static final String NAME = "mnemocatalogue.name";
+    private static final String ID = "mnemocatalogue.id";
 
     private String mDictionaryName;
     private long mID;
@@ -33,8 +33,8 @@ public class DictionaryFragment extends BaseDictionaryFragment {
     public static DictionaryFragment newInstance(long dictonaryid, String dictionaryName) {
         DictionaryFragment fragment = new DictionaryFragment();
         Bundle args = new Bundle();
-        args.putString(DICTIONARY_NAME, dictionaryName);
-        args.putLong(DICTIONARY_ID, dictonaryid);
+        args.putString(NAME, dictionaryName);
+        args.putLong(ID, dictonaryid);
 
         fragment.setArguments(args);
         return fragment;
@@ -48,8 +48,8 @@ public class DictionaryFragment extends BaseDictionaryFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mDictionaryName = getArguments().getString(DICTIONARY_NAME);
-            mID = getArguments().getLong(DICTIONARY_ID);
+            mDictionaryName = getArguments().getString(NAME);
+            mID = getArguments().getLong(ID);
         }
 
     }

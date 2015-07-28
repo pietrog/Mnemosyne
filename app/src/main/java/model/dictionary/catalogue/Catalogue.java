@@ -38,8 +38,8 @@ public class Catalogue {
 
     public static Catalogue LoadFromSQL(Cursor cursor){
         return new Catalogue(GeneralTools.getLongElement(cursor, CatalogueContract.Catalogue._ID),
-                GeneralTools.getStringElement(cursor, CatalogueContract.Catalogue.CATALOGUE_NAME),
-                GeneralTools.getStringElement(cursor, CatalogueContract.Catalogue.CATALOGUE_DESC));
+                GeneralTools.getStringElement(cursor, CatalogueContract.Catalogue.NAME),
+                GeneralTools.getStringElement(cursor, CatalogueContract.Catalogue.DESCRIPTION));
 
     }
 

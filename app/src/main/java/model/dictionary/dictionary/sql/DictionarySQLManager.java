@@ -190,4 +190,16 @@ public class DictionarySQLManager extends BaseSQLManager{
 
         return add(val, DictionaryContractBase.DictionaryBase.TABLE_NAME);
     }
+
+    public long addDictionary(String name, String description){
+        if (name == null || description == null)
+            return Global.BAD_PARAMETER;
+        if (name.length() < 3)
+            return Global.BAD_PARAMETER;
+        ContentValues val = new ContentValues();
+        val.put(DictionaryContractBase.DictionaryBase.NAME, name);
+        val.put(DictionaryContractBase.DictionaryBase.DESCRIPTION, description);
+
+        return add(val, DictionaryContractBase.DictionaryBase.TABLE_NAME);
+    }
 }

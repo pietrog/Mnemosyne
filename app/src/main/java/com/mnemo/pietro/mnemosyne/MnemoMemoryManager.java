@@ -1,12 +1,8 @@
 package com.mnemo.pietro.mnemosyne;
 
 import android.app.IntentService;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.TaskStackBuilder;
 
 import java.util.Calendar;
 import java.util.Vector;
@@ -112,7 +108,7 @@ public class MnemoMemoryManager extends IntentService {
         /**
          * test notif
          */
-        int mID = 0;
+        /*int mID = 0;
         NotificationCompat.Builder mbuilder = new NotificationCompat.Builder(this).setSmallIcon(R.drawable.ic_action_new).setContentTitle(getResources().getString(R.string.hint_raised_message)).setContentText("");
         Intent intent = new Intent(getApplicationContext(), MnemoCentral.class);
         intent.putExtra(MnemoCentral.EXTRA_ALERT_DATE, now.getTimeInMillis());
@@ -122,7 +118,7 @@ public class MnemoMemoryManager extends IntentService {
         PendingIntent pintent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
         mbuilder.setContentIntent(pintent);
         NotificationManager not = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        not.notify(mID, mbuilder.build());
+        not.notify(mID, mbuilder.build());*/
     }
 
 

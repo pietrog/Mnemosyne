@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
-import com.mnemo.pietro.mnemosyne.fragments.catalogue.CatalogueFragment;
+import com.mnemo.pietro.mnemosyne.fragments.dictionary.DictionaryFragment;
 
 
 /**
@@ -12,11 +12,11 @@ import com.mnemo.pietro.mnemosyne.fragments.catalogue.CatalogueFragment;
  */
 public class MnemoCatalogue extends AppCompatActivity {
 
-    public static final String CATALOGUEID = "mnemocatalogue.catalogueid";
-    public static final String CATALOGUENAME = "mnemocatalogue.cataloguename";
+    public static final String ID = "mnemocatalogue.id";
+    public static final String NAME = "mnemocatalogue.name";
 
-    private long mCatalogueID;
-    private String mCatalogueName;
+    private long mID;
+    private String mName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,44 +25,13 @@ public class MnemoCatalogue extends AppCompatActivity {
         setContentView(R.layout.activity_mnemo_catalogue);
 
         if (savedInstanceState == null){
-            mCatalogueID = getIntent().getLongExtra(CATALOGUEID, -1);
-            mCatalogueName = getIntent().getStringExtra(CATALOGUENAME);
+            mID = getIntent().getLongExtra(ID, -1);
+            mName = getIntent().getStringExtra(NAME);
 
             //create the catalogue list fragment
-            CatalogueFragment fgt = CatalogueFragment.newInstance(mCatalogueID, mCatalogueName);
+            DictionaryFragment fgt = DictionaryFragment.newInstance(mID, mName);
             getSupportFragmentManager().beginTransaction().add(R.id.main_subscreen, fgt).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
         }
 
     }
-
-
-
-
-    /*public static class PagerAdapter extends FragmentStatePagerAdapter {
-
-        private final SparseArray<Long> mIDOfCatalogues = new SparseArray<>();
-        private final SparseArray<String> mCatalogueTitles = new SparseArray<>();
-
-        public PagerAdapter(FragmentManager fm, Context context){
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            if (mIDOfCatalogues.get(position) == null){
-
-            }
-            return mIDOfCatalogues.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return mFragments.size();
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position){
-            return mTitles.get(position);
-        }
-    }*/
 }

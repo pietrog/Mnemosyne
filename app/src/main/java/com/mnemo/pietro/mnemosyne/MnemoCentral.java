@@ -7,10 +7,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 
-import com.mnemo.pietro.mnemosyne.fragments.dictionary.TodayListFragment;
 import com.mnemo.pietro.mnemosyne.fragments.library.LibraryFragment;
 
 import java.util.ArrayList;
@@ -19,6 +17,7 @@ import java.util.List;
 import model.dictionary.Global;
 import model.dictionary.tools.MnemoDBHelper;
 import model.dictionary.tools.TestEnvironment;
+import model.dictionary.tools.ViewTools;
 
 //EN COURS
 //@TODO: modifier l'ecran d'affichage des mot a réviser, avec couleurs pour noter l'importance(jours de retard)
@@ -52,11 +51,12 @@ public class MnemoCentral
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mnemo_central);
 
-        Toolbar mToolbar = (Toolbar) findViewById(R.id.global_toolbar);
+        /*Toolbar mToolbar = (Toolbar) findViewById(R.id.global_toolbar);
         if (mToolbar != null) {
-            mToolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
             setSupportActionBar(mToolbar);
-        }
+            getSupportActionBar().setHomeButtonEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }*/
 
         if (savedInstanceState == null) {
             mPageAdapter = new CentralPagerAdapter(getSupportFragmentManager(), getApplicationContext());
@@ -93,7 +93,7 @@ public class MnemoCentral
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
-        menu.getItem(1).setVisible(false);
+        ViewTools.setTitle(this, R.string.app_name);
         return true;
     }
 
@@ -129,8 +129,8 @@ public class MnemoCentral
             mFragments.add(LibraryFragment.newInstance());
             mTitles.add(context.getString(R.string.hint_catalogue_list));
 
-            mFragments.add(TodayListFragment.newInstance(-1));
-            mTitles.add(context.getString(R.string.hint_todayslist));
+            /*mFragments.add(TodayListFragment.newInstance(-1));
+            mTitles.add(context.getString(R.string.hint_todayslist));*/
         }
 
         @Override
@@ -148,5 +148,4 @@ public class MnemoCentral
             return mTitles.get(position);
         }
     }
-
 }

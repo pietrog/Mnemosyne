@@ -1,7 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.Toolbar
-    android:id="@+id/global_toolbar"
-    android:layout_height="@dimen/abc_action_bar_default_height_material"
+<android.support.design.widget.AppBarLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/appBarLayout"
     android:layout_width="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android">
-    </android.support.v7.widget.Toolbar>
+    android:layout_height="wrap_content"
+    android:theme="@style/ThemeOverlay.AppCompat"
+    >
+
+    <android.support.v7.widget.Toolbar
+        android:layout_height="@dimen/abc_action_bar_default_height_material"
+        android:layout_width="match_parent"
+        android:layout_gravity="bottom"
+        android:background="@color/colorPrimary"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        />
+
+
+</android.support.design.widget.AppBarLayout>

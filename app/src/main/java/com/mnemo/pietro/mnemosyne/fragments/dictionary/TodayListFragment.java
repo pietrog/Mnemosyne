@@ -3,6 +3,8 @@ package com.mnemo.pietro.mnemosyne.fragments.dictionary;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.ListView;
 
@@ -15,7 +17,6 @@ import model.dictionary.dictionaryObject.sql.WordContract;
 import model.dictionary.memoryManager.sql.MemoryManagerSQLManager;
 import model.dictionary.tools.GeneralTools;
 import model.dictionary.tools.MnemoCalendar;
-import model.dictionary.tools.ViewTools;
 
 /**
  * Created by pietro on 25/03/15.
@@ -54,6 +55,14 @@ public class TodayListFragment extends BaseDictionaryFragment{
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.findItem(R.id.raiseAlert).setVisible(false);
+        menu.findItem(R.id.validate).setVisible(false);
+        menu.findItem(R.id.add_item).setVisible(false);
+    }
+
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         refreshListView();
@@ -78,10 +87,7 @@ public class TodayListFragment extends BaseDictionaryFragment{
     @Override
     public void onResume() {
         super.onResume();
-        ViewTools.setTitle(getActivity(), R.string.hint_todayslist);
-        ViewTools.setSubtitle(getActivity(), "");
         refreshListView();
-
     }
 
     @Override

@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.mnemo.pietro.mnemosyne.MnemoCentral;
 import com.mnemo.pietro.mnemosyne.MnemoMemoryManager;
 import com.mnemo.pietro.mnemosyne.R;
 import com.mnemo.pietro.mnemosyne.fragments.catalogue.tools.CatalogueAdapter;
@@ -108,7 +107,7 @@ public class CatalogueFragment extends ListFragment {
         cursor.moveToPosition(position);
         Dictionary dictionary = Dictionary.LoadFromCursor(cursor);
         DictionaryFragment fragment = DictionaryFragment.newInstance(dictionary.getID(), dictionary.getName());
-        getActivity().getSupportFragmentManager().beginTransaction().addToBackStack(MnemoCentral.FGT_DICTIONARY_TAG).replace(R.id.main_subscreen, fragment).commit();
+        //getActivity().getSupportFragmentManager().beginTransaction().addToBackStack(MnemoCentral.FGT_DICTIONARY_TAG).replace(R.id.main_subscreen, fragment).commit();
     }
 
     @Override

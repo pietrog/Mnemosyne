@@ -46,6 +46,10 @@ public class CatalogueSQLManager extends BaseSQLManager{
         String sql = "SELECT * FROM " + CatalogueContract.Catalogue.TABLE_NAME;
         return rawQuery(sql, null);
     }
+    public Cursor getAllDictionary(){
+        String sql = "SELECT * FROM " + DictionaryContractBase.DictionaryBase.TABLE_NAME ;
+        return rawQuery(sql, null);
+    }
 
     /**
      * Return all dictionaries related to a catalogue
@@ -71,8 +75,8 @@ public class CatalogueSQLManager extends BaseSQLManager{
         if (name == null || name.length() < 3 )
             return Global.BAD_PARAMETER;
         ContentValues val = new ContentValues();
-        val.put(CatalogueContract.Catalogue.CATALOGUE_NAME, name);
-        val.put(CatalogueContract.Catalogue.CATALOGUE_DESC, description);
+        val.put(CatalogueContract.Catalogue.NAME, name);
+        val.put(CatalogueContract.Catalogue.DESCRIPTION, description);
         return add(val, CatalogueContract.Catalogue.TABLE_NAME);
     }
 

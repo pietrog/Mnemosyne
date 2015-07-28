@@ -97,7 +97,11 @@ public class CreateDictionaryFragment extends Fragment {
         String dictDesc = ViewTools.getStringFromEditableText(rootView.findViewById(R.id.description));
 
         DictionarySQLManager manager = DictionarySQLManager.getInstance(getActivity().getApplicationContext());
-        long id = manager.addDictionaryInCatalogue(mCatalogueID, dictName, dictDesc);
+        long id;
+        if (mCatalogueID >= 0)
+            id = manager.addDictionaryInCatalogue(mCatalogueID, dictName, dictDesc);
+        else
+            id = manager.addDictionary(dictName, dictDesc);
 
         if (id == Global.FAILURE)
             Toast.makeText(getActivity().getApplicationContext(), "Dictionary " + dictName + " already exists.", Toast.LENGTH_SHORT).show();
