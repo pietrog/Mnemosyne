@@ -20,6 +20,7 @@ import model.dictionary.tools.GeneralTools;
  */
 public class LibraryAdapter extends CursorRecycleViewAdapter<LibraryAdapter.ViewHolder> {
 
+
     public LibraryAdapter (Cursor cursor){
         super(cursor);
     }
@@ -41,6 +42,8 @@ public class LibraryAdapter extends CursorRecycleViewAdapter<LibraryAdapter.View
         holder.mDescription.setText(GeneralTools.getStringElement(cursor, DictionaryContractBase.DictionaryBase.DESCRIPTION));
     }
 
+
+
     /**
      * Class describing an item in library recycle view
      */
@@ -54,8 +57,13 @@ public class LibraryAdapter extends CursorRecycleViewAdapter<LibraryAdapter.View
             super(view);
             mName = (TextView)view.findViewById(R.id.name);
             mDescription = (TextView)view.findViewById(R.id.description);
+
+            //onclick
+            //view.setBackground(Drawable.);
         }
     }
+
+
 }
 
 

@@ -1,13 +1,12 @@
 package com.mnemo.pietro.mnemosyne.fragments.library;
 
-//import android.app.ListFragment;
-
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -15,6 +14,7 @@ import com.mnemo.pietro.mnemosyne.R;
 import com.mnemo.pietro.mnemosyne.fragments.library.tools.LibraryAdapter;
 
 import model.dictionary.catalogue.sql.CatalogueSQLManager;
+import model.dictionary.tools.Logger;
 
 /**
  * Fragment containing the list of all catalogues.
@@ -52,7 +52,7 @@ public class LibraryFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.std_list_fragment, container, false);
+        View view = inflater.inflate(R.layout.recycle_view, container, false);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -70,6 +70,23 @@ public class LibraryFragment extends Fragment {
         CatalogueSQLManager manager = CatalogueSQLManager.getInstance();
         mAdapter = new LibraryAdapter(manager.getAllDictionary());
         mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+            @Override
+            public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
+                Logger.i("onInterceptTouchEvent", "onTouchEvent");
+                return false;
+            }
+
+            @Override
+            public void onTouchEvent(RecyclerView rv, MotionEvent e) {
+                Logger.i("onTouchEvent", "onTouchEvent");
+            }
+
+            @Override
+            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+                Logger.i("onRequestDisallowInterceptTouchEvent", "onTouchEvent");
+            }
+        });
         //registerForContextMenu(getListView());
     }
 

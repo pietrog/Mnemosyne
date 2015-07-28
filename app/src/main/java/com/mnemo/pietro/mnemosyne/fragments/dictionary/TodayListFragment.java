@@ -98,7 +98,7 @@ public class TodayListFragment extends BaseDictionaryFragment{
 
     public void refreshListView(){
         if (mAdapter == null){
-            mAdapter = new TodayListAdapter(mDate, getActivity().getApplicationContext(), R.layout.std_list_fragment, MemoryManagerSQLManager.getInstance().getCursorOfObjectsToLearn(mDate), 0);
+            mAdapter = new TodayListAdapter(mDate, getActivity().getApplicationContext(), R.layout.recycle_view, MemoryManagerSQLManager.getInstance().getCursorOfObjectsToLearn(mDate), 0);
         }
         else
             mAdapter.changeCursor(MemoryManagerSQLManager.getInstance().getCursorOfObjectsToLearn(mDate));

@@ -60,7 +60,7 @@ public class DictionaryFragment extends BaseDictionaryFragment {
 
         DictionarySQLManager sqlManager = DictionarySQLManager.getInstance(getActivity().getApplicationContext());
         Cursor mRawCursor = sqlManager.getAllDictionaryObjectsCursor(mID);
-        mAdapter = new DictionaryAdapter(getActivity().getApplicationContext(), R.layout.std_list_fragment, mRawCursor, 0);
+        mAdapter = new DictionaryAdapter(getActivity().getApplicationContext(), R.layout.recycle_view, mRawCursor, 0);
         setListAdapter(mAdapter);
     }
 

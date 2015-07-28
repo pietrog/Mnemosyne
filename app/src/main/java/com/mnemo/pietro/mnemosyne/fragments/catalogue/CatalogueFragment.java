@@ -75,7 +75,7 @@ public class CatalogueFragment extends ListFragment {
         super.onActivityCreated(savedInstanceState);
 
         //bind the adapter
-        mAdapter = new CatalogueAdapter(getActivity().getApplicationContext(),R.layout.std_list_fragment, CatalogueSQLManager.getInstance().getAllDictionaryOfCatalogue(mCatalogueID), 0);
+        mAdapter = new CatalogueAdapter(getActivity().getApplicationContext(),R.layout.recycle_view, CatalogueSQLManager.getInstance().getAllDictionaryOfCatalogue(mCatalogueID), 0);
         setListAdapter(mAdapter);
         registerForContextMenu(getListView());
     }

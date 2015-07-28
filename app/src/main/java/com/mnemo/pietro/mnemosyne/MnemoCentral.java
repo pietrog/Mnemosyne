@@ -34,12 +34,6 @@ import model.dictionary.tools.ViewTools;
 public class MnemoCentral
         extends AppCompatActivity{
 
-    public static final String EXTRA_ALERT_DATE = "com.mnemo.pietro.ALERT_DATE";
-
-    public static final String FGT_CATALOGUE_TAG = "CATALOGUE";
-    public static final String FGT_DICTIONARY_TAG = "DICTIONARY";
-
-
     ViewPager mViewPager ;
     CentralPagerAdapter mPageAdapter;
 
