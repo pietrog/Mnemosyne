@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.mnemo.pietro.mnemosyne.R;
+import com.mnemo.pietro.mnemosyne.tools.CursorRecycleViewAdapter;
 
 import model.dictionary.dictionary.sql.DictionaryContractBase;
 import model.dictionary.tools.GeneralTools;
@@ -17,8 +18,32 @@ import model.dictionary.tools.GeneralTools;
  *
  *
  */
-public class LibraryAdapter extends RecyclerView.Adapter {
+public class LibraryAdapter extends CursorRecycleViewAdapter<LibraryAdapter.ViewHolder> {
 
+    public LibraryAdapter (Cursor cursor){
+        super(cursor);
+    }
+
+    @Override
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        return new ViewHolder(inflater.inflate(R.layout.library_view, parent, false));
+    }
+
+    /**
+     * Override method from abstract class {CursorRecycleViewAdapter}
+     * @param holder Holder implented here
+     * @param cursor cursor, already checked, and position set
+     */
+    @Override
+    public void onBindViewHolder(ViewHolder holder, Cursor cursor) {
+        holder.mName.setText(GeneralTools.getStringElement(cursor, DictionaryContractBase.DictionaryBase.NAME));
+        holder.mDescription.setText(GeneralTools.getStringElement(cursor, DictionaryContractBase.DictionaryBase.DESCRIPTION));
+    }
+
+    /**
+     * Class describing an item in library recycle view
+     */
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
 
@@ -30,34 +55,6 @@ public class LibraryAdapter extends RecyclerView.Adapter {
             mName = (TextView)view.findViewById(R.id.name);
             mDescription = (TextView)view.findViewById(R.id.description);
         }
-    }
-
-    private Cursor mCursor;
-
-    public LibraryAdapter (Cursor cursor){
-        mCursor = cursor;
-    }
-
-    @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        return new ViewHolder(inflater.inflate(R.layout.library_view, parent, false));
-    }
-
-    @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        ViewHolder h = (ViewHolder)holder;
-        if (mCursor != null && mCursor.moveToPosition(position)){
-            h.mName.setText(GeneralTools.getStringElement(mCursor, DictionaryContractBase.DictionaryBase.NAME));
-            h.mDescription.setText(GeneralTools.getStringElement(mCursor, DictionaryContractBase.DictionaryBase.DESCRIPTION));
-        }
-    }
-
-    @Override
-    public int getItemCount() {
-        if (mCursor != null)
-            return mCursor.getCount();
-        return 0;
     }
 }
 
