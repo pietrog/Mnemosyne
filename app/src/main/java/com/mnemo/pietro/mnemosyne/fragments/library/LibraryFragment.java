@@ -2,26 +2,19 @@ package com.mnemo.pietro.mnemosyne.fragments.library;
 
 //import android.app.ListFragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 
-import com.mnemo.pietro.mnemosyne.MnemoCreation;
 import com.mnemo.pietro.mnemosyne.R;
 import com.mnemo.pietro.mnemosyne.fragments.library.tools.LibraryAdapter;
 
 import model.dictionary.catalogue.sql.CatalogueSQLManager;
-import model.dictionary.tools.ViewTools;
 
 /**
  * Fragment containing the list of all catalogues.
@@ -32,6 +25,7 @@ public class LibraryFragment extends Fragment {
 
     private LibraryAdapter mAdapter;
     private RecyclerView mRecyclerView;
+    private RecyclerView.LayoutManager mLayoutManager;
 
     /**
      * Use this factory method to create a new instance of
@@ -60,7 +54,10 @@ public class LibraryFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.std_list_fragment, container, false);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
-        return null;
+        mLayoutManager = new LinearLayoutManager(getActivity());
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
+        return view;
     }
 
 
@@ -86,10 +83,10 @@ public class LibraryFragment extends Fragment {
         startActivity(intent);
     }*/
 
-    @Override
+    /*@Override
     public void onResume() {
         super.onResume();
-        mAdapter.notifyDataSetChanged();
+        //mAdapter.notifyDataSetChanged();
         ViewTools.setTitle(getActivity(), R.string.hint_catalogue_list);
     }
 
@@ -130,7 +127,7 @@ public class LibraryFragment extends Fragment {
         return true;
     }
 
-    private void removeCatalogue(int position){
+    private void removeCatalogue(int position){*/
         /*mAdapter.getCursor().moveToPosition(position);
         long[] listIDs = {GeneralTools.getLongElement(mAdapter.getCursor(), CatalogueContract.Catalogue._ID)};
 
@@ -138,15 +135,14 @@ public class LibraryFragment extends Fragment {
         Logger.i("LibraryFragment::removeCatalogue", " catalogue(s) " + listIDs[0] + " removed");
 
         mAdapter.changeCursor(CatalogueSQLManager.getInstance().getAll());*/
-    }
+    /*}
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        /*if (mAdapter != null && mAdapter.getCursor() != null)
-            mAdapter.getCursor().close();*/
-    }
-
+        if (mAdapter != null && mAdapter.getCursor() != null)
+            mAdapter.getCursor().close();
+    }*/
 
 
 }

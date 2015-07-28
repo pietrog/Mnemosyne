@@ -9,6 +9,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 
+import com.mnemo.pietro.mnemosyne.fragments.dictionary.TodayListFragment;
 import com.mnemo.pietro.mnemosyne.fragments.library.LibraryFragment;
 
 import java.util.ArrayList;
@@ -50,13 +51,6 @@ public class MnemoCentral
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mnemo_central);
-
-        /*Toolbar mToolbar = (Toolbar) findViewById(R.id.global_toolbar);
-        if (mToolbar != null) {
-            setSupportActionBar(mToolbar);
-            getSupportActionBar().setHomeButtonEnabled(true);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }*/
 
         if (savedInstanceState == null) {
             mPageAdapter = new CentralPagerAdapter(getSupportFragmentManager(), getApplicationContext());
@@ -129,8 +123,8 @@ public class MnemoCentral
             mFragments.add(LibraryFragment.newInstance());
             mTitles.add(context.getString(R.string.hint_catalogue_list));
 
-            /*mFragments.add(TodayListFragment.newInstance(-1));
-            mTitles.add(context.getString(R.string.hint_todayslist));*/
+            mFragments.add(TodayListFragment.newInstance(-1));
+            mTitles.add(context.getString(R.string.hint_todayslist));
         }
 
         @Override
