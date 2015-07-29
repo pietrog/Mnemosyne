@@ -14,7 +14,6 @@ import com.mnemo.pietro.mnemosyne.R;
 import com.mnemo.pietro.mnemosyne.fragments.library.tools.LibraryAdapter;
 
 import model.dictionary.catalogue.sql.CatalogueSQLManager;
-import model.dictionary.tools.Logger;
 
 /**
  * Fragment containing the list of all catalogues.
@@ -56,7 +55,6 @@ public class LibraryFragment extends Fragment {
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
-
         return view;
     }
 
@@ -68,35 +66,19 @@ public class LibraryFragment extends Fragment {
 
         //bind the adapter
         CatalogueSQLManager manager = CatalogueSQLManager.getInstance();
-        mAdapter = new LibraryAdapter(manager.getAllDictionary());
+        mAdapter = new LibraryAdapter(manager.getAllDictionary(), getActivity().getApplicationContext());
         mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
-            @Override
-            public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
-                Logger.i("onInterceptTouchEvent", "onTouchEvent");
-                return false;
-            }
-
-            @Override
-            public void onTouchEvent(RecyclerView rv, MotionEvent e) {
-                Logger.i("onTouchEvent", "onTouchEvent");
-            }
-
-            @Override
-            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-                Logger.i("onRequestDisallowInterceptTouchEvent", "onTouchEvent");
-            }
-        });
+        mRecyclerView.addOnItemTouchListener(new RecycleViewListener());
         //registerForContextMenu(getListView());
     }
 
     /*@Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        Intent intent = new Intent(getActivity().getApplicationContext(), MnemoCatalogue.class);
+        Intent intent = new Intent(getActivity().getApplicationContext(), MnemoDictionary.class);
         Cursor cursor = mAdapter.getCursor();
         cursor.moveToPosition(position);
-        intent.putExtra(MnemoCatalogue.ID, GeneralTools.getLongElement(cursor, CatalogueContract.Catalogue._ID));
-        intent.putExtra(MnemoCatalogue.NAME, GeneralTools.getStringElement(cursor, CatalogueContract.Catalogue.NAME));
+        intent.putExtra(MnemoDictionary.ID, GeneralTools.getLongElement(cursor, CatalogueContract.Catalogue._ID));
+        intent.putExtra(MnemoDictionary.NAME, GeneralTools.getStringElement(cursor, CatalogueContract.Catalogue.NAME));
         startActivity(intent);
     }*/
 
@@ -161,5 +143,23 @@ public class LibraryFragment extends Fragment {
             mAdapter.getCursor().close();
     }*/
 
+    public static class RecycleViewListener implements RecyclerView.OnItemTouchListener{
+        @Override
+        public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
+            //onTouchEvent(rv, e);
+            return false;
+        }
+
+        @Override
+        public void onTouchEvent(RecyclerView rv, MotionEvent e) {
+            int position = rv.getChildLayoutPosition(rv);
+            int c = position + 2;
+        }
+
+        @Override
+        public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+
+        }
+    }
 
 }

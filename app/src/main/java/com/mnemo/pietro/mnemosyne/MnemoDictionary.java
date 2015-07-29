@@ -1,7 +1,6 @@
 package com.mnemo.pietro.mnemosyne;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
 import com.mnemo.pietro.mnemosyne.fragments.dictionary.DictionaryFragment;
@@ -10,7 +9,7 @@ import com.mnemo.pietro.mnemosyne.fragments.dictionary.DictionaryFragment;
 /**
  * Created by pietro on 26/07/15.
  */
-public class MnemoCatalogue extends AppCompatActivity {
+public class MnemoDictionary extends AppCompatActivity {
 
     public static final String ID = "mnemocatalogue.id";
     public static final String NAME = "mnemocatalogue.name";
@@ -30,8 +29,7 @@ public class MnemoCatalogue extends AppCompatActivity {
 
             //create the catalogue list fragment
             DictionaryFragment fgt = DictionaryFragment.newInstance(mID, mName);
-            getSupportFragmentManager().beginTransaction().add(R.id.main_subscreen, fgt).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
+            getSupportFragmentManager().beginTransaction().add(R.id.main_subscreen, fgt).commit();
         }
-
     }
 }

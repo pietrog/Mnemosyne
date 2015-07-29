@@ -1,5 +1,6 @@
 package com.mnemo.pietro.mnemosyne.tools;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 
@@ -10,9 +11,11 @@ import android.support.v7.widget.RecyclerView;
 public abstract class CursorRecycleViewAdapter<VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {
 
     private Cursor  mCursor;
+    protected Context mContext;
 
-    public CursorRecycleViewAdapter(Cursor cursor){
+    public CursorRecycleViewAdapter(Cursor cursor, Context context){
         mCursor = cursor;
+        mContext = context;
     }
 
     public abstract void onBindViewHolder(VH holder, Cursor cursor);
