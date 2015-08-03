@@ -48,13 +48,15 @@ public class TodayListFragment extends BaseDictionaryFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         Cursor mRawCursor = MemoryManagerSQLManager.getInstance().getCursorOfObjectsToLearn(mDate);
-        mAdapter = new TodayListAdapter(mDate, mRawCursor, getActivity());
+        mAdapter = new TodayListAdapter(mDate, mRawCursor, getActivity(), getChildFragmentManager());
         mRecyclerView.setAdapter(mAdapter);
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        //@TODO change it !! suboptimal !!!!!!
+        mAdapter.changeCursor(MemoryManagerSQLManager.getInstance().getCursorOfObjectsToLearn(mDate));
     }
 
 }

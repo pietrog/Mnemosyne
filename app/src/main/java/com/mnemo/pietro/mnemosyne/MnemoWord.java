@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.mnemo.pietro.mnemosyne.fragments.word.WordFragment;
+import com.mnemo.pietro.mnemosyne.fragments.word.WordFragmentRev;
 
 /**
  * Created by pietro on 26/07/15.
@@ -28,9 +29,29 @@ public class MnemoWord extends AppCompatActivity{
             mID = getIntent().getLongExtra(WordFragment.WORDID, -1);
             mDictObjID = getIntent().getLongExtra(WordFragment.DICTIONARYOBJECTID, -1);
 
-            WordFragment fragment = WordFragment.newInstance(mWord, mDefinition, mID, mDictObjID);
-            getSupportFragmentManager().beginTransaction().add(R.id.main_subscreen, fragment).commit();
+            WordFragment fragment = WordFragmentRev.newInstance(mWord, mDefinition, mID, mDictObjID);
+            getSupportFragmentManager().beginTransaction().add(R.id.main_subscreen, fragment).addToBackStack(null).commit();
         }
 
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    public void onContentChanged() {
+        super.onContentChanged();
     }
 }

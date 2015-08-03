@@ -114,7 +114,7 @@ public class WordFragment extends Fragment implements View.OnClickListener{
         }
     }
 
-    private void onLearntWord(){
+    protected void onLearntWord(){
         //MnemoMemoryManager.startActionUpdateWord(getActivity().getApplicationContext(), mDictObjID);
         LongTermMemory.getInstance(getActivity().getApplicationContext()).onLearnt(mDictObjID);
         getFragmentManager().popBackStack();

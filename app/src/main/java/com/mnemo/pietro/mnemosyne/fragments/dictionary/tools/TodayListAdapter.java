@@ -3,6 +3,7 @@ package com.mnemo.pietro.mnemosyne.fragments.dictionary.tools;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import com.mnemo.pietro.mnemosyne.R;
 import com.mnemo.pietro.mnemosyne.fragments.word.WordFragment;
 import com.mnemo.pietro.mnemosyne.tools.CursorRecycleViewAdapter;
 
+import model.dictionary.dictionaryObject.sql.DictionaryObjectContract;
 import model.dictionary.dictionaryObject.sql.WordContract;
 import model.dictionary.memoryManager.sql.MemoryManagerContract;
 import model.dictionary.tools.GeneralTools;
@@ -24,16 +26,18 @@ import model.dictionary.tools.GeneralTools;
 public class TodayListAdapter extends CursorRecycleViewAdapter<TodayListAdapter.ViewHolder> {
 
     private long mRefDate;
+    private FragmentManager mFm;
 
-    public TodayListAdapter(long refDate, Cursor cursor, Context context){
+    public TodayListAdapter(long refDate, Cursor cursor, Context context, FragmentManager fragMgr){
         super(cursor, context);
+        mFm = fragMgr;
         mRefDate = refDate;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        return new ViewHolder(inflater.inflate(R.layout.dictionary_view, parent, false));
+        return new ViewHolder(inflater.inflate(R.layout.dictionary_view, parent, false), mFm);
     }
 
     /**
@@ -46,7 +50,7 @@ public class TodayListAdapter extends CursorRecycleViewAdapter<TodayListAdapter.
         holder.mName.setText(GeneralTools.getStringElement(cursor, WordContract.Word.WORD));
         holder.mName.setBackgroundColor(GeneralTools.getColorFromDelay((int) GeneralTools.getNumberOfDaysBetweenTwoDates(mRefDate, GeneralTools.getLongElement(mCursor, MemoryManagerContract.MemoryMonitoring.NEXT_LEARN))));
         holder.definition = GeneralTools.getStringElement(mCursor, WordContract.Word.DEFINITION);
-        holder.dictionaryID = GeneralTools.getLongElement(mCursor, WordContract.Word.DICTIONARYOBJECTID);
+        holder.dictionaryID = GeneralTools.getLongElement(mCursor, DictionaryObjectContract.DictionaryObject.CSID);
         holder.wordID = GeneralTools.getLongElement(mCursor, WordContract.Word.CSID);
     }
 
@@ -58,9 +62,11 @@ public class TodayListAdapter extends CursorRecycleViewAdapter<TodayListAdapter.
         public long wordID;
         public long dictionaryID;
         public String definition;
+        private final FragmentManager mFm;
 
-        public ViewHolder(View view){
+        public ViewHolder(View view, FragmentManager fragMgr){
             super(view);
+            mFm = fragMgr;
             view.setOnClickListener(this);
             mName = (TextView)view.findViewById(R.id.name);
         }
@@ -71,12 +77,16 @@ public class TodayListAdapter extends CursorRecycleViewAdapter<TodayListAdapter.
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.putExtra(MnemoDictionary.NAME, mName.getText());
             mContext.startActivity(intent);*/
+
             Intent intent = new Intent(v.getContext(), MnemoWord.class);
             intent.putExtra(WordFragment.WORDID, wordID);
             intent.putExtra(WordFragment.DICTIONARYOBJECTID, dictionaryID);
             intent.putExtra(WordFragment.WORD, mName.getText());
             intent.putExtra(WordFragment.DEFINITION, definition);
             v.getContext().startActivity(intent);
+
+            /*WordFragment fragment = WordFragment.newInstance(mName.getText().toString(), definition, wordID, dictionaryID);
+            mFm.beginTransaction().add(v.getId(), fragment).addToBackStack(null).commit();*/
         }
     }
 
