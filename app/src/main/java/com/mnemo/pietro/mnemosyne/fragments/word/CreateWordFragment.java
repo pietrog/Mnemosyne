@@ -3,8 +3,6 @@ package com.mnemo.pietro.mnemosyne.fragments.word;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -16,7 +14,7 @@ import model.dictionary.tools.ViewTools;
 /**
  *
  */
-public class CreateWordFragment extends Fragment {
+public class CreateWordFragment extends Fragment implements View.OnClickListener{
     private static final String DICTIONARY_ID = "DICTIONARY_ID";
 
     private long mDictionaryID;
@@ -53,21 +51,8 @@ public class CreateWordFragment extends Fragment {
     }
 
     @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-        menu.getItem(0).setVisible(false);
-        menu.getItem(1).setVisible(true);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()){
-            case R.id.validate:
-                saveDictionaryObject();
-                return true;
-            default:
-                return true;
-        }
+    public void onClick(View v) {
+        saveDictionaryObject();
     }
 
     private void saveDictionaryObject(){
@@ -80,6 +65,7 @@ public class CreateWordFragment extends Fragment {
         //hide the keyboard and exit the create fragment
         ViewTools.hideKeyboard(mRootview, getActivity());
         getFragmentManager().popBackStack();
+        getActivity().finish();
     }
 
 }

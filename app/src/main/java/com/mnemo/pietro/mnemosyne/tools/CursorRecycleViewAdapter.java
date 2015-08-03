@@ -52,6 +52,12 @@ public abstract class CursorRecycleViewAdapter<VH extends RecyclerView.ViewHolde
         }
     }
 
+    public void release(){
+        if (mCursor != null)
+            mCursor.close();
+    }
+
+
 
     private class NotifyingDataSetObserver extends DataSetObserver{
         @Override

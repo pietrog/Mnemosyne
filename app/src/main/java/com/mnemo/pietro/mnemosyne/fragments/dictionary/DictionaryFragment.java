@@ -2,7 +2,6 @@ package com.mnemo.pietro.mnemosyne.fragments.dictionary;
 
 import android.database.Cursor;
 import android.os.Bundle;
-import android.view.MenuItem;
 
 import com.mnemo.pietro.mnemosyne.fragments.dictionary.tools.DictionaryAdapter;
 
@@ -62,18 +61,16 @@ public class DictionaryFragment extends BaseDictionaryFragment {
     @Override
     public void onResume() {
         super.onResume();
+        mAdapter.changeCursor(DictionarySQLManager.getInstance().getAllDictionaryObjectsCursor(mID));
         /*mAdapter.notifyDataSetChanged();
         ViewTools.setTitle(getActivity(), R.string.hint_dictionary);
         ViewTools.setSubtitle(getActivity(), mDictionaryName);*/
-
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        //go to create wordFragment
-        /*CreateWordFragment fragment = CreateWordFragment.newInstance(mID);
-        getFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.main_subscreen, fragment).commit();*/
-        return true;
+    public void onDestroy() {
+        super.onDestroy();
+        mAdapter.release();
     }
 
     /*@Override

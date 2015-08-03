@@ -1,7 +1,10 @@
 package com.mnemo.pietro.mnemosyne;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 
 import com.mnemo.pietro.mnemosyne.fragments.dictionary.DictionaryFragment;
 
@@ -21,6 +24,16 @@ public class MnemoDictionary extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mnemo_dictionary);
+
+        FloatingActionButton fab = (FloatingActionButton)findViewById(R.id.fabDictionary);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), MnemoCreation.class);
+                intent.putExtra(MnemoCreation.DICTIONARYID, mID);
+                startActivity(intent);
+            }
+        });
 
         if (savedInstanceState == null){
             mID = getIntent().getLongExtra(ID, -1);

@@ -7,24 +7,13 @@ android:layout_height="match_parent"
 android:fitsSystemWindows="true"
     >
 
-    <android.support.design.widget.AppBarLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/appBarLayout"
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/global_toolbar2"
+        android:layout_height="?attr/actionBarSize"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        android:fitsSystemWindows="true"
-        >
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/global_toolbar"
-            android:layout_height="?attr/actionBarSize"
-            android:layout_width="match_parent"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            app:layout_collapseMode="pin"
-            />
-
-    </android.support.design.widget.AppBarLayout>
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:layout_collapseMode="pin"
+        />
 
     <FrameLayout
         android:id="@+id/main_subscreen"
@@ -34,6 +23,7 @@ android:fitsSystemWindows="true"
         />
 
     <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabDictionary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"

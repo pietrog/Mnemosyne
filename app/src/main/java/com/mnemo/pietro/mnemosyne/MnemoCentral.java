@@ -1,6 +1,7 @@
 package com.mnemo.pietro.mnemosyne;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -24,13 +25,13 @@ import model.dictionary.tools.ViewTools;
 
 //EN COURS
 //@TODO: modifier l'ecran d'affichage des mot a réviser, avec couleurs pour noter l'importance(jours de retard)
+//@TODO: definir une regle de navigation dans l'appli (d'un dictionaire a l'autre, ...) coherente pour l'utilisateur
 
 //A FAIRE
-//@TODO: implementer la gestion des jours de retard dans l'apprentissage
-//@TODO: implementer un rappel basé sur l'alarme
-//@TODO: definir une regle de navigation dans l'appli (d'un dictionaire a l'autre, ...) coherente pour l'utilisateur
+//@TODO: gerer la sauvegarde des instances, optimiser l'app !!!
 //@TODO: implementer la modification des entites
 //@TODO: implementer la differenciation des cartes  (item date, image, definition, ...)
+//@TODO:(low) implementer un rappel basé sur l'alarme
 
 
 public class MnemoCentral
@@ -52,15 +53,14 @@ public class MnemoCentral
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intent = new Intent(getApplicationContext(), MnemoCreation.class);
+                startActivity(intent);
             }
         });
 
-        if (savedInstanceState == null) {
-            mPageAdapter = new CentralPagerAdapter(getSupportFragmentManager(), getApplicationContext());
-            mViewPager = (ViewPager) findViewById(R.id.pager);
-            mViewPager.setAdapter(mPageAdapter);
-        }
+        mPageAdapter = new CentralPagerAdapter(getSupportFragmentManager(), getApplicationContext());
+        mViewPager = (ViewPager) findViewById(R.id.pager);
+        mViewPager.setAdapter(mPageAdapter);
 
         // init the system, database helpers, ...
         InitSystem();
@@ -130,6 +130,7 @@ public class MnemoCentral
             mFragments.add(TodayListFragment.newInstance(-1));
             mTitles.add(context.getString(R.string.hint_todayslist));
         }
+
 
         @Override
         public Fragment getItem(int position) {

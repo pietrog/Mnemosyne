@@ -59,4 +59,9 @@ public class TodayListFragment extends BaseDictionaryFragment {
         mAdapter.changeCursor(MemoryManagerSQLManager.getInstance().getCursorOfObjectsToLearn(mDate));
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mAdapter.release();
+    }
 }

@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 import com.mnemo.pietro.mnemosyne.R;
 import com.mnemo.pietro.mnemosyne.fragments.library.tools.LibraryAdapter;
 
+import java.io.Serializable;
+
 import model.dictionary.catalogue.sql.CatalogueSQLManager;
 
 /**
@@ -19,7 +21,7 @@ import model.dictionary.catalogue.sql.CatalogueSQLManager;
  * You can click on a catalogue to open the catalogue fragment and obtain the list of dictionaries
  *
  */
-public class LibraryFragment extends Fragment {
+public class LibraryFragment extends Fragment implements Serializable{
 
     private LibraryAdapter mAdapter;
     private RecyclerView mRecyclerView;
@@ -68,6 +70,12 @@ public class LibraryFragment extends Fragment {
         mRecyclerView.setAdapter(mAdapter);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        mAdapter.changeCursor(CatalogueSQLManager.getInstance().getAllDictionary());
+    }
+
     /*@Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         Intent intent = new Intent(getActivity().getApplicationContext(), MnemoDictionary.class);
@@ -78,7 +86,7 @@ public class LibraryFragment extends Fragment {
         startActivity(intent);
     }*/
 
-    /*private void removeCatalogue(int position){*/
+    private void removeCatalogue(int position){
         /*mAdapter.getCursor().moveToPosition(position);
         long[] listIDs = {GeneralTools.getLongElement(mAdapter.getCursor(), CatalogueContract.Catalogue._ID)};
 
@@ -86,13 +94,12 @@ public class LibraryFragment extends Fragment {
         Logger.i("LibraryFragment::removeCatalogue", " catalogue(s) " + listIDs[0] + " removed");
 
         mAdapter.changeCursor(CatalogueSQLManager.getInstance().getAll());*/
-    /*}
+    }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if (mAdapter != null && mAdapter.getCursor() != null)
-            mAdapter.getCursor().close();
-    }*/
+        mAdapter.release();
+    }
 
 }

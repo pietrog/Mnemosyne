@@ -4,8 +4,6 @@ package com.mnemo.pietro.mnemosyne.fragments.dictionary;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -21,7 +19,7 @@ import model.dictionary.tools.ViewTools;
  * Use the {@link CreateDictionaryFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CreateDictionaryFragment extends Fragment {
+public class CreateDictionaryFragment extends Fragment implements View.OnClickListener{
 
     private static final String CATALOGUE_ID = "CATALOGUE_ID";
 
@@ -67,28 +65,8 @@ public class CreateDictionaryFragment extends Fragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        ViewTools.setTitle(getActivity(), R.string.action_dict_create);
-        ViewTools.setSubtitle(getActivity(), "");
-    }
-
-    @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-        menu.getItem(0).setVisible(false);
-        menu.getItem(1).setVisible(true);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()){
-            case R.id.validate:
-                saveDictionary();
-                return true;
-            default:
-                return true;
-        }
+    public void onClick(View v) {
+        saveDictionary();
     }
 
     public void saveDictionary(){
@@ -112,6 +90,7 @@ public class CreateDictionaryFragment extends Fragment {
         ViewTools.hideKeyboard(rootView, getActivity());
         //pop the fragment
         getFragmentManager().popBackStack();
+        getActivity().finish();
     }
 
 
