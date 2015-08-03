@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.WebView;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -25,6 +26,10 @@ public class ViewTools {
 
     public static void setStringOfTextView(View view, String text){
         ((TextView)view).setText(text);
+    }
+
+    public static void setStringOfWebView(View view, String text){
+        ((WebView)view).loadData(text, "text/html", "utf-8");
     }
 
     public static void hideKeyboard(View view, Activity activity){

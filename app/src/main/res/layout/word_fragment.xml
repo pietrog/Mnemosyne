@@ -9,7 +9,7 @@
         android:id="@+id/word_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/description"
+        style="@style/name"
         android:layout_alignParentTop="true"
         />
 
@@ -18,124 +18,16 @@
         android:text="definition"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:lines="13"
         style="@style/description"
-        android:layout_below="@+id/word_name"/>
-
-    <GridLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/word_definition"
-        android:id="@+id/layStats"
-        android:visibility="invisible"
-        android:rowCount="6"
-        android:columnCount="2"
-        android:layout_margin="15dp"
-        android:background="#A0A0A0"
-        >
-        <TextView
-            android:id="@+id/hintNextDate"
-            android:text="@string/hint_next_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_row="0"
-            android:layout_column="0"/>
-        <TextView
-            android:id="@+id/nextDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_row="0"
-            android:layout_column="1"
-            />
-        <TextView
-            android:id="@+id/hintLastDate"
-            android:text="@string/hint_last_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_row="1"
-            android:layout_column="0"
-            />
-        <TextView
-            android:id="@+id/lastDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_row="1"
-            android:layout_column="1"
-            />
-
-        <TextView
-            android:id="@+id/hint_date_add"
-            android:text="@string/hint_mem_add_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_row="2"
-            android:layout_column="0"/>
-        <TextView
-            android:id="@+id/date_add"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_row="2"
-            android:layout_column="1"/>
-
-        <TextView
-            android:id="@+id/hint_mem_phase"
-            android:text="@string/hint_mem_memory_phase"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_row="3"
-            android:layout_column="0"/>
-        <TextView
-            android:id="@+id/mem_phase"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_row="3"
-            android:layout_column="1"/>
-
-        <TextView
-            android:id="@+id/hint_beg_mp"
-            android:text="@string/hint_mem_beg_mp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_row="4"
-            android:layout_column="0"/>
-        <TextView
-            android:id="@+id/beg_mem"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_row="4"
-            android:layout_column="1"/>
-
-        <TextView
-            android:id="@+id/hint_days_between"
-            android:text="@string/hint_mem_days_between"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_row="5"
-            android:layout_column="0"/>
-        <TextView
-            android:id="@+id/days_between"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_row="5"
-            android:layout_column="1"
-            />
-
-    </GridLayout>
-
-
-    <ImageButton
-        android:id="@+id/showStats"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_action_data_usage"
-        android:layout_below="@id/layStats"
-        android:layout_centerHorizontal="true"/>
+        android:layout_below="@id/word_name"/>
 
     <ImageButton
         android:id="@+id/learnt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_action_good"
-        android:layout_below="@id/showStats"
+        android:layout_below="@id/word_definition"
         android:layout_centerHorizontal="true"
         />
 

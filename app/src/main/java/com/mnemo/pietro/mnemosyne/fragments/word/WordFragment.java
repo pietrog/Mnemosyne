@@ -11,13 +11,8 @@ import android.widget.ImageButton;
 
 import com.mnemo.pietro.mnemosyne.R;
 
-import java.util.Date;
-
-import model.dictionary.dictionary.sql.DictionarySQLManager;
-import model.dictionary.dictionaryObject.MemoryObject;
 import model.dictionary.dictionaryObject.WordDefinitionObj;
 import model.dictionary.memory.LongTermMemory;
-import model.dictionary.tools.GeneralTools;
 import model.dictionary.tools.ViewTools;
 
 /**
@@ -89,8 +84,9 @@ public class WordFragment extends Fragment implements View.OnClickListener{
         //onclicklistener attached
         ImageButton valid = (ImageButton)mRootView.findViewById(R.id.learnt);
         valid.setOnClickListener(this);
-        ImageButton show = (ImageButton)mRootView.findViewById(R.id.showStats);
-        show.setOnClickListener(this);
+        mRootView.setOnClickListener(this);
+        /*ImageButton show = (ImageButton)mRootView.findViewById(R.id.showStats);
+        show.setOnClickListener(this);*/
 
         return mRootView;
     }
@@ -108,9 +104,11 @@ public class WordFragment extends Fragment implements View.OnClickListener{
             case R.id.learnt:
                 onLearntWord();
             break;
-            case R.id.showStats:
-                showStatistics();
+            default:
                 break;
+            /*case R.id.showStats:
+                showStatistics();
+                break;*/
         }
     }
 
@@ -120,7 +118,7 @@ public class WordFragment extends Fragment implements View.OnClickListener{
         getFragmentManager().popBackStack();
     }
 
-    private void showStatistics(){
+    /*private void showStatistics(){
         MemoryObject object = DictionarySQLManager.getInstance().getMemoryObjectFromDictionaryObjectID(mDictObjID);
         ViewTools.setStringOfTextView(mRootView.findViewById(R.id.lastDate), GeneralTools.getSQLDate(object.getLastLearnt()));
         ViewTools.setStringOfTextView(mRootView.findViewById(R.id.nextDate), GeneralTools.getSQLDate(new Date(object.getNextLearn())));
@@ -135,7 +133,7 @@ public class WordFragment extends Fragment implements View.OnClickListener{
         View stats = mRootView.findViewById(R.id.layStats);
         stats.setVisibility(View.VISIBLE);
         show.setVisibility(View.INVISIBLE);
-    }
+    }*/
 
 
 }

@@ -8,13 +8,30 @@
 
 
     <style name="name" parent="AppTheme">
+        <item name="android:textSize">26dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/material_blue_grey_800</item>
+        <item name="android:layout_margin">15dp</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:background">@color/displayBackColorLight</item>
+        <item name="android:layout_centerInParent">true</item>
+    </style>
+
+    <style name="description" parent="AppTheme">
+        <item name="android:textColor">@color/black_translucent</item>
+        <item name="android:background">@color/displayBackColor</item>
+        <item name="android:textSize">20dp</item>
+        <item name="android:layout_margin">15dp</item>
+    </style>
+
+    <style name="nameInList" parent="AppTheme">
         <item name="android:textSize">26sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/material_blue_grey_800</item>
         <item name="android:layout_centerInParent">true</item>
     </style>
 
-    <style name="description" parent="AppTheme">
+    <style name="descriptionInList" parent="AppTheme">
         <item name="android:textColor">@color/black_translucent</item>
         <item name="android:textSize">15sp</item>
         <item name="android:textStyle">italic</item>
@@ -22,7 +39,7 @@
 
     <!-- Passive text when editing -->
     <style name="passiveText" parent="AppTheme">
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">20dp</item>
         <item name="android:textStyle">bold</item>
     </style>
     <style name="editingZone" parent="AppTheme">

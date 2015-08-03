@@ -64,4 +64,6 @@ public class TodayListFragment extends BaseDictionaryFragment {
         super.onDestroyView();
         mAdapter.release();
     }
+
+
 }

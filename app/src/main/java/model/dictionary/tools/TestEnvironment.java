@@ -35,7 +35,7 @@ public class TestEnvironment {
         long idDictIT = DictionarySQLManager.getInstance().addDictionaryInCatalogue(idCatDictionaries, "Italien", "Dictionaire d'italien");
         //long idDictHistFR = DictionarySQLManager.getInstance().addDictionaryInCatalogue(idCatHistory, "Histoire de france", "Des elements de l'histoire de france");
         //long idDictHistRUSSIE = DictionarySQLManager.getInstance().addDictionaryInCatalogue(idCatHistory, "Histoire de russie", "Que s'est il passe en Russie ?");
-        DictionarySQLManager.getInstance().addDictionary("Dict1", "Desc");
+        /*DictionarySQLManager.getInstance().addDictionary("Dict1", "Desc");
         DictionarySQLManager.getInstance().addDictionary("Dict2", "Desc");
         DictionarySQLManager.getInstance().addDictionary("Dict3", "Desc");
         DictionarySQLManager.getInstance().addDictionary("Dict4", "Desc");
@@ -46,7 +46,7 @@ public class TestEnvironment {
         DictionarySQLManager.getInstance().addDictionary("Dict9", "Desc");
         DictionarySQLManager.getInstance().addDictionary("Dict10", "Desc");
         DictionarySQLManager.getInstance().addDictionary("Dict11", "Desc");
-        DictionarySQLManager.getInstance().addDictionary("Dict12", "Desc");
+        DictionarySQLManager.getInstance().addDictionary("Dict12", "Desc");*/
 
 
         //words

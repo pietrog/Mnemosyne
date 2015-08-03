@@ -27,4 +27,6 @@ public class WordFragmentRev extends WordFragment {
         getActivity().finish();
     }
 
+
+
 }

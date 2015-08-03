@@ -36,22 +36,9 @@ public class MnemoWord extends AppCompatActivity{
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    protected void onPostResume() {
-        super.onPostResume();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    public void onContentChanged() {
-        super.onContentChanged();
+    public void onBackPressed() {
+        super.onBackPressed();
+        if (getSupportFragmentManager().getBackStackEntryCount() == 0)
+            finish();
     }
 }

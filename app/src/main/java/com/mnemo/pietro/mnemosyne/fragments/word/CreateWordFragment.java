@@ -6,9 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.mnemo.pietro.mnemosyne.MnemoMemoryManager;
 import com.mnemo.pietro.mnemosyne.R;
 
+import model.dictionary.dictionary.sql.DictionarySQLManager;
 import model.dictionary.tools.ViewTools;
 
 /**
@@ -60,7 +60,8 @@ public class CreateWordFragment extends Fragment implements View.OnClickListener
         String definition = ViewTools.getStringFromEditableText(mRootview.findViewById(R.id.description));
 
         //add word in dictionary via DictionarySQLManager
-        MnemoMemoryManager.startActionAddWord(getActivity().getApplicationContext(), mDictionaryID, word, definition);
+        //MnemoMemoryManager.startActionAddWord(getActivity().getApplicationContext(), mDictionaryID, word, definition);
+        DictionarySQLManager.getInstance().addNewWord(mDictionaryID, word, definition);
 
         //hide the keyboard and exit the create fragment
         ViewTools.hideKeyboard(mRootview, getActivity());
