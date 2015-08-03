@@ -4,12 +4,9 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.view.MenuItem;
 
-import com.mnemo.pietro.mnemosyne.R;
 import com.mnemo.pietro.mnemosyne.fragments.dictionary.tools.DictionaryAdapter;
-import com.mnemo.pietro.mnemosyne.fragments.word.CreateWordFragment;
 
 import model.dictionary.dictionary.sql.DictionarySQLManager;
-import model.dictionary.tools.ViewTools;
 
 /**
  * Dictionary fragment. Manages the layout of a dictionay, add and remove words, ...
@@ -57,34 +54,32 @@ public class DictionaryFragment extends BaseDictionaryFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        DictionarySQLManager sqlManager = DictionarySQLManager.getInstance(getActivity().getApplicationContext());
-        Cursor mRawCursor = sqlManager.getAllDictionaryObjectsCursor(mID);
-        mAdapter = new DictionaryAdapter(getActivity().getApplicationContext(), R.layout.recycle_view, mRawCursor, 0);
-        setListAdapter(mAdapter);
+        Cursor cursor = DictionarySQLManager.getInstance().getAllDictionaryObjectsCursor(mID);
+        mAdapter = new DictionaryAdapter(cursor, getActivity());
+        mRecyclerView.setAdapter(mAdapter);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mAdapter.notifyDataSetChanged();
+        /*mAdapter.notifyDataSetChanged();
         ViewTools.setTitle(getActivity(), R.string.hint_dictionary);
-        ViewTools.setSubtitle(getActivity(), mDictionaryName);
+        ViewTools.setSubtitle(getActivity(), mDictionaryName);*/
 
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         //go to create wordFragment
-        CreateWordFragment fragment = CreateWordFragment.newInstance(mID);
-        getFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.main_subscreen, fragment).commit();
+        /*CreateWordFragment fragment = CreateWordFragment.newInstance(mID);
+        getFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.main_subscreen, fragment).commit();*/
         return true;
     }
 
-    @Override
+    /*@Override
     protected void removeWord(int position){
         super.removeWord(position);
         mAdapter.changeCursor(DictionarySQLManager.getInstance().getAllDictionaryObjectsCursor(mID));
-    }
+    }*/
 
 }

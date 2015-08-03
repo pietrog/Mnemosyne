@@ -20,8 +20,7 @@ public class MnemoDictionary extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.activity_mnemo_catalogue);
+        setContentView(R.layout.activity_mnemo_dictionary);
 
         if (savedInstanceState == null){
             mID = getIntent().getLongExtra(ID, -1);

@@ -21,7 +21,7 @@ public class MnemoWord extends AppCompatActivity{
 
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_mnemo_catalogue);
+        setContentView(R.layout.activity_mnemo_dictionary);
 
         if (savedInstanceState == null){
             mWord = getIntent().getStringExtra(WordFragment.WORD);

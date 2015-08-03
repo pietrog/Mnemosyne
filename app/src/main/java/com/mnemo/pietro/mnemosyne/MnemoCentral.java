@@ -2,12 +2,14 @@ package com.mnemo.pietro.mnemosyne;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
+import android.view.View;
 
 import com.mnemo.pietro.mnemosyne.fragments.dictionary.TodayListFragment;
 import com.mnemo.pietro.mnemosyne.fragments.library.LibraryFragment;
@@ -45,6 +47,14 @@ public class MnemoCentral
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mnemo_central);
+
+        FloatingActionButton fab = (FloatingActionButton)findViewById(R.id.floatingButtonCentral);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
 
         if (savedInstanceState == null) {
             mPageAdapter = new CentralPagerAdapter(getSupportFragmentManager(), getApplicationContext());

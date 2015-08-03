@@ -44,6 +44,7 @@ public class LibraryAdapter extends CursorRecycleViewAdapter<LibraryAdapter.View
         holder.mDescription.setText(GeneralTools.getStringElement(cursor, DictionaryContractBase.DictionaryBase.DESCRIPTION));
         holder.mID = GeneralTools.getLongElement(cursor, DictionaryContractBase.DictionaryBase._ID);
     }
+    private long mRefDate; // reference date for the learning sessions. all object to learn should have a next learn date less or equal to refdate
 
 
 
@@ -60,17 +61,16 @@ public class LibraryAdapter extends CursorRecycleViewAdapter<LibraryAdapter.View
 
         public ViewHolder(View view, Context context) {
             super(view);
-            //view.setOnClickListener(this);
+            view.setOnClickListener(this);
             mName = (TextView)view.findViewById(R.id.name);
             mDescription = (TextView)view.findViewById(R.id.description);
             mContext = context;
-
-            //onclick
         }
 
         @Override
         public void onClick(View v) {
-            Intent intent = new Intent(mContext, MnemoDictionary.class);
+            Intent intent = new Intent(v.getContext(), MnemoDictionary.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.putExtra(MnemoDictionary.ID, mID);
             intent.putExtra(MnemoDictionary.NAME, mName.getText());
             mContext.startActivity(intent);

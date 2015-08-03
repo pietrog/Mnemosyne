@@ -14,7 +14,7 @@ public class MnemoCreation extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_mnemo_catalogue);
+        setContentView(R.layout.activity_mnemo_dictionary);
 
         CreateDictionaryFragment fragment = CreateDictionaryFragment.newInstance(-1);
         getSupportFragmentManager().beginTransaction().addToBackStack(null).add(R.id.main_subscreen, fragment).commit();

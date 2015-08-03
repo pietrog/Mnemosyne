@@ -10,7 +10,7 @@ import android.support.v7.widget.RecyclerView;
  */
 public abstract class CursorRecycleViewAdapter<VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {
 
-    private Cursor  mCursor;
+    protected Cursor  mCursor;
     protected Context mContext;
 
     public CursorRecycleViewAdapter(Cursor cursor, Context context){
