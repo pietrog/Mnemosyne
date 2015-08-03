@@ -52,21 +52,6 @@ public class TodayListFragment extends BaseDictionaryFragment {
         mRecyclerView.setAdapter(mAdapter);
     }
 
-
-    /*@Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        Intent intent = new Intent(getActivity().getApplicationContext(), MnemoWord.class);
-        Cursor cursor = mAdapter.getCursor();
-        cursor.moveToPosition(position);
-        intent.putExtra(WordFragment.WORDID, GeneralTools.getLongElement(cursor, WordContract.Word.CID));
-        intent.putExtra(WordFragment.DICTIONARYOBJECTID, GeneralTools.getLongElement(cursor, WordContract.Word.DICTIONARYOBJECTID));
-        intent.putExtra(WordFragment.WORD, GeneralTools.getStringElement(cursor, WordContract.Word.WORD));
-        intent.putExtra(WordFragment.DEFINITION, GeneralTools.getStringElement(cursor, WordContract.Word.DEFINITION));
-        startActivity(intent);
-    }*/
-
-
-
     @Override
     public void onResume() {
         super.onResume();

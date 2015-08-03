@@ -30,7 +30,7 @@ public class LibraryAdapter extends CursorRecycleViewAdapter<LibraryAdapter.View
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        return new ViewHolder(inflater.inflate(R.layout.library_view, parent, false), mContext);
+        return new ViewHolder(inflater.inflate(R.layout.library_view, parent, false));
     }
 
     /**
@@ -57,23 +57,21 @@ public class LibraryAdapter extends CursorRecycleViewAdapter<LibraryAdapter.View
         public TextView mName;
         public TextView mDescription;
         public long mID;
-        private Context mContext;
 
-        public ViewHolder(View view, Context context) {
+        public ViewHolder(View view) {
             super(view);
             view.setOnClickListener(this);
             mName = (TextView)view.findViewById(R.id.name);
             mDescription = (TextView)view.findViewById(R.id.description);
-            mContext = context;
         }
 
         @Override
         public void onClick(View v) {
             Intent intent = new Intent(v.getContext(), MnemoDictionary.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.putExtra(MnemoDictionary.ID, mID);
             intent.putExtra(MnemoDictionary.NAME, mName.getText());
-            mContext.startActivity(intent);
+            v.getContext().startActivity(intent);
         }
     }
 

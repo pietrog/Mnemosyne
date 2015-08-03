@@ -1,6 +1,7 @@
 package com.mnemo.pietro.mnemosyne.fragments.dictionary.tools;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,7 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.mnemo.pietro.mnemosyne.MnemoWord;
 import com.mnemo.pietro.mnemosyne.R;
+import com.mnemo.pietro.mnemosyne.fragments.word.WordFragment;
 import com.mnemo.pietro.mnemosyne.tools.CursorRecycleViewAdapter;
 
 import model.dictionary.dictionaryObject.sql.WordContract;
@@ -42,6 +45,9 @@ public class TodayListAdapter extends CursorRecycleViewAdapter<TodayListAdapter.
     public void onBindViewHolder(ViewHolder holder, Cursor cursor) {
         holder.mName.setText(GeneralTools.getStringElement(cursor, WordContract.Word.WORD));
         holder.mName.setBackgroundColor(GeneralTools.getColorFromDelay((int) GeneralTools.getNumberOfDaysBetweenTwoDates(mRefDate, GeneralTools.getLongElement(mCursor, MemoryManagerContract.MemoryMonitoring.NEXT_LEARN))));
+        holder.definition = GeneralTools.getStringElement(mCursor, WordContract.Word.DEFINITION);
+        holder.dictionaryID = GeneralTools.getLongElement(mCursor, WordContract.Word.DICTIONARYOBJECTID);
+        holder.wordID = GeneralTools.getLongElement(mCursor, WordContract.Word.CSID);
     }
 
 
@@ -49,6 +55,9 @@ public class TodayListAdapter extends CursorRecycleViewAdapter<TodayListAdapter.
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         public TextView mName;
+        public long wordID;
+        public long dictionaryID;
+        public String definition;
 
         public ViewHolder(View view){
             super(view);
@@ -62,6 +71,12 @@ public class TodayListAdapter extends CursorRecycleViewAdapter<TodayListAdapter.
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.putExtra(MnemoDictionary.NAME, mName.getText());
             mContext.startActivity(intent);*/
+            Intent intent = new Intent(v.getContext(), MnemoWord.class);
+            intent.putExtra(WordFragment.WORDID, wordID);
+            intent.putExtra(WordFragment.DICTIONARYOBJECTID, dictionaryID);
+            intent.putExtra(WordFragment.WORD, mName.getText());
+            intent.putExtra(WordFragment.DEFINITION, definition);
+            v.getContext().startActivity(intent);
         }
     }
 

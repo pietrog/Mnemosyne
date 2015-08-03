@@ -55,7 +55,7 @@ public class DictionaryFragment extends BaseDictionaryFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         Cursor cursor = DictionarySQLManager.getInstance().getAllDictionaryObjectsCursor(mID);
-        mAdapter = new DictionaryAdapter(cursor, getActivity());
+        mAdapter = new DictionaryAdapter(cursor, getActivity(), getFragmentManager());
         mRecyclerView.setAdapter(mAdapter);
     }
 

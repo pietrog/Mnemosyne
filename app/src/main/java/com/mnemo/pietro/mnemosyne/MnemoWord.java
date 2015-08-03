@@ -1,7 +1,6 @@
 package com.mnemo.pietro.mnemosyne;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
 import com.mnemo.pietro.mnemosyne.fragments.word.WordFragment;
@@ -30,7 +29,7 @@ public class MnemoWord extends AppCompatActivity{
             mDictObjID = getIntent().getLongExtra(WordFragment.DICTIONARYOBJECTID, -1);
 
             WordFragment fragment = WordFragment.newInstance(mWord, mDefinition, mID, mDictObjID);
-            getSupportFragmentManager().beginTransaction().add(R.id.main_subscreen, fragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE).commit();
+            getSupportFragmentManager().beginTransaction().add(R.id.main_subscreen, fragment).commit();
         }
 
     }
