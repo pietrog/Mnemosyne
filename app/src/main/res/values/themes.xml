@@ -6,6 +6,9 @@
         <item name="android:background">#F0F0F0</item>
     </style>
 
+    <style name="hint" parent="AppTheme">
+        <item name="android:textSize">18dp</item>
+    </style>
 
     <style name="name" parent="AppTheme">
         <item name="android:textSize">26dp</item>

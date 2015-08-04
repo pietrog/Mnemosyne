@@ -49,10 +49,7 @@ public abstract class BaseDictionaryFragment extends Fragment{
     @Override
     public void onStop() {
         super.onStop();
-
-        //close the cursor before leaving
-        /*if (mAdapter != null && mAdapter.getCursor() != null)
-            mAdapter.getCursor().close();*/
+        mAdapter.release();
     }
 
     /*@Override
