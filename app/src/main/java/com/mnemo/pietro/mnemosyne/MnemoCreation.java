@@ -24,7 +24,7 @@ public class MnemoCreation extends AppCompatActivity {
         mDictionaryID = getIntent().getLongExtra(DICTIONARYID, -1);
 
         FloatingActionButton fab = (FloatingActionButton)findViewById(R.id.fabDictionary);
-        fab.setImageResource(R.drawable.ic_action_accept);
+        fab.setImageResource(R.drawable.ic_check_white_48dp);
 
         if (mDictionaryID == -1) {
             CreateDictionaryFragment fragment = CreateDictionaryFragment.newInstance(-1);

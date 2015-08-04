@@ -4,7 +4,6 @@
 
     <item android:id="@+id/add_item"
         android:title="@string/action_create_item"
-        android:icon="@drawable/ic_action_new"
         android:orderInCategory="1"
         app:showAsAction="always"
 
@@ -12,7 +11,6 @@
 
     <item android:id="@+id/validate"
         android:title="@string/action_save"
-        android:icon="@drawable/ic_action_accept"
         android:orderInCategory="2"
         app:showAsAction="always"
          />

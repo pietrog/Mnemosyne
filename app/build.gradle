@@ -12,10 +12,19 @@ android {
         versionCode 1
         versionName "0.8"
     }
+    signingConfigs {
+        release {
+            storeFile file("myGoogleAppJKS")
+            storePassword "shaBJ1303;silvio"
+            keyAlias "client"
+            keyPassword "shaBJ1303;silvio"
+        }
+    }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
 }
